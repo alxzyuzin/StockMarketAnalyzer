@@ -4,8 +4,8 @@
         <!-- Required meta tags -->
         <meta http-equiv="content-type" content="text/html" charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="Alexander Ziuzin Selected works" />
-	    <meta name="keywords" content="art artworks wotercolor graphic" />
+        <meta name="description" content="Alexander Ziuzin. Stck Market Analizer" />
+	      <meta name="keywords" content="stock mutual funds SMA EMA RSI MACD" />
         <meta name="theme-color" content="#7952b3">
         <!-- Import the Bootstarp stylesheet -->
         <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
@@ -18,47 +18,49 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&display=swap" >
  -->
-    	<title>Alexander Ziuzin graphics and watercolors</title>
+    	<title>Alexander Ziuzin. Stock Analyzer</title>
         
 	</head>
     <body >
       <header class="container-sm">
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top" >   
-          <a class="navbar-brand cinzel-400" href="#">AZ</a>
+          <a id = "brand-icon" class="navbar-brand cinzel-400" href="#">SMA</a>
           <button type="button" class="navbar-toggler"  
                         data-bs-toggle="collapse" 
                         data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse">
+          <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
             <ul class="navbar-nav">
               <li class = "nav-item">
                 <a class="nav-link {% if pageName == 'Home' %} active {% endif %}" aria-current="page" href="/">Home</a>
               </li>
+              <!-- Simbols.menu -->
+              <li class = "nav-item dropdown">
+               <a class="nav-link dropdown-toggle href="#"
+                 id="navbarDropdownGalleries" role="button" data-bs-toggle="dropdown" 
+                 aria-expanded="false">Simbols</a>
+               <ul class="dropdown-menu" aria-labelledby="navbarDropdownGalleries">
+                <li><a class="dropdown-item" href="/simbols?listtype=portfolio">Portfolio</a></li>
+                <li><a class="dropdown-item" href="/simbols?listtype=wachlist">Wachlist</a></li>
+                <li><a class="dropdown-item" href="/simbols?listtype=portfolio">All</a></li>
+               </ul>
+              </li>
               <li class = "nav-item">
-                <a class="nav-link {% if pageName == 'Works' %} active {% endif %}" href="/works">Selected works</a>
+                <a class="nav-link {% if pageName == 'Works' %} active {% endif %}" href="/portfolio">Portfolio</a>
               </li>
               <li class = "nav-item">
                 <a class="nav-link {% if pageName == 'Contacts' %} active {% endif %}" href="/contacts">Contacts</a>            
               </li>
-              <!-- Galleries menu -->
-              <li class = "nav-item dropdown">
-                <a class="nav-link dropdown-toggle href="#"
-                   id="navbarDropdownGalleries" role="button" data-bs-toggle="dropdown" 
-                   aria-expanded="false">Galleries</a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdownGalleries">
-                  {% for gallery in galleries %}
-                    <li><a class="dropdown-item" href="/gallery?galleryid={{gallery.id}}">{{ gallery.name}}</a></li>
-                  <!--
-                    <li><a class="dropdown-item" href="/displayartworks">Edit list of artworks</a></li>
-                  <li><a class="dropdown-item" href="/displaygallerieslist#">Edit list of galleries</a></li>
-				          <li><hr class="dropdown-divider"></li>
-				          <li><a class="dropdown-item" href="#">Something else here</a></li>
-                  -->
-                  {% endfor %}
-                </ul>
+             
+              <li class = "nav-item">
+                {% if user %}
+                  <a class="nav-link {% if pageName == 'Login' %} active {% endif %}" href="/logout">Logout</a>            
+                {% else %}
+                  <a class="nav-link {% if pageName == 'Logout' %} active {% endif %}" href="/login">Login</a>            
+                {% endif %}
               </li>
-              
+                            
               <!-- Admin menu-->
               {% if user %}
               <li class = "nav-item dropdown">
@@ -109,7 +111,7 @@
         <div  class = "container">
           <div class = "row ">
             <div class = "col-sm-2"></div> 
-            <div class = "col-sm-8"> © 2022 by Alexander Ziuzin </div>
+            <div class = "col-sm-8"> © 2024 by Alexander Ziuzin </div>
             <div class = "col-sm-2 ml-auto">{% if user %}Logged as {{user}}{% endif %}</div>
           </div>
         </div>
@@ -117,10 +119,9 @@
     
 
   <!-- Import jquerry -->
-  <script src = "/static/js/jquery-3.6.0.min.js"></script>  
+  <script src = "/static/js/jquery-3.7.1.min.js"></script>  
   <!-- Import Bootstrap js -->
   <script  src = "/static/js/bootstrap.bundle.min.js"></script>
-  <script src = "/static/js/bootstrap.min.js"></script>
   <!-- Import site scripts -->
   <script src ="/static/js/app.js"></script>
   <script>

@@ -7,7 +7,8 @@ from app import app
 # import variables db,login from module models.py
 # defined in a package app
 
-from app.models import db, login
+from app.models import db
+from app.username import login
 
 
 # Link 'db' instance to our application

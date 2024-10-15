@@ -20,4 +20,4 @@ from app.username  import currentusername
 @app.route("/")
 def home():
    #galleries = db.session.query(GalleryModel).all()
-   return render_template("empty.html")
+   return render_template("home.html")
