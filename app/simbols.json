@@ -1,0 +1,2221 @@
+[
+    {
+        "simbol": "FSENX",
+        "status": "portfolio",
+        "name": "Fidelity Select Energy Portfolio (FSENX)",
+        "category": "Equity Energy",
+        "yearreturn": 4.6
+    },
+    {
+        "simbol": "FSELX",
+        "status": "portfolio",
+        "name": "Fidelity Select Semiconductors Portfolio (FSELX)",
+        "category": "Technology",
+        "yearreturn": 45.33
+    },
+    {
+        "simbol": "FNARX",
+        "status": "unselected",
+        "name": "Fidelity Natural Resources Fund (FNARX)",
+        "category": "Equity Energy",
+        "yearreturn": 9.92
+    },
+    {
+        "simbol": "FSPCX",
+        "status": "portfolio",
+        "name": "Fidelity Select Insurance Portfolio (FSPCX)",
+        "category": "Financial",
+        "yearreturn": 39.69
+    },
+    {
+        "simbol": "FMILX",
+        "status": "hotwatch",
+        "name": "Fidelity New Millennium Fund (FMILX)",
+        "category": "Large Value",
+        "yearreturn": 29.45
+    },
+    {
+        "simbol": "FPHAX",
+        "status": "watchlist",
+        "name": "Fidelity Select Pharmaceuticals Portfolio (FPHAX)",
+        "category": "Health",
+        "yearreturn": 37.7
+    },
+    {
+        "simbol": "FGRTX",
+        "status": "hotwatch",
+        "name": "Fidelity Mega Cap Stock Fund (FGRTX)",
+        "category": "Large Blend",
+        "yearreturn": 28.92
+    },
+    {
+        "simbol": "FLCSX",
+        "status": "watchlist",
+        "name": "Fidelity Large Cap Stock Fund (FLCSX)",
+        "category": "Large Blend",
+        "yearreturn": 28.39
+    },
+    {
+        "simbol": "FSDAX",
+        "status": "hotwatch",
+        "name": "Fidelity Select Defense and Aerospace Portfolio (FSDAX)",
+        "category": "Industrials",
+        "yearreturn": 29.85
+    },
+    {
+        "simbol": "FGRIX",
+        "status": "watchlist",
+        "name": "Fidelity Growth & Income Portfolio (FGRIX)",
+        "category": "Large Blend",
+        "yearreturn": 26.21
+    },
+    {
+        "simbol": "FSHOX",
+        "status": "hotwatch",
+        "name": "Fidelity Select Construction and Housing Portfolio (FSHOX)",
+        "category": "Consumer Cyclical",
+        "yearreturn": 26.1
+    },
+    {
+        "simbol": "FCYIX",
+        "status": "hotwatch",
+        "name": "Fidelity Select Industrials Portfolio (FCYIX)",
+        "category": "Industrials",
+        "yearreturn": 29.64
+    },
+    {
+        "simbol": "FIUIX",
+        "status": "hotwatch",
+        "name": "Fidelity Telecom and Utilities Fund (FIUIX)",
+        "category": "Utilities",
+        "yearreturn": 32.59
+    },
+    {
+        "simbol": "FSUTX",
+        "status": "hotwatch",
+        "name": "Fidelity Select Utilities Portfolio (FSUTX)",
+        "category": "Utilities",
+        "yearreturn": 28.16
+    },
+    {
+        "simbol": "FDGFX",
+        "status": "watchlist",
+        "name": "Fidelity Dividend Growth Fund (FDGFX)",
+        "category": "Large Blend",
+        "yearreturn": 31.34
+    },
+    {
+        "simbol": "FFGCX",
+        "status": "unselected",
+        "name": "Fidelity Global Commodity Stock Fund (FFGCX)",
+        "category": "Natural Resources",
+        "yearreturn": 5.93
+    },
+    {
+        "simbol": "FEQTX",
+        "status": "unselected",
+        "name": "Fidelity Equity Dividend Income Fund (FEQTX)",
+        "category": "Large Value",
+        "yearreturn": 21.34
+    },
+    {
+        "simbol": "FXAIX",
+        "status": "hotwatch",
+        "name": "Fidelity 500 Index Fund (FXAIX)",
+        "category": "Large Blend",
+        "yearreturn": 27.12
+    },
+    {
+        "simbol": "FCNTX",
+        "status": "watchlist",
+        "name": "Fidelity Contrafund (FCNTX)",
+        "category": "Large Growth",
+        "yearreturn": 38.78
+    },
+    {
+        "simbol": "FSMVX",
+        "status": "unselected",
+        "name": "Fidelity Mid Cap Value Fund (FSMVX)",
+        "category": "Mid-Cap Value",
+        "yearreturn": 24.78
+    },
+    {
+        "simbol": "FSPTX",
+        "status": "portfolio",
+        "name": "Fidelity Select Technology Portfolio (FSPTX)",
+        "category": "Technology",
+        "yearreturn": 31.49
+    },
+    {
+        "simbol": "FDSVX",
+        "status": "watchlist",
+        "name": "Fidelity Growth Discovery Fund (FDSVX)",
+        "category": "Large Growth",
+        "yearreturn": 33.67
+    },
+    {
+        "simbol": "FSLVX",
+        "status": "unselected",
+        "name": "Fidelity Stock Selector Large Cap Value Fund (FSLVX)",
+        "category": "Large Value",
+        "yearreturn": 23.5
+    },
+    {
+        "simbol": "FITLX",
+        "status": "hotwatch",
+        "name": "Fidelity U.S. Sustainability Index Fund (FITLX)",
+        "category": "Large Blend",
+        "yearreturn": 26.33
+    },
+    {
+        "simbol": "FSLBX",
+        "status": "hotwatch",
+        "name": "Fidelity Select Brokerage and Investment Management Portfolio (FSLBX)",
+        "category": "Financial",
+        "yearreturn": 36.27
+    },
+    {
+        "simbol": "FIDSX",
+        "status": "watchlist",
+        "name": "Fidelity Select Financials Portfolio (FIDSX)",
+        "category": "Financial",
+        "yearreturn": 37.7
+    },
+    {
+        "simbol": "FSPGX",
+        "status": "watchlist",
+        "name": "Fidelity Large Cap Growth Index Fund (FSPGX)",
+        "category": "Large Growth",
+        "yearreturn": 30.77
+    },
+    {
+        "simbol": "FNILX",
+        "status": "watchlist",
+        "name": "Fidelity ZERO Large Cap Index Fund (FNILX)",
+        "category": "Large Blend",
+        "yearreturn": 27.45
+    },
+    {
+        "simbol": "FSLSX",
+        "status": "unselected",
+        "name": "Fidelity Value Strategies Fund (FSLSX)",
+        "category": "Mid-Cap Value",
+        "yearreturn": 17.36
+    },
+    {
+        "simbol": "FIVLX",
+        "status": "unselected",
+        "name": "Fidelity International Value Fund (FIVLX)",
+        "category": "Foreign Large Value",
+        "yearreturn": 23.36
+    },
+    {
+        "simbol": "FTQGX",
+        "status": "watchlist",
+        "name": "Fidelity Focused Stock Fund (FTQGX)",
+        "category": "Large Growth",
+        "yearreturn": 34.87
+    },
+    {
+        "simbol": "FDCAX",
+        "status": "watchlist",
+        "name": "Fidelity Capital Appreciation Fund (FDCAX)",
+        "category": "Large Growth",
+        "yearreturn": 29.41
+    },
+    {
+        "simbol": "FDLSX",
+        "status": "unselected",
+        "name": "Fidelity Select Leisure Portfolio (FDLSX)",
+        "category": "Consumer Cyclical",
+        "yearreturn": 17.28
+    },
+    {
+        "simbol": "FEQIX",
+        "status": "unselected",
+        "name": "Fidelity Equity-Income Fund (FEQIX)",
+        "category": "Large Value",
+        "yearreturn": 23.4
+    },
+    {
+        "simbol": "FDVLX",
+        "status": "unselected",
+        "name": "Fidelity Value Fund (FDVLX)",
+        "category": "Mid-Cap Value",
+        "yearreturn": 19.98
+    },
+    {
+        "simbol": "FFIDX",
+        "status": "watchlist",
+        "name": "Fidelity Fund (FFIDX)",
+        "category": "Large Growth",
+        "yearreturn": 30.79
+    },
+    {
+        "simbol": "FICDX",
+        "status": "unselected",
+        "name": "Fidelity Canada Fund (FICDX)",
+        "category": "Miscellaneous Region",
+        "yearreturn": 18.1
+    },
+    {
+        "simbol": "FZROX",
+        "status": "watchlist",
+        "name": "Fidelity ZERO Total Market Index Fund (FZROX)",
+        "category": "Large Blend",
+        "yearreturn": 26.24
+    },
+    {
+        "simbol": "FBCVX",
+        "status": "unselected",
+        "name": "Fidelity Blue Chip Value Fund (FBCVX)",
+        "category": "Large Value",
+        "yearreturn": 17.9
+    },
+    {
+        "simbol": "FSKAX",
+        "status": "hotwatch",
+        "name": "Fidelity Total Market Index Fund (FSKAX)",
+        "category": "Large Blend",
+        "yearreturn": 26.2
+    },
+    {
+        "simbol": "FMAGX",
+        "status": "watchlist",
+        "name": "Fidelity Magellan Fund (FMAGX)",
+        "category": "Large Growth",
+        "yearreturn": 33.74
+    },
+    {
+        "simbol": "FTRNX",
+        "status": "watchlist",
+        "name": "Fidelity Trend Fund (FTRNX)",
+        "category": "Large Growth",
+        "yearreturn": 34.09
+    },
+    {
+        "simbol": "FDCPX",
+        "status": "watchlist",
+        "name": "Fidelity Select Tech Hardware Portfolio (FDCPX)",
+        "category": "Technology",
+        "yearreturn": 29.87
+    },
+    {
+        "simbol": "FLPSX",
+        "status": "unselected",
+        "name": "Fidelity Low-Priced Stock Fund (FLPSX)",
+        "category": "Mid-Cap Value",
+        "yearreturn": 20.76
+    },
+    {
+        "simbol": "FLCOX",
+        "status": "unselected",
+        "name": "Fidelity Large Cap Value Index Fund (FLCOX)",
+        "category": "Large Value",
+        "yearreturn": 21.13
+    },
+    {
+        "simbol": "FSRFX",
+        "status": "unselected",
+        "name": "Fidelity Select Transportation Portfolio (FSRFX)",
+        "category": "Industrials",
+        "yearreturn": 10.88
+    },
+    {
+        "simbol": "FBGRX",
+        "status": "unselected",
+        "name": "Fidelity Blue Chip Growth Fund (FBGRX)",
+        "category": "Large Growth",
+        "yearreturn": 35.12
+    },
+    {
+        "simbol": "FMCSX",
+        "status": "unselected",
+        "name": "Fidelity Mid-Cap Stock Fund (FMCSX)",
+        "category": "Mid-Cap Blend",
+        "yearreturn": 17.35
+    },
+    {
+        "simbol": "FGILX",
+        "status": "unselected",
+        "name": "Fidelity Global Equity Income Fund (FGILX)",
+        "category": "Global Large-Stock Blend",
+        "yearreturn": 21.6
+    },
+    {
+        "simbol": "FSEBX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable U.S. Equity Fund (FSEBX)",
+        "category": "Large Blend",
+        "yearreturn": 24.45
+    },
+    {
+        "simbol": "FDEQX",
+        "status": "hotwatch",
+        "name": "Fidelity Disciplined Equity Fund (FDEQX)",
+        "category": "Large Growth",
+        "yearreturn": 29.27
+    },
+    {
+        "simbol": "FSRBX",
+        "status": "hotwatch",
+        "name": "Fidelity Select Banking Portfolio (FSRBX)",
+        "category": "Financial",
+        "yearreturn": 47.25
+    },
+    {
+        "simbol": "FIFNX",
+        "status": "hotwatch",
+        "name": "Fidelity Founders Fund (FIFNX)",
+        "category": "Large Growth",
+        "yearreturn": 29.87
+    },
+    {
+        "simbol": "FDSSX",
+        "status": "unselected",
+        "name": "Fidelity Stock Selector All Cap Fund (FDSSX)",
+        "category": "Large Growth",
+        "yearreturn": 22.51
+    },
+    {
+        "simbol": "FNCMX",
+        "status": "watchlist",
+        "name": "Fidelity NASDAQ Composite Index Fund (FNCMX)",
+        "category": "Large Growth",
+        "yearreturn": 27.48
+    },
+    {
+        "simbol": "FFRHX",
+        "status": "unselected",
+        "name": "Fidelity Floating Rate High Income Fund (FFRHX)",
+        "category": "Bank Loan",
+        "yearreturn": 8.82
+    },
+    {
+        "simbol": "FOCPX",
+        "status": "watchlist",
+        "name": "Fidelity OTC Portfolio (FOCPX)",
+        "category": "Large Growth",
+        "yearreturn": 30.63
+    },
+    {
+        "simbol": "FCPVX",
+        "status": "unselected",
+        "name": "Fidelity Small Cap Value Fund (FCPVX)",
+        "category": "Small Value",
+        "yearreturn": 20.06
+    },
+    {
+        "simbol": "FPURX",
+        "status": "unselected",
+        "name": "Fidelity Puritan Fund (FPURX)",
+        "category": "Moderate Allocation",
+        "yearreturn": 21.09
+    },
+    {
+        "simbol": "FDFAX",
+        "status": "unselected",
+        "name": "Fidelity Select Consumer Staples Portfolio (FDFAX)",
+        "category": "Consumer Defensive",
+        "yearreturn": 8.54
+    },
+    {
+        "simbol": "FDSCX",
+        "status": "unselected",
+        "name": "Fidelity Stock Selector Small Cap Fund (FDSCX)",
+        "category": "Small Blend",
+        "yearreturn": 24.21
+    },
+    {
+        "simbol": "FLVCX",
+        "status": "watchlist",
+        "name": "Fidelity Leveraged Company Stock Fund (FLVCX)",
+        "category": "Large Blend",
+        "yearreturn": 25.73
+    },
+    {
+        "simbol": "FVDFX",
+        "status": "unselected",
+        "name": "Fidelity Value Discovery Fund (FVDFX)",
+        "category": "Large Value",
+        "yearreturn": 16.45
+    },
+    {
+        "simbol": "FIMVX",
+        "status": "unselected",
+        "name": "Fidelity Mid Cap Value Index Fund (FIMVX)",
+        "category": "Mid-Cap Value",
+        "yearreturn": 20.17
+    },
+    {
+        "simbol": "FWWFX",
+        "status": "watchlist",
+        "name": "Fidelity Worldwide Fund (FWWFX)",
+        "category": "Global Large-Stock Growth",
+        "yearreturn": 30.89
+    },
+    {
+        "simbol": "FBALX",
+        "status": "unselected",
+        "name": "Fidelity Balanced Fund (FBALX)",
+        "category": "Moderate Allocation",
+        "yearreturn": 19.85
+    },
+    {
+        "simbol": "FSHCX",
+        "status": "unselected",
+        "name": "Fidelity Select Health Care Services Portfolio (FSHCX)",
+        "category": "Health",
+        "yearreturn": 13.2
+    },
+    {
+        "simbol": "FSLEX",
+        "status": "unselected",
+        "name": "Fidelity Environment and Alternative Energy Fund (FSLEX)",
+        "category": "Industrials",
+        "yearreturn": 23.03
+    },
+    {
+        "simbol": "FSSMX",
+        "status": "unselected",
+        "name": "Fidelity Stock Selector Mid Cap Fund (FSSMX)",
+        "category": "Mid-Cap Blend",
+        "yearreturn": 17.55
+    },
+    {
+        "simbol": "FULVX",
+        "status": "unselected",
+        "name": "Fidelity U.S. Low Volatility Equity Fund (FULVX)",
+        "category": "Large Blend",
+        "yearreturn": 20.27
+    },
+    {
+        "simbol": "FSDIX",
+        "status": "unselected",
+        "name": "Fidelity Strategic Dividend & Income Fund (FSDIX)",
+        "category": "Moderately Aggressive Allocation",
+        "yearreturn": 17.24
+    },
+    {
+        "simbol": "FNSTX",
+        "status": "unselected",
+        "name": "Fidelity Infrastructure Fund (FNSTX)",
+        "category": "Infrastructure",
+        "yearreturn": 17.3
+    },
+    {
+        "simbol": "FFFHX",
+        "status": "unselected",
+        "name": "Fidelity Freedom 2050 Fund (FFFHX)",
+        "category": "Target-Date 2050",
+        "yearreturn": 22.17
+    },
+    {
+        "simbol": "FFSFX",
+        "status": "unselected",
+        "name": "Fidelity Freedom 2065 Fund (FFSFX)",
+        "category": "Target-Date 2065+",
+        "yearreturn": 22.18
+    },
+    {
+        "simbol": "FDEEX",
+        "status": "unselected",
+        "name": "Fidelity Freedom 2055 Fund (FDEEX)",
+        "category": "Target-Date 2055",
+        "yearreturn": 22.14
+    },
+    {
+        "simbol": "FDKVX",
+        "status": "unselected",
+        "name": "Fidelity Freedom 2060 Fund (FDKVX)",
+        "category": "Target-Date 2060",
+        "yearreturn": 22.16
+    },
+    {
+        "simbol": "FFFGX",
+        "status": "unselected",
+        "name": "Fidelity Freedom 2045 Fund (FFFGX)",
+        "category": "Target-Date 2045",
+        "yearreturn": 22.13
+    },
+    {
+        "simbol": "FSCRX",
+        "status": "unselected",
+        "name": "Fidelity Small Cap Discovery Fund (FSCRX)",
+        "category": "Small Blend",
+        "yearreturn": 14.69
+    },
+    {
+        "simbol": "FFOLX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2045 Fund Institutional Premium Class (FFOLX)",
+        "category": "Target-Date 2045",
+        "yearreturn": 21.15
+    },
+    {
+        "simbol": "FFLDX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2055 Fund Institutional Premium Class (FFLDX)",
+        "category": "Target-Date 2055",
+        "yearreturn": 21.09
+    },
+    {
+        "simbol": "FFOPX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2050 Fund Institutional Premium Class (FFOPX)",
+        "category": "Target-Date 2050",
+        "yearreturn": 21.12
+    },
+    {
+        "simbol": "FFLEX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2060 Fund Institutional Premium Class (FFLEX)",
+        "category": "Target-Date 2060",
+        "yearreturn": 21.11
+    },
+    {
+        "simbol": "FFIKX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2065 Fund Institutional Premium Class (FFIKX)",
+        "category": "Target-Date 2065+",
+        "yearreturn": 21.1
+    },
+    {
+        "simbol": "FDEWX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2055 Fund Investor Class (FDEWX)",
+        "category": "Target-Date 2055",
+        "yearreturn": 21.06
+    },
+    {
+        "simbol": "FSPSX",
+        "status": "unselected",
+        "name": "Fidelity International Index Fund (FSPSX)",
+        "category": "Foreign Large Blend",
+        "yearreturn": 19.86
+    },
+    {
+        "simbol": "FIOFX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2045 Fund Investor Class (FIOFX)",
+        "category": "Target-Date 2045",
+        "yearreturn": 21.06
+    },
+    {
+        "simbol": "FIPFX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2050 Fund Investor Class (FIPFX)",
+        "category": "Target-Date 2050",
+        "yearreturn": 21.05
+    },
+    {
+        "simbol": "FDKLX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2060 Fund Investor Class (FDKLX)",
+        "category": "Target-Date 2060",
+        "yearreturn": 21.06
+    },
+    {
+        "simbol": "FSCHX",
+        "status": "unselected",
+        "name": "Fidelity Select Chemicals Portfolio (FSCHX)",
+        "category": "Natural Resources",
+        "yearreturn": 10.77
+    },
+    {
+        "simbol": "FFIJX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2065 Fund Investor Class (FFIJX)",
+        "category": "Target-Date 2065+",
+        "yearreturn": 21.05
+    },
+    {
+        "simbol": "FFFFX",
+        "status": "unselected",
+        "name": "Fidelity Freedom 2040 Fund (FFFFX)",
+        "category": "Target-Date 2040",
+        "yearreturn": 21.15
+    },
+    {
+        "simbol": "FHAQX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Blend 2045 Fund (FHAQX)",
+        "category": "Target-Date 2045",
+        "yearreturn": 21.46
+    },
+    {
+        "simbol": "FHAPX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Blend 2050 Fund (FHAPX)",
+        "category": "Target-Date 2050",
+        "yearreturn": 21.47
+    },
+    {
+        "simbol": "FFNOX",
+        "status": "unselected",
+        "name": "Fidelity Multi-Asset Index Fund (FFNOX)",
+        "category": "Moderately Aggressive Allocation",
+        "yearreturn": 20.16
+    },
+    {
+        "simbol": "FHAOX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Blend 2055 Fund (FHAOX)",
+        "category": "Target-Date 2055",
+        "yearreturn": 21.48
+    },
+    {
+        "simbol": "FFBSX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Blend 2065 Fund (FFBSX)",
+        "category": "Target-Date 2065+",
+        "yearreturn": 21.42
+    },
+    {
+        "simbol": "FHANX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Blend 2060 Fund (FHANX)",
+        "category": "Target-Date 2060",
+        "yearreturn": 21.47
+    },
+    {
+        "simbol": "FFIZX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2040 Fund Institutional Premium Class (FFIZX)",
+        "category": "Target-Date 2040",
+        "yearreturn": 20.32
+    },
+    {
+        "simbol": "FBIFX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2040 Fund Investor Class (FBIFX)",
+        "category": "Target-Date 2040",
+        "yearreturn": 20.21
+    },
+    {
+        "simbol": "FCAEX",
+        "status": "hotwatch",
+        "name": "Fidelity Climate Action Fund (FCAEX)",
+        "category": "Global Large-Stock Growth",
+        "yearreturn": 27.45
+    },
+    {
+        "simbol": "FSDPX",
+        "status": "unselected",
+        "name": "Fidelity Select Materials Portfolio (FSDPX)",
+        "category": "Natural Resources",
+        "yearreturn": 4.16
+    },
+    {
+        "simbol": "FLOWX",
+        "status": "unselected",
+        "name": "Fidelity Water Sustainability Fund (FLOWX)",
+        "category": "Natural Resources",
+        "yearreturn": 17.76
+    },
+    {
+        "simbol": "FHARX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Blend 2040 Fund (FHARX)",
+        "category": "Target-Date 2040",
+        "yearreturn": 20.61
+    },
+    {
+        "simbol": "FCNVX",
+        "status": "unselected",
+        "name": "Fidelity Conservative Income Bond Fund (FCNVX)",
+        "category": "Ultrashort Bond",
+        "yearreturn": 5.81
+    },
+    {
+        "simbol": "FSMDX",
+        "status": "unselected",
+        "name": "Fidelity Mid Cap Index Fund (FSMDX)",
+        "category": "Mid-Cap Blend",
+        "yearreturn": 20.15
+    },
+    {
+        "simbol": "FNSXX",
+        "status": "unselected",
+        "name": "Fidelity Investments Money Market - Money Market Portfolio - Institutional Class (FNSXX)",
+        "category": "Prime Money Market",
+        "yearreturn": 5.48
+    },
+    {
+        "simbol": "FMPXX",
+        "status": "unselected",
+        "name": "Fidelity Investments Money Market - Money Market Portfolio - Class I (FMPXX)",
+        "category": "Prime Money Market",
+        "yearreturn": 5.43
+    },
+    {
+        "simbol": "FAMRX",
+        "status": "unselected",
+        "name": "Fidelity Asset Manager 85% (FAMRX)",
+        "category": "Aggressive Allocation",
+        "yearreturn": 19.4
+    },
+    {
+        "simbol": "FRBXX",
+        "status": "unselected",
+        "name": "Fidelity Investments Money Market Treasury Portfolio - Institutional Class (FRBXX)",
+        "category": "Money Market-Taxable",
+        "yearreturn": 5.38
+    },
+    {
+        "simbol": "FRGXX",
+        "status": "unselected",
+        "name": "Fidelity Investments Money Market Government Portfolio - Institutional Class (FRGXX)",
+        "category": "Money Market-Taxable",
+        "yearreturn": 5.4
+    },
+    {
+        "simbol": "FISXX",
+        "status": "unselected",
+        "name": "Fidelity Investments Money Market Treasury Portfolio - Class I (FISXX)",
+        "category": "Money Market-Taxable",
+        "yearreturn": 5.34
+    },
+    {
+        "simbol": "FZDXX",
+        "status": "unselected",
+        "name": "Fidelity Money Market Fund Premium Class (FZDXX)",
+        "category": "Prime Money Market",
+        "yearreturn": 5.31
+    },
+    {
+        "simbol": "FIGXX",
+        "status": "unselected",
+        "name": "Fidelity Investments Money Market Government Portfolio Class I (FIGXX)",
+        "category": "Money Market-Taxable",
+        "yearreturn": 5.36
+    },
+    {
+        "simbol": "FSRRX",
+        "status": "unselected",
+        "name": "Fidelity Strategic Real Return Fund (FSRRX)",
+        "category": "Moderately Conservative Allocation",
+        "yearreturn": 7.49
+    },
+    {
+        "simbol": "FRSXX",
+        "status": "unselected",
+        "name": "Fidelity Investments Money Market Treasury Only - Institutional Class (FRSXX)",
+        "category": "Money Market-Taxable",
+        "yearreturn": 5.38
+    },
+    {
+        "simbol": "FAGIX",
+        "status": "unselected",
+        "name": "Fidelity Capital & Income Fund (FAGIX)",
+        "category": "High Yield Bond",
+        "yearreturn": 12.82
+    },
+    {
+        "simbol": "FSIXX",
+        "status": "unselected",
+        "name": "Fidelity Investments Money Market Treasury Only Class I (FSIXX)",
+        "category": "Money Market-Taxable",
+        "yearreturn": 5.34
+    },
+    {
+        "simbol": "SPRXX",
+        "status": "unselected",
+        "name": "Fidelity Money Market Fund (SPRXX)",
+        "category": "Prime Money Market",
+        "yearreturn": 5.18
+    },
+    {
+        "simbol": "FSAHX",
+        "status": "unselected",
+        "name": "Fidelity Short Duration High Income Fund (FSAHX)",
+        "category": "High Yield Bond",
+        "yearreturn": 10.43
+    },
+    {
+        "simbol": "FNORX",
+        "status": "watchlist",
+        "name": "Fidelity Nordic Fund (FNORX)",
+        "category": "Miscellaneous Region",
+        "yearreturn": 28.71
+    },
+    {
+        "simbol": "FZCXX",
+        "status": "unselected",
+        "name": "Fidelity Government Money Market Fund Premium Class (FZCXX)",
+        "category": "Money Market-Taxable",
+        "yearreturn": 5.21
+    },
+    {
+        "simbol": "FDRXX",
+        "status": "unselected",
+        "name": "Fidelity Government Cash Reserves (FDRXX)",
+        "category": "Money Market-Taxable",
+        "yearreturn": 5.12
+    },
+    {
+        "simbol": "SPAXX",
+        "status": "unselected",
+        "name": "Fidelity Government Money Market Fund (SPAXX)",
+        "category": "Money Market-Taxable",
+        "yearreturn": 5.1
+    },
+    {
+        "simbol": "FZFXX",
+        "status": "unselected",
+        "name": "Fidelity Treasury Money Market Fund (FZFXX)",
+        "category": "Money Market-Taxable",
+        "yearreturn": 5.09
+    },
+    {
+        "simbol": "FISVX",
+        "status": "unselected",
+        "name": "Fidelity Small Cap Value Index Fund (FISVX)",
+        "category": "Small Value",
+        "yearreturn": 19.21
+    },
+    {
+        "simbol": "FDLXX",
+        "status": "unselected",
+        "name": "Fidelity Treasury Only Money Market Fund (FDLXX)",
+        "category": "Money Market-Taxable",
+        "yearreturn": 5.09
+    },
+    {
+        "simbol": "FFTHX",
+        "status": "unselected",
+        "name": "Fidelity Freedom 2035 Fund (FFTHX)",
+        "category": "Target-Date 2035",
+        "yearreturn": 18.86
+    },
+    {
+        "simbol": "FWOMX",
+        "status": "unselected",
+        "name": "Fidelity Women's Leadership Fund (FWOMX)",
+        "category": "Large Blend",
+        "yearreturn": 19.9
+    },
+    {
+        "simbol": "FFEZX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2035 Fund Institutional Premium Class (FFEZX)",
+        "category": "Target-Date 2035",
+        "yearreturn": 18.03
+    },
+    {
+        "simbol": "FIHFX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2035 Fund Investor Class (FIHFX)",
+        "category": "Target-Date 2035",
+        "yearreturn": 17.98
+    },
+    {
+        "simbol": "FASGX",
+        "status": "unselected",
+        "name": "Fidelity Asset Manager 70% (FASGX)",
+        "category": "Moderately Aggressive Allocation",
+        "yearreturn": 17.14
+    },
+    {
+        "simbol": "FMSDX",
+        "status": "unselected",
+        "name": "Fidelity Multi-Asset Income Fund (FMSDX)",
+        "category": "Moderately Conservative Allocation",
+        "yearreturn": 12.68
+    },
+    {
+        "simbol": "FHASX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Blend 2035 Fund (FHASX)",
+        "category": "Target-Date 2035",
+        "yearreturn": 18.28
+    },
+    {
+        "simbol": "FTIEX",
+        "status": "unselected",
+        "name": "Fidelity Total International Equity Fund (FTIEX)",
+        "category": "Foreign Large Blend",
+        "yearreturn": 19.42
+    },
+    {
+        "simbol": "FJSCX",
+        "status": "unselected",
+        "name": "Fidelity Japan Smaller Companies Fund (FJSCX)",
+        "category": "Japan Stock",
+        "yearreturn": 15.53
+    },
+    {
+        "simbol": "FZIPX",
+        "status": "unselected",
+        "name": "Fidelity ZERO Extended Market Index Fund (FZIPX)",
+        "category": "Small Blend",
+        "yearreturn": 17.75
+    },
+    {
+        "simbol": "FZILX",
+        "status": "unselected",
+        "name": "Fidelity ZERO International Index Fund (FZILX)",
+        "category": "Foreign Large Blend",
+        "yearreturn": 18.44
+    },
+    {
+        "simbol": "FSGGX",
+        "status": "unselected",
+        "name": "Fidelity Global ex U.S. Index Fund (FSGGX)",
+        "category": "Foreign Large Blend",
+        "yearreturn": 18.2
+    },
+    {
+        "simbol": "FIVFX",
+        "status": "unselected",
+        "name": "Fidelity International Capital Appreciation Fund (FIVFX)",
+        "category": "Foreign Large Growth",
+        "yearreturn": 24.93
+    },
+    {
+        "simbol": "FTCXX",
+        "status": "unselected",
+        "name": "Fidelity Investments Money Market Tax Exempt - Class I (FTCXX)",
+        "category": "Money Market-Tax-Free",
+        "yearreturn": 3.41
+    },
+    {
+        "simbol": "FSANX",
+        "status": "unselected",
+        "name": "Fidelity Asset Manager 60% (FSANX)",
+        "category": "Moderate Allocation",
+        "yearreturn": 15.79
+    },
+    {
+        "simbol": "FFEGX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2030 Fund Institutional Premium Class (FFEGX)",
+        "category": "Target-Date 2030",
+        "yearreturn": 16.2
+    },
+    {
+        "simbol": "FNKXX",
+        "status": "unselected",
+        "name": "Fidelity New York Municipal Money Market Fund - Institutional Class (FNKXX)",
+        "category": "Money Market-Tax-Free",
+        "yearreturn": 3.38
+    },
+    {
+        "simbol": "FFFEX",
+        "status": "unselected",
+        "name": "Fidelity Freedom 2030 Fund (FFFEX)",
+        "category": "Target-Date 2030",
+        "yearreturn": 16.82
+    },
+    {
+        "simbol": "FMNDX",
+        "status": "unselected",
+        "name": "Fidelity Conservative Income Municipal Bond Fund (FMNDX)",
+        "category": "Muni National Short",
+        "yearreturn": 4.12
+    },
+    {
+        "simbol": "FXIFX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2030 Fund Investor Class (FXIFX)",
+        "category": "Target-Date 2030",
+        "yearreturn": 16.15
+    },
+    {
+        "simbol": "FSKXX",
+        "status": "unselected",
+        "name": "Fidelity New Jersey Municipal Money Market Fund - Institutional Class (FSKXX)",
+        "category": "Money Market-Tax-Free",
+        "yearreturn": 3.3
+    },
+    {
+        "simbol": "FZEXX",
+        "status": "unselected",
+        "name": "Fidelity Tax-Exempt Money Market Fund Premium Class (FZEXX)",
+        "category": "Money Market-Tax-Free",
+        "yearreturn": 3.31
+    },
+    {
+        "simbol": "FTEXX",
+        "status": "unselected",
+        "name": "Fidelity Municipal Money Market Fund (FTEXX)",
+        "category": "Money Market-Tax-Free",
+        "yearreturn": 3.33
+    },
+    {
+        "simbol": "FSNXX",
+        "status": "unselected",
+        "name": "Fidelity New York Municipal Money Market Fund - Premium Class (FSNXX)",
+        "category": "Money Market-Tax-Free",
+        "yearreturn": 3.28
+    },
+    {
+        "simbol": "FMAXX",
+        "status": "unselected",
+        "name": "Fidelity Massachusetts Municipal Money Market Fund - Institutional Class (FMAXX)",
+        "category": "Money Market-Tax-Free",
+        "yearreturn": 3.19
+    },
+    {
+        "simbol": "FISMX",
+        "status": "unselected",
+        "name": "Fidelity International Small Cap Fund (FISMX)",
+        "category": "Foreign Small/Mid Blend",
+        "yearreturn": 16.18
+    },
+    {
+        "simbol": "FSJXX",
+        "status": "unselected",
+        "name": "Fidelity New Jersey Municipal Money Market Fund - Premium Class (FSJXX)",
+        "category": "Money Market-Tax-Free",
+        "yearreturn": 3.2
+    },
+    {
+        "simbol": "FMOXX",
+        "status": "unselected",
+        "name": "Fidelity Tax-Exempt Money Market Fund (FMOXX)",
+        "category": "Money Market-Tax-Free",
+        "yearreturn": 3.18
+    },
+    {
+        "simbol": "FSBXX",
+        "status": "unselected",
+        "name": "Fidelity California Municipal Money Market Fund - Institutional Class (FSBXX)",
+        "category": "Money Market-Tax-Free",
+        "yearreturn": 3.06
+    },
+    {
+        "simbol": "FMSXX",
+        "status": "unselected",
+        "name": "Fidelity Massachusetts Municipal Money Market Fund - Premium Class (FMSXX)",
+        "category": "Money Market-Tax-Free",
+        "yearreturn": 3.09
+    },
+    {
+        "simbol": "FSPXX",
+        "status": "unselected",
+        "name": "Fidelity California Municipal Money Market Fund - Premium Class (FSPXX)",
+        "category": "Money Market-Tax-Free",
+        "yearreturn": 2.96
+    },
+    {
+        "simbol": "FTIHX",
+        "status": "unselected",
+        "name": "Fidelity Total International Index Fund (FTIHX)",
+        "category": "Foreign Large Blend",
+        "yearreturn": 17.8
+    },
+    {
+        "simbol": "FASMX",
+        "status": "unselected",
+        "name": "Fidelity Asset Manager 50% (FASMX)",
+        "category": "Moderate Allocation",
+        "yearreturn": 14.4
+    },
+    {
+        "simbol": "FSAGX",
+        "status": "hotwatch",
+        "name": "Fidelity Select Gold Portfolio (FSAGX)",
+        "category": "Equity Precious Metals",
+        "yearreturn": 27.0
+    },
+    {
+        "simbol": "FHATX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Blend 2030 Fund (FHATX)",
+        "category": "Target-Date 2030",
+        "yearreturn": 16.41
+    },
+    {
+        "simbol": "FSCSX",
+        "status": "unselected",
+        "name": "Fidelity Select Software and IT Services Portfolio (FSCSX)",
+        "category": "Technology",
+        "yearreturn": 12.31
+    },
+    {
+        "simbol": "SPHIX",
+        "status": "unselected",
+        "name": "Fidelity High Income Fund (SPHIX)",
+        "category": "High Yield Bond",
+        "yearreturn": 12.81
+    },
+    {
+        "simbol": "FWRLX",
+        "status": "watchlist",
+        "name": "Fidelity Select Wireless Portfolio (FWRLX)",
+        "category": "Communications",
+        "yearreturn": 28.32
+    },
+    {
+        "simbol": "FOSFX",
+        "status": "unselected",
+        "name": "Fidelity Overseas Fund (FOSFX)",
+        "category": "Foreign Large Growth",
+        "yearreturn": 23.49
+    },
+    {
+        "simbol": "FFEDX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2025 Fund Institutional Premium Class (FFEDX)",
+        "category": "Target-Date 2025",
+        "yearreturn": 15.06
+    },
+    {
+        "simbol": "FFTWX",
+        "status": "unselected",
+        "name": "Fidelity Freedom 2025 Fund (FFTWX)",
+        "category": "Target-Date 2025",
+        "yearreturn": 15.65
+    },
+    {
+        "simbol": "FQIFX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2025 Fund Investor Class (FQIFX)",
+        "category": "Target-Date 2025",
+        "yearreturn": 15.08
+    },
+    {
+        "simbol": "FSHBX",
+        "status": "unselected",
+        "name": "Fidelity Short-Term Bond Fund (FSHBX)",
+        "category": "Short-Term Bond",
+        "yearreturn": 6.73
+    },
+    {
+        "simbol": "FFANX",
+        "status": "unselected",
+        "name": "Fidelity Asset Manager 40% (FFANX)",
+        "category": "Moderately Conservative Allocation",
+        "yearreturn": 12.98
+    },
+    {
+        "simbol": "FHIFX",
+        "status": "unselected",
+        "name": "Fidelity Focused High Income Fund (FHIFX)",
+        "category": "High Yield Bond",
+        "yearreturn": 10.86
+    },
+    {
+        "simbol": "FHAUX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Blend 2025 Fund (FHAUX)",
+        "category": "Target-Date 2025",
+        "yearreturn": 15.24
+    },
+    {
+        "simbol": "FRIFX",
+        "status": "unselected",
+        "name": "Fidelity Real Estate Income Fund (FRIFX)",
+        "category": "Moderate Allocation",
+        "yearreturn": 13.73
+    },
+    {
+        "simbol": "FIWTX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2020 Fund Institutional Premium Class (FIWTX)",
+        "category": "Target-Date 2020",
+        "yearreturn": 13.84
+    },
+    {
+        "simbol": "FIGFX",
+        "status": "unselected",
+        "name": "Fidelity International Growth Fund (FIGFX)",
+        "category": "Foreign Large Growth",
+        "yearreturn": 20.17
+    },
+    {
+        "simbol": "FSLCX",
+        "status": "unselected",
+        "name": "Fidelity Small Cap Stock Fund (FSLCX)",
+        "category": "Small Blend",
+        "yearreturn": 20.55
+    },
+    {
+        "simbol": "FFFDX",
+        "status": "unselected",
+        "name": "Fidelity Freedom 2020 Fund (FFFDX)",
+        "category": "Target-Date 2020",
+        "yearreturn": 14.34
+    },
+    {
+        "simbol": "FPIFX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2020 Fund Investor Class (FPIFX)",
+        "category": "Target-Date 2020",
+        "yearreturn": 13.78
+    },
+    {
+        "simbol": "FJRLX",
+        "status": "unselected",
+        "name": "Fidelity Limited Term Bond Fund (FJRLX)",
+        "category": "Short-Term Bond",
+        "yearreturn": 7.8
+    },
+    {
+        "simbol": "FTANX",
+        "status": "unselected",
+        "name": "Fidelity Asset Manager 30% (FTANX)",
+        "category": "Moderately Conservative Allocation",
+        "yearreturn": 11.43
+    },
+    {
+        "simbol": "FJPNX",
+        "status": "unselected",
+        "name": "Fidelity Japan Fund (FJPNX)",
+        "category": "Japan Stock",
+        "yearreturn": 20.7
+    },
+    {
+        "simbol": "FBMPX",
+        "status": "watchlist",
+        "name": "Fidelity Select Communication Services Portfolio (FBMPX)",
+        "category": "Communications",
+        "yearreturn": 28.59
+    },
+    {
+        "simbol": "FSCPX",
+        "status": "unselected",
+        "name": "Fidelity Select Consumer Discretionary Portfolio (FSCPX)",
+        "category": "Consumer Cyclical",
+        "yearreturn": 15.44
+    },
+    {
+        "simbol": "FIWFX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2015 Fund Institutional Premium Class (FIWFX)",
+        "category": "Target-Date 2015",
+        "yearreturn": 12.36
+    },
+    {
+        "simbol": "FLIFX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2015 Fund Investor Class (FLIFX)",
+        "category": "Target-Date 2015",
+        "yearreturn": 12.37
+    },
+    {
+        "simbol": "FASIX",
+        "status": "unselected",
+        "name": "Fidelity Asset Manager 20% (FASIX)",
+        "category": "Conservative Allocation",
+        "yearreturn": 9.88
+    },
+    {
+        "simbol": "FADMX",
+        "status": "unselected",
+        "name": "Fidelity Strategic Income Fund (FADMX)",
+        "category": "Multisector Bond",
+        "yearreturn": 10.57
+    },
+    {
+        "simbol": "FFVFX",
+        "status": "unselected",
+        "name": "Fidelity Freedom 2015 Fund (FFVFX)",
+        "category": "Target-Date 2015",
+        "yearreturn": 12.78
+    },
+    {
+        "simbol": "FMRAX",
+        "status": "unselected",
+        "name": "#VALUE!",
+        "category": "Target-Date 2030",
+        "yearreturn": 13.85
+    },
+    {
+        "simbol": "FDIVX",
+        "status": "unselected",
+        "name": "Fidelity Diversified International Fund (FDIVX)",
+        "category": "Foreign Large Growth",
+        "yearreturn": 20.45
+    },
+    {
+        "simbol": "FARMX",
+        "status": "unselected",
+        "name": "Fidelity Agricultural Productivity Fund (FARMX)",
+        "category": "Natural Resources",
+        "yearreturn": -5.25
+    },
+    {
+        "simbol": "FNIDX",
+        "status": "unselected",
+        "name": "Fidelity International Sustainability Index Fund (FNIDX)",
+        "category": "Foreign Large Blend",
+        "yearreturn": 18.65
+    },
+    {
+        "simbol": "FHAVX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Blend 2020 Fund (FHAVX)",
+        "category": "Target-Date 2020",
+        "yearreturn": 13.89
+    },
+    {
+        "simbol": "FSPHX",
+        "status": "unselected",
+        "name": "Fidelity Select Health Care Portfolio (FSPHX)",
+        "category": "Health",
+        "yearreturn": 17.51
+    },
+    {
+        "simbol": "FSSNX",
+        "status": "unselected",
+        "name": "Fidelity Small Cap Index Fund (FSSNX)",
+        "category": "Small Blend",
+        "yearreturn": 18.55
+    },
+    {
+        "simbol": "FFWTX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2010 Fund Institutional Premium Class (FFWTX)",
+        "category": "Target-Date 2000-2010",
+        "yearreturn": 10.95
+    },
+    {
+        "simbol": "FEDDX",
+        "status": "unselected",
+        "name": "Fidelity Emerging Markets Discovery Fund (FEDDX)",
+        "category": "Diversified Emerging Mkts",
+        "yearreturn": 11.61
+    },
+    {
+        "simbol": "FIXRX",
+        "status": "unselected",
+        "name": "#VALUE!",
+        "category": "Target-Date 2025",
+        "yearreturn": 13.1
+    },
+    {
+        "simbol": "FKIFX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2010 Fund Investor Class (FKIFX)",
+        "category": "Target-Date 2000-2010",
+        "yearreturn": 10.9
+    },
+    {
+        "simbol": "FDEGX",
+        "status": "unselected",
+        "name": "Fidelity Growth Strategies Fund (FDEGX)",
+        "category": "Mid-Cap Growth",
+        "yearreturn": 20.51
+    },
+    {
+        "simbol": "FFGZX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index Income Fund Institutional Premium Class (FFGZX)",
+        "category": "Target-Date Retirement",
+        "yearreturn": 9.73
+    },
+    {
+        "simbol": "FSRPX",
+        "status": "unselected",
+        "name": "Fidelity Select Retailing Portfolio (FSRPX)",
+        "category": "Consumer Cyclical",
+        "yearreturn": 20.99
+    },
+    {
+        "simbol": "FNSOX",
+        "status": "unselected",
+        "name": "Fidelity Short-Term Bond Index Fund (FNSOX)",
+        "category": "Short-Term Bond",
+        "yearreturn": 6.68
+    },
+    {
+        "simbol": "FIKFX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index Income Fund Investor Class (FIKFX)",
+        "category": "Target-Date Retirement",
+        "yearreturn": 9.67
+    },
+    {
+        "simbol": "FEOPX",
+        "status": "unselected",
+        "name": "Fidelity Enduring Opportunities Fund (FEOPX)",
+        "category": "Global Large-Stock Growth",
+        "yearreturn": 22.29
+    },
+    {
+        "simbol": "FHAWX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Blend 2015 Fund (FHAWX)",
+        "category": "Target-Date 2015",
+        "yearreturn": 12.46
+    },
+    {
+        "simbol": "FFFCX",
+        "status": "unselected",
+        "name": "Fidelity Freedom 2010 Fund (FFFCX)",
+        "category": "Target-Date 2000-2010",
+        "yearreturn": 11.13
+    },
+    {
+        "simbol": "FIRVX",
+        "status": "unselected",
+        "name": "#VALUE!",
+        "category": "Target-Date 2020",
+        "yearreturn": 12.01
+    },
+    {
+        "simbol": "FCVSX",
+        "status": "unselected",
+        "name": "Fidelity Convertible Securities Fund (FCVSX)",
+        "category": "Convertibles",
+        "yearreturn": 10.28
+    },
+    {
+        "simbol": "FSTFX",
+        "status": "unselected",
+        "name": "Fidelity Limited Term Municipal Income Fund (FSTFX)",
+        "category": "Muni National Short",
+        "yearreturn": 4.96
+    },
+    {
+        "simbol": "FRESX",
+        "status": "unselected",
+        "name": "Fidelity Real Estate Investment Portfolio (FRESX)",
+        "category": "Real Estate",
+        "yearreturn": 20.58
+    },
+    {
+        "simbol": "FCPGX",
+        "status": "watchlist",
+        "name": "Fidelity Small Cap Growth Fund (FCPGX)",
+        "category": "Small Growth",
+        "yearreturn": 26.68
+    },
+    {
+        "simbol": "FFFAX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Income Fund (FFFAX)",
+        "category": "Target-Date Retirement",
+        "yearreturn": 9.8
+    },
+    {
+        "simbol": "FUMBX",
+        "status": "unselected",
+        "name": "Fidelity Short-Term Treasury Bond Index Fund (FUMBX)",
+        "category": "Short Government",
+        "yearreturn": 6.22
+    },
+    {
+        "simbol": "FIRSX",
+        "status": "unselected",
+        "name": "#VALUE!",
+        "category": "Target-Date 2015",
+        "yearreturn": 10.96
+    },
+    {
+        "simbol": "FNMIX",
+        "status": "unselected",
+        "name": "Fidelity New Markets Income Fund (FNMIX)",
+        "category": "Emerging Markets Bond",
+        "yearreturn": 16.09
+    },
+    {
+        "simbol": "FHAYX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Blend 2010 Fund (FHAYX)",
+        "category": "Target-Date 2000-2010",
+        "yearreturn": 10.86
+    },
+    {
+        "simbol": "FHLKX",
+        "status": "unselected",
+        "name": "Fidelity Health Savings Fund Class K (FHLKX)",
+        "category": "Moderately Conservative Allocation",
+        "yearreturn": 11.76
+    },
+    {
+        "simbol": "FCSTX",
+        "status": "unselected",
+        "name": "Fidelity California Limited Term Tax-Free Bond Fund (FCSTX)",
+        "category": "Muni Single State Short",
+        "yearreturn": 4.55
+    },
+    {
+        "simbol": "FIRMX",
+        "status": "unselected",
+        "name": "#VALUE!",
+        "category": "Target-Date Retirement",
+        "yearreturn": 9.63
+    },
+    {
+        "simbol": "FLTMX",
+        "status": "unselected",
+        "name": "Fidelity Intermediate Municipal Income Fund (FLTMX)",
+        "category": "Muni National Interm",
+        "yearreturn": 5.53
+    },
+    {
+        "simbol": "FHBZX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Blend Income Fund (FHBZX)",
+        "category": "Target-Date Retirement",
+        "yearreturn": 9.51
+    },
+    {
+        "simbol": "FIRQX",
+        "status": "unselected",
+        "name": "#VALUE!",
+        "category": "Target-Date 2000-2010",
+        "yearreturn": 9.89
+    },
+    {
+        "simbol": "FHLSX",
+        "status": "unselected",
+        "name": "Fidelity Health Savings Fund (FHLSX)",
+        "category": "Moderately Conservative Allocation",
+        "yearreturn": 11.63
+    },
+    {
+        "simbol": "FHSNX",
+        "status": "unselected",
+        "name": "Fidelity Health Savings Index Fund (FHSNX)",
+        "category": "Moderately Conservative Allocation",
+        "yearreturn": 11.86
+    },
+    {
+        "simbol": "FIGRX",
+        "status": "watchlist",
+        "name": "Fidelity International Discovery Fund (FIGRX)",
+        "category": "Foreign Large Growth",
+        "yearreturn": 25.16
+    },
+    {
+        "simbol": "FFXSX",
+        "status": "unselected",
+        "name": "Fidelity Limited Term Government Fund (FFXSX)",
+        "category": "Short Government",
+        "yearreturn": 5.93
+    },
+    {
+        "simbol": "FNJHX",
+        "status": "unselected",
+        "name": "Fidelity New Jersey Municipal Income Fund (FNJHX)",
+        "category": "Muni New Jersey",
+        "yearreturn": 6.83
+    },
+    {
+        "simbol": "FIEUX",
+        "status": "unselected",
+        "name": "Fidelity Europe Fund (FIEUX)",
+        "category": "Europe Stock",
+        "yearreturn": 22.05
+    },
+    {
+        "simbol": "FCTFX",
+        "status": "unselected",
+        "name": "Fidelity California Municipal Income Fund (FCTFX)",
+        "category": "Muni California Long",
+        "yearreturn": 6.59
+    },
+    {
+        "simbol": "FTHRX",
+        "status": "unselected",
+        "name": "Fidelity Intermediate Bond Fund (FTHRX)",
+        "category": "Intermediate Core Bond",
+        "yearreturn": 7.29
+    },
+    {
+        "simbol": "FSRNX",
+        "status": "unselected",
+        "name": "Fidelity Real Estate Index Fund (FSRNX)",
+        "category": "Real Estate",
+        "yearreturn": 20.37
+    },
+    {
+        "simbol": "FMDGX",
+        "status": "unselected",
+        "name": "Fidelity Mid Cap Growth Index Fund (FMDGX)",
+        "category": "Mid-Cap Growth",
+        "yearreturn": 19.03
+    },
+    {
+        "simbol": "FSAZX",
+        "status": "unselected",
+        "name": "Fidelity Arizona Municipal Income Fund (FSAZX)",
+        "category": "Muni Single State Long",
+        "yearreturn": 6.78
+    },
+    {
+        "simbol": "FICNX",
+        "status": "unselected",
+        "name": "Fidelity Connecticut Municipal Income Fund (FICNX)",
+        "category": "Muni Single State Long",
+        "yearreturn": 6.13
+    },
+    {
+        "simbol": "FIMIX",
+        "status": "unselected",
+        "name": "Fidelity Minnesota Municipal Income Fund (FIMIX)",
+        "category": "Muni Minnesota",
+        "yearreturn": 5.73
+    },
+    {
+        "simbol": "FTABX",
+        "status": "unselected",
+        "name": "Fidelity Tax-Free Bond Fund (FTABX)",
+        "category": "Muni National Long",
+        "yearreturn": 6.86
+    },
+    {
+        "simbol": "FOHFX",
+        "status": "unselected",
+        "name": "Fidelity Ohio Municipal Income Fund (FOHFX)",
+        "category": "Muni Ohio",
+        "yearreturn": 6.32
+    },
+    {
+        "simbol": "FMHTX",
+        "status": "unselected",
+        "name": "Fidelity Michigan Municipal Income Fund (FMHTX)",
+        "category": "Muni Single State Long",
+        "yearreturn": 6.66
+    },
+    {
+        "simbol": "FTFMX",
+        "status": "unselected",
+        "name": "Fidelity New York Municipal Income Fund (FTFMX)",
+        "category": "Muni New York Long",
+        "yearreturn": 6.86
+    },
+    {
+        "simbol": "FSMAX",
+        "status": "unselected",
+        "name": "Fidelity Extended Market Index Fund (FSMAX)",
+        "category": "Mid-Cap Blend",
+        "yearreturn": 20.46
+    },
+    {
+        "simbol": "FHIGX",
+        "status": "unselected",
+        "name": "Fidelity Municipal Income Fund (FHIGX)",
+        "category": "Muni National Long",
+        "yearreturn": 6.82
+    },
+    {
+        "simbol": "SMDMX",
+        "status": "unselected",
+        "name": "Fidelity Maryland Municipal Income Fund (SMDMX)",
+        "category": "Muni Single State Long",
+        "yearreturn": 6.22
+    },
+    {
+        "simbol": "FDMMX",
+        "status": "unselected",
+        "name": "Fidelity Massachusetts Municipal Income Fund (FDMMX)",
+        "category": "Muni Massachusetts",
+        "yearreturn": 6.12
+    },
+    {
+        "simbol": "FPXTX",
+        "status": "unselected",
+        "name": "Fidelity Pennsylvania Municipal Income Fund (FPXTX)",
+        "category": "Muni Pennsylvania",
+        "yearreturn": 6.73
+    },
+    {
+        "simbol": "FMBIX",
+        "status": "unselected",
+        "name": "Fidelity Municipal Bond Index Fund (FMBIX)",
+        "category": "Muni National Interm",
+        "yearreturn": 5.94
+    },
+    {
+        "simbol": "FBIIX",
+        "status": "unselected",
+        "name": "Fidelity International Bond Index Fund (FBIIX)",
+        "category": "Global Bond-USD Hedged",
+        "yearreturn": 6.64
+    },
+    {
+        "simbol": "FBIOX",
+        "status": "watchlist",
+        "name": "Fidelity Select Biotechnology Portfolio (FBIOX)",
+        "category": "Health",
+        "yearreturn": 30.99
+    },
+    {
+        "simbol": "FSTGX",
+        "status": "unselected",
+        "name": "Fidelity Intermediate Government Income Fund (FSTGX)",
+        "category": "Intermediate Government",
+        "yearreturn": 5.94
+    },
+    {
+        "simbol": "FTBFX",
+        "status": "unselected",
+        "name": "Fidelity Total Bond Fund (FTBFX)",
+        "category": "Intermediate Core-Plus Bond",
+        "yearreturn": 8.52
+    },
+    {
+        "simbol": "FIPDX",
+        "status": "unselected",
+        "name": "Fidelity Inflation-Protected Bond Index Fund (FIPDX)",
+        "category": "Inflation-Protected Bond",
+        "yearreturn": 6.12
+    },
+    {
+        "simbol": "FPBFX",
+        "status": "unselected",
+        "name": "Fidelity Pacific Basin Fund (FPBFX)",
+        "category": "Diversified Pacific/Asia",
+        "yearreturn": 17.1
+    },
+    {
+        "simbol": "FGMNX",
+        "status": "unselected",
+        "name": "Fidelity GNMA Fund (FGMNX)",
+        "category": "Intermediate Government",
+        "yearreturn": 7.37
+    },
+    {
+        "simbol": "FSAVX",
+        "status": "unselected",
+        "name": "Fidelity Select Automotive Portfolio (FSAVX)",
+        "category": "Consumer Cyclical",
+        "yearreturn": 1.56
+    },
+    {
+        "simbol": "FBNDX",
+        "status": "unselected",
+        "name": "Fidelity Investment Grade Bond Fund (FBNDX)",
+        "category": "Intermediate Core Bond",
+        "yearreturn": 7.83
+    },
+    {
+        "simbol": "FECGX",
+        "status": "unselected",
+        "name": "Fidelity Small Cap Growth Index Fund (FECGX)",
+        "category": "Small Growth",
+        "yearreturn": 17.8
+    },
+    {
+        "simbol": "FMSFX",
+        "status": "unselected",
+        "name": "Fidelity Mortgage Securities Fund (FMSFX)",
+        "category": "Intermediate Government",
+        "yearreturn": 7.7
+    },
+    {
+        "simbol": "FCBFX",
+        "status": "unselected",
+        "name": "Fidelity Corporate Bond Fund (FCBFX)",
+        "category": "Corporate Bond",
+        "yearreturn": 9.89
+    },
+    {
+        "simbol": "FXNAX",
+        "status": "unselected",
+        "name": "Fidelity U.S. Bond Index Fund (FXNAX)",
+        "category": "Intermediate Core Bond",
+        "yearreturn": 7.21
+    },
+    {
+        "simbol": "FNDSX",
+        "status": "unselected",
+        "name": "Fidelity Sustainability Bond Index Fund (FNDSX)",
+        "category": "Intermediate Core Bond",
+        "yearreturn": 7.06
+    },
+    {
+        "simbol": "FFEBX",
+        "status": "unselected",
+        "name": "Fidelity Environmental Bond Fund (FFEBX)",
+        "category": "Intermediate Core-Plus Bond",
+        "yearreturn": 7.57
+    },
+    {
+        "simbol": "FGOVX",
+        "status": "unselected",
+        "name": "Fidelity Government Income Fund (FGOVX)",
+        "category": "Intermediate Government",
+        "yearreturn": 6.36
+    },
+    {
+        "simbol": "FUAMX",
+        "status": "unselected",
+        "name": "Fidelity Intermediate Treasury Bond Index Fund (FUAMX)",
+        "category": "Intermediate Government",
+        "yearreturn": 6.56
+    },
+    {
+        "simbol": "FSTCX",
+        "status": "unselected",
+        "name": "Fidelity Select Telecommunications Portfolio (FSTCX)",
+        "category": "Communications",
+        "yearreturn": 20.55
+    },
+    {
+        "simbol": "FGBFX",
+        "status": "unselected",
+        "name": "Fidelity Global Credit Fund (FGBFX)",
+        "category": "Global Bond-USD Hedged",
+        "yearreturn": 13.97
+    },
+    {
+        "simbol": "FPADX",
+        "status": "unselected",
+        "name": "Fidelity Emerging Markets Index Fund (FPADX)",
+        "category": "Diversified Emerging Mkts",
+        "yearreturn": 14.0
+    },
+    {
+        "simbol": "FSCOX",
+        "status": "unselected",
+        "name": "Fidelity International Small Cap Opportunities Fund (FSCOX)",
+        "category": "Foreign Small/Mid Growth",
+        "yearreturn": 18.57
+    },
+    {
+        "simbol": "FEMKX",
+        "status": "unselected",
+        "name": "Fidelity Emerging Markets Fund (FEMKX)",
+        "category": "Diversified Emerging Mkts",
+        "yearreturn": 14.67
+    },
+    {
+        "simbol": "FSVLX",
+        "status": "unselected",
+        "name": "Fidelity Select FinTech Portfolio (FSVLX)",
+        "category": "Financial",
+        "yearreturn": 17.06
+    },
+    {
+        "simbol": "FBSOX",
+        "status": "unselected",
+        "name": "Fidelity Select Enterprise Technology Services Portfolio (FBSOX)",
+        "category": "Technology",
+        "yearreturn": 12.33
+    },
+    {
+        "simbol": "FSMEX",
+        "status": "unselected",
+        "name": "Fidelity Select Medical Technology and Devices Portfolio (FSMEX)",
+        "category": "Health",
+        "yearreturn": 9.77
+    },
+    {
+        "simbol": "FHKCX",
+        "status": "unselected",
+        "name": "Fidelity China Region Fund (FHKCX)",
+        "category": "China Region",
+        "yearreturn": 14.39
+    },
+    {
+        "simbol": "FSEAX",
+        "status": "unselected",
+        "name": "Fidelity Emerging Asia Fund (FSEAX)",
+        "category": "Pacific/Asia ex-Japan Stk",
+        "yearreturn": 18.63
+    },
+    {
+        "simbol": "FIREX",
+        "status": "unselected",
+        "name": "Fidelity International Real Estate Fund (FIREX)",
+        "category": "Global Real Estate",
+        "yearreturn": 7.67
+    },
+    {
+        "simbol": "FNBGX",
+        "status": "unselected",
+        "name": "Fidelity Long-Term Treasury Bond Index Fund (FNBGX)",
+        "category": "Long Government",
+        "yearreturn": 4.78
+    },
+    {
+        "simbol": "FRAGX",
+        "status": "unselected",
+        "name": "#VALUE!",
+        "category": "Aggressive Allocation",
+        "yearreturn": 21.16
+    },
+    {
+        "simbol": "FRYBX",
+        "status": "unselected",
+        "name": "#VALUE!",
+        "category": "Moderate Allocation",
+        "yearreturn": 15.27
+    },
+    {
+        "simbol": "FRBQX",
+        "status": "unselected",
+        "name": "Fidelity Flex Freedom Blend 2070 Fund (FRBQX)",
+        "category": "Target-Date 2065+",
+        "yearreturn": 0.0
+    },
+    {
+        "simbol": "FRBDX",
+        "status": "unselected",
+        "name": "Fidelity Freedom 2070 Fund (FRBDX)",
+        "category": "Target-Date 2065+",
+        "yearreturn": 0.0
+    },
+    {
+        "simbol": "FRBYX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Blend 2070 Fund (FRBYX)",
+        "category": "Target-Date 2065+",
+        "yearreturn": 0.0
+    },
+    {
+        "simbol": "FRBUX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2070 Fund - Institutional Premium Class (FRBUX)",
+        "category": "Target-Date 2065+",
+        "yearreturn": 0.0
+    },
+    {
+        "simbol": "FRBVX",
+        "status": "unselected",
+        "name": "Fidelity Freedom Index 2070 Fund - Investor Class (FRBVX)",
+        "category": "Target-Date 2065+",
+        "yearreturn": 0.0
+    },
+    {
+        "simbol": "FMRTX",
+        "status": "unselected",
+        "name": "#VALUE!",
+        "category": "Target-Date 2035",
+        "yearreturn": 14.75
+    },
+    {
+        "simbol": "FABXX",
+        "status": "unselected",
+        "name": "Fidelity California Municipal Money Market Fund (FABXX)",
+        "category": "Money Market-Tax-Free",
+        "yearreturn": 2.83
+    },
+    {
+        "simbol": "FEMNX",
+        "status": "unselected",
+        "name": "Fidelity Equity Market Neutral Fund (FEMNX)",
+        "category": "Equity Market Neutral",
+        "yearreturn": 0.0
+    },
+    {
+        "simbol": "FAPHX",
+        "status": "unselected",
+        "name": "Fidelity Healthy Future Fund (FAPHX)",
+        "category": "Large Growth",
+        "yearreturn": 21.87
+    },
+    {
+        "simbol": "FEQHX",
+        "status": "unselected",
+        "name": "Fidelity Hedged Equity Fund (FEQHX)",
+        "category": "Options Trading",
+        "yearreturn": 22.11
+    },
+    {
+        "simbol": "FAQAX",
+        "status": "unselected",
+        "name": "Fidelity Macro Opportunities Fund (FAQAX)",
+        "category": "Macro Trading",
+        "yearreturn": 0.34
+    },
+    {
+        "simbol": "FAUXX",
+        "status": "unselected",
+        "name": "Fidelity Massachusetts Municipal Money Market Fund (FAUXX)",
+        "category": "Money Market-Tax-Free",
+        "yearreturn": 2.96
+    },
+    {
+        "simbol": "FMSMX",
+        "status": "unselected",
+        "name": "Fidelity Multi-Strategy Credit Fund Class I (FMSMX)",
+        "category": "--",
+        "yearreturn": 9.38
+    },
+    {
+        "simbol": "FMBAX",
+        "status": "unselected",
+        "name": "Fidelity Municipal Core Plus Bond Fund (FMBAX)",
+        "category": "Muni National Interm",
+        "yearreturn": 7.07
+    },
+    {
+        "simbol": "FAYXX",
+        "status": "unselected",
+        "name": "Fidelity New Jersey Municipal Money Market Fund (FAYXX)",
+        "category": "Money Market-Tax-Free",
+        "yearreturn": 3.07
+    },
+    {
+        "simbol": "FAWXX",
+        "status": "unselected",
+        "name": "Fidelity New York Municipal Money Market Fund (FAWXX)",
+        "category": "Money Market-Tax-Free",
+        "yearreturn": 3.15
+    },
+    {
+        "simbol": "FAPSX",
+        "status": "unselected",
+        "name": "Fidelity Risk Parity Fund (FAPSX)",
+        "category": "Large Blend",
+        "yearreturn": 13.83
+    },
+    {
+        "simbol": "FIAEX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable Core Plus Bond Fund (FIAEX)",
+        "category": "Intermediate Core-Plus Bond",
+        "yearreturn": 7.63
+    },
+    {
+        "simbol": "FSYJX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable Emerging Markets Equity Fund (FSYJX)",
+        "category": "Diversified Emerging Mkts",
+        "yearreturn": 14.88
+    },
+    {
+        "simbol": "FSIKX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable Intermediate Municipal Income Fund (FSIKX)",
+        "category": "Muni National Interm",
+        "yearreturn": 6.43
+    },
+    {
+        "simbol": "FSYRX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable International Equity Fund (FSYRX)",
+        "category": "Foreign Large Blend",
+        "yearreturn": 23.16
+    },
+    {
+        "simbol": "FAPGX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable Low Duration Bond Fund (FAPGX)",
+        "category": "Ultrashort Bond",
+        "yearreturn": 5.79
+    },
+    {
+        "simbol": "FYMRX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable Multi-Asset Fund (FYMRX)",
+        "category": "Moderate Allocation",
+        "yearreturn": 18.65
+    },
+    {
+        "simbol": "FSUYX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable Target Date 2010 Fund (FSUYX)",
+        "category": "Target-Date 2000-2010",
+        "yearreturn": 10.7
+    },
+    {
+        "simbol": "FSVNX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable Target Date 2015 Fund (FSVNX)",
+        "category": "Target-Date 2015",
+        "yearreturn": 12.19
+    },
+    {
+        "simbol": "FSWDX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable Target Date 2020 Fund (FSWDX)",
+        "category": "Target-Date 2020",
+        "yearreturn": 13.59
+    },
+    {
+        "simbol": "FSWOX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable Target Date 2025 Fund (FSWOX)",
+        "category": "Target-Date 2025",
+        "yearreturn": 14.82
+    },
+    {
+        "simbol": "FSXAX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable Target Date 2030 Fund (FSXAX)",
+        "category": "Target-Date 2030",
+        "yearreturn": 15.97
+    },
+    {
+        "simbol": "FSXKX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable Target Date 2035 Fund (FSXKX)",
+        "category": "Target-Date 2035",
+        "yearreturn": 17.78
+    },
+    {
+        "simbol": "FSXVX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable Target Date 2040 Fund (FSXVX)",
+        "category": "Target-Date 2040",
+        "yearreturn": 20.15
+    },
+    {
+        "simbol": "FSYHX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable Target Date 2045 Fund (FSYHX)",
+        "category": "Target-Date 2045",
+        "yearreturn": 20.9
+    },
+    {
+        "simbol": "FSYWX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable Target Date 2050 Fund (FSYWX)",
+        "category": "Target-Date 2050",
+        "yearreturn": 20.98
+    },
+    {
+        "simbol": "FSZHX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable Target Date 2055 Fund (FSZHX)",
+        "category": "Target-Date 2055",
+        "yearreturn": 21.0
+    },
+    {
+        "simbol": "FSZSX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable Target Date 2060 Fund (FSZSX)",
+        "category": "Target-Date 2060",
+        "yearreturn": 21.04
+    },
+    {
+        "simbol": "FTGPX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable Target Date 2065 Fund (FTGPX)",
+        "category": "Target-Date 2065+",
+        "yearreturn": 21.0
+    },
+    {
+        "simbol": "FRCQX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable Target Date 2070 Fund (FRCQX)",
+        "category": "Target-Date 2065+",
+        "yearreturn": 0.0
+    },
+    {
+        "simbol": "FSUDX",
+        "status": "unselected",
+        "name": "Fidelity Sustainable Target Date Income Fund (FSUDX)",
+        "category": "Target-Date Retirement",
+        "yearreturn": 9.33
+    },
+    {
+        "simbol": "FBAGX",
+        "status": "unselected",
+        "name": "Fidelity Tactical Bond Fund (FBAGX)",
+        "category": "Multisector Bond",
+        "yearreturn": 7.86
+    },
+    {
+        "simbol": "FRGAX",
+        "status": "unselected",
+        "name": "Growth Allocation Fund (FRGAX)",
+        "category": "Moderately Aggressive Allocation",
+        "yearreturn": 18.59
+    },
+    {
+        "simbol": "FMWIX",
+        "status": "unselected",
+        "name": "Moderate with Income Allocation Fund (FMWIX)",
+        "category": "Moderately Conservative Allocation",
+        "yearreturn": 11.89
+    }
+]

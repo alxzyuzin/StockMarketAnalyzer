@@ -4,6 +4,13 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'HvDTrial_Brandon_Grotesque_regular'; 
+    src: url("/static/fonts/brandon_grotesque/HvDTrial_Brandon_Grotesque_regular.otf") format("opentype");
+    font-style: normal;
+}
+
+
 
 html { 
 	visibility:hidden; 
@@ -13,7 +20,8 @@ body
 {
     color: #566787;background-color:rgb(68, 68, 68);
     /*font-family: "Varela Round", sans-serif;*/    
-	font-family: "HvDTrial_Brandon_Grotesque_light";
+	font-family: "HvDTrial_Brandon_Grotesque_regular";
+    font-size: large;
 	
 }
 

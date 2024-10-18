@@ -8,7 +8,7 @@ from app import app
 # defined in a package app
 
 from app.models import db
-from app.username import login
+from app.userlogin import login
 
 
 # Link 'db' instance to our application
@@ -19,12 +19,6 @@ login.init_app(app)
 # the unauthenticated users will be redirected
 # This is login page only
 login.login_view = 'login'
-
-###########################################
-# Uncomment next line if application start first time
-#from app.initdatabase import dbinit
-#dbinit()
-###########################################
 
 
 if __name__ == "__main__":
