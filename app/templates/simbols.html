@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div class = "container-fluid">
+    <div id = "main-row" class = "row">
+        <div class = "col-sm-2 left-column">
+            <div class = "row">
+                <input id = "simbol-search" type="text" class = "form-control search-simbol-input" 
+                    placeholder="Type simbol">
+            </div>
+            <div class = "row">
+                <ul id = "list-of-simbols" class = "simbols-list">
+                    {% for simbol in simbols %}
+                    <li>
+                        <button type="button" class="btn  btn-secondary shadow-none simbol-button">
+                            {{simbol.simbol}}
+                        </button>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class = "col-sm-10 right-column">
+            <button type="button" class="btn btn-primary simbol-button">
+                RIGHT
+            </button>
+        </div>
+    </div>
+</div>
+ <!--
+
+-->
+<script>
+    // Ajust size of images to inner browser window.
+    const MAIN_AREA_AJUSTMENT = 105
+    window.onload = function()
+    {
+        main_row_height = window.innerHeight - MAIN_AREA_AJUSTMENT
+        list_of_simbols_height = main_row_height - 40
+        $("#main-row").css("height", main_row_height)
+        $("#list-of-simbols").css("height", list_of_simbols_height)
+    }
+       
+    var timer_id;
+    window.onresize = function()
+    {
+        clearTimeout(timer_id);
+        timer_id = setTimeout(function() 
+        {
+            main_row_height = window.innerHeight - MAIN_AREA_AJUSTMENT
+            list_of_simbols_height = main_row_height - 40
+            $("#main-row").css("height", main_row_height)
+            $("#list-of-simbols").css("height", list_of_simbols_height)
+        }, 150);
+    };
+
+    const search_smb = document.getElementById('simbol-search');
+      
+    search_smb.addEventListener('input', function(event)
+    {
+             simbols_list = document.getElementById('list-of-simbols');
+            items = simbols_list.getElementsByTagName("button")
+            // Convert the HTMLCollection to an array and log each item
+            Array.from(items).forEach(item => {
+                button_text = item.textContent.trim()
+                if (button_text.substring(0, event.target.value.length) == event.target.value.toUpperCase())
+                {
+                    item.scrollIntoView({ block: 'end', behavior: 'smooth' });
+                    return
+                }
+            });
+    })
+        
+</script>
+
+{% endblock %}
