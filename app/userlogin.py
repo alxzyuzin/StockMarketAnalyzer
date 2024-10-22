@@ -1,6 +1,8 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, LoginManager, current_user
 
+from app.models import db, User
+
 login = LoginManager()
 
 def currentusername():
@@ -11,5 +13,5 @@ def currentusername():
     
 @login.user_loader
 def load_user(id):
-    #return UserModel.query.get(int(id))
-    return "username"
+    return User.query.get(str(id))
+   

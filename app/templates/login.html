@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+<div id="LoginDialog" class = "dialog">
+    <div class = "container"  style="width:50%; max-width:300px">
+    <form class = "base-form" action="/login" method="POST">
+        <h4>Login</h4>   
+        <div class = "container">
+            <div class = "row" >             
+                <input type="text" class="form-control col-sm" id="inputUserName" 
+                name="inputUserName" placeholder="User name" required>
+            
+            </div>
+            <div class = "row"  style = "max-width: 80;">
+            <input type="password" class="form-control  col-sm" id="inputPassword"
+                name="inputPassword" placeholder="Password" required>
+               
+            </div>
+        </div>
+        <div class="base-footer">
+            <button id="btnCancel" class="btn btn-submit btn-outline-secondary" 
+                        type="reset">Cancel</button>
+            
+            <button id="btnSubmit" type="submit" class="btn btn-submit btn-outline-secondary" >Login</button>
+            <div class = "feedback">&nbsp{{loginRes}}</div> 
+        </div>
+    </form>
+</div>
+</div>
+{% endblock %}
