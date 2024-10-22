@@ -62,7 +62,7 @@ footer
     position:fixed;
     bottom: 0;
     width:100%;
-    height: 45px;
+    height: 35px;
     background-color:rgb(33, 37, 41);
     text-align: center;
     padding-top: 5px;
@@ -134,7 +134,8 @@ footer
 
 }
 
-.manage-simbol-button
+.simbol-management-buton
 {
     font-size: small;
+    text-wrap: nowrap ;
 }

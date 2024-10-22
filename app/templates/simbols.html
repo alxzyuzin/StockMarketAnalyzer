@@ -11,19 +11,30 @@
             <div class = "row">
                 <ul id = "list-of-simbols" class = "simbols-list">
                     {% for simbol in simbols %}
-                    <li>
+                    
                         <button type="button" class="btn  btn-secondary shadow-none simbol-button">
                             {{simbol.simbol}}
                         </button>
-                    </li>
+                    
                     {% endfor %}
                 </ul>
             </div>
         </div>
         <div class = "col-sm-10 right-column">
-            <button type="button" class="btn btn-primary simbol-button">
-                RIGHT
-            </button>
+            <div class = "row">
+                &nbsp
+            </div>
+            <div class = "row">
+                <div class = "col-sm">
+                    <div class="float-end">
+                        <button type="button" class="btn btn-secondary shadow-none simbol-management-buton">
+                            Add simbol to wachlist
+                        </button>
+                        <button type="button" class="btn btn-secondary shadow-none simbol-management-buton">
+                            Add simbol to portfolio
+                        </button>
+                    </div>
+            </div>
         </div>
     </div>
 </div>
@@ -32,7 +43,7 @@
 -->
 <script>
     // Ajust size of images to inner browser window.
-    const MAIN_AREA_AJUSTMENT = 105
+    const MAIN_AREA_AJUSTMENT = 115
     window.onload = function()
     {
         main_row_height = window.innerHeight - MAIN_AREA_AJUSTMENT
