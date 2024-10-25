@@ -5,6 +5,12 @@ from app.models import db, User
 
 login = LoginManager()
 
+def currentuser():
+    if current_user.is_authenticated:
+        return current_user
+    else:
+        return None
+
 def currentusername():
     if current_user.is_authenticated:
         return current_user.username

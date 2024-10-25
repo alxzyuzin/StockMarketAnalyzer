@@ -21,7 +21,7 @@ from app.userlogin  import currentusername
 #____________________________________________________________________________
 @app.route("/")
 def home():
-   return render_template("home.html")
+   return render_template("home.html", user = current_user)
 
 
 #____________________________________________________________________________
@@ -32,15 +32,20 @@ def home():
 def simbols():
    if request.args:
       req = request.args
+      simbols=[]
       if req["listtype"] == "portfolio":
-          simbols = db.session.query(Simbol).order_by(Simbol.simbol).all()
-      if req["listtype"] == "wachlist":
-          simbols = db.session.query(Simbol).order_by(Simbol.simbol).all()
+          subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id and UserSimbol.listtype == "portfolio").subquery()
+          simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
+   
+      if req["listtype"] == "watchlist":
+          subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id and UserSimbol.listtype == "watchlist").subquery()
+          simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
+          
       if req["listtype"] == "unselected":
-          simbols = db.session.query(Simbol).order_by(Simbol.simbol).all()
-        
-      print(req["listtype"])
-   return render_template("simbols.html", simbols = simbols)
+          subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id).subquery()
+          simbols = db.session.query(Simbol).filter(Simbol.simbol.notin_(subquery)).order_by(Simbol.simbol).all()
+       
+   return render_template("simbols.html", simbols = simbols, user = current_user, listtype = req["listtype"])
 
 
 #____________________________________________________________________________
@@ -62,7 +67,7 @@ def login():
                 loginResult = "Invalid user name or password."   
         except Exception as ex:  
             loginResult = "Login error."        
-    return render_template("login.html", pageName = "Login", user = currentusername(), loginRes = loginResult)
+    return render_template("login.html", pageName = "Login", user = current_user, loginRes = loginResult)
 
 
 #____________________________________________________________________________
