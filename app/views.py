@@ -38,21 +38,16 @@ def simbols():
          #   1 - portfolio
          #   2 - watchlist
       if req["listtype"] == "portfolio":
-         simbols_1 = db.session.query(UserSimbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).all()
-         i = len(simbols_1)
          subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).subquery()
          simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
    
       if req["listtype"] == "watchlist":
-         simbols_1 = db.session.query(UserSimbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).all()
-         i = len(simbols_1)
          subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 2).subquery()
          simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
           
       if req["listtype"] == "unselected":
          subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id).subquery()
          simbols = db.session.query(Simbol).filter(Simbol.simbol.notin_(subquery)).order_by(Simbol.simbol).all()
-         i = len(simbols)
    return render_template("simbols.html", simbols = simbols, user = current_user, listtype = req["listtype"])
 
 
@@ -107,16 +102,18 @@ def add_simbol_to_watchlist():
                                    listtype = targetlist))
          # Moving simbol between watchlist an portfolio in any direction   
          if (sourcelist == 1 and targetlist == 2) or (sourcelist == 2 and targetlist == 1):   
-             record = db.session.query(UserSimbol).filter(UserSimbol.userid == current_user.id and 
-                                                          UserSimbol.simbol == simbol and
-                                                          UserSimbol.listtype == sourcelist).first()
+             record = db.session.query(UserSimbol).filter(UserSimbol.userid == current_user.id, 
+                                                          UserSimbol.simbol == simbol,
+                                                          UserSimbol.listtype == sourcelist
+                                                          ).first()
              record.listtype = targetlist
          
           # Moving simbol from watchlist or portfolio to unselected   
          if (sourcelist == 1 or sourcelist == 2) and (targetlist == 0):
-            db.session.query(UserSimbol).filter(UserSimbol.userid == current_user.id and 
-                                                          UserSimbol.simbol == simbol and
-                                                          UserSimbol.listtype == sourcelist).delete()
+            db.session.query(UserSimbol).filter(UserSimbol.userid == current_user.id,
+                                                          UserSimbol.simbol == simbol,
+                                                          UserSimbol.listtype == sourcelist
+                                                          ).delete()
          db.session.commit()
          results = {"processed": "true", "error_descr":""}
       except Exception as ex:
