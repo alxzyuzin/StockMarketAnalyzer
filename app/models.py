@@ -90,13 +90,17 @@ class Simbol(db.Model):
 class UserSimbol(db.Model):  
     __tablename__ = 'usersimbol'
 
-    simbol = db.Column(db.String(10), primary_key = True)
+    simbol = db.Column(db.String(10), primary_key=True)
     userid = db.Column(db.String(100), primary_key=True)
     listtype  = db.Column(db.Integer)
+    # Listtypes
+    #   0 - unselected
+    #   1 - portfolio
+    #   2 - watchlist
     
-    def __init__(self, simbol:str, userid:str, listtype:str):
+    def __init__(self, simbol:str, userid:str, listtype:int):
         self.simbol = simbol
-        self.iserid = userid
+        self.userid = userid
         self.listtype = listtype
 
     def __repr__(self):

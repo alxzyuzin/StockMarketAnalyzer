@@ -1,6 +1,6 @@
 from logging import exception
 from app import app
-from flask import render_template, redirect, request, sessions, url_for
+from flask import render_template, redirect, request, sessions, url_for, jsonify
 from flask_login import current_user, user_logged_out, login_user, logout_user, login_required
 
 #import secrets
@@ -33,18 +33,26 @@ def simbols():
    if request.args:
       req = request.args
       simbols=[]
+        # Listtypes
+         #   0 - unselected
+         #   1 - portfolio
+         #   2 - watchlist
       if req["listtype"] == "portfolio":
-          subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id and UserSimbol.listtype == "portfolio").subquery()
-          simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
+         simbols_1 = db.session.query(UserSimbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).all()
+         i = len(simbols_1)
+         subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).subquery()
+         simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
    
       if req["listtype"] == "watchlist":
-          subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id and UserSimbol.listtype == "watchlist").subquery()
-          simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
+         simbols_1 = db.session.query(UserSimbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).all()
+         i = len(simbols_1)
+         subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 2).subquery()
+         simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
           
       if req["listtype"] == "unselected":
-          subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id).subquery()
-          simbols = db.session.query(Simbol).filter(Simbol.simbol.notin_(subquery)).order_by(Simbol.simbol).all()
-       
+         subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id).subquery()
+         simbols = db.session.query(Simbol).filter(Simbol.simbol.notin_(subquery)).order_by(Simbol.simbol).all()
+         i = len(simbols)
    return render_template("simbols.html", simbols = simbols, user = current_user, listtype = req["listtype"])
 
 
@@ -78,3 +86,40 @@ def login():
 def logout():
     logout_user()
     return redirect('/')
+
+@app.route("//move_simbols_between_lists", methods = ['POST', 'GET'])
+def add_simbol_to_watchlist():
+   if request.method == "POST":
+      request_data = request.get_json()
+      simbol = request_data[0]["simbol"]
+      sourcelist = request_data[0]["sourcelist"]
+      targetlist = request_data[0]["targetlist"]
+      try:
+         # Listtypes
+         #   0 - unselected
+         #   1 - portfolio
+         #   2 - watchlist
+
+         # Moving simbol from unselected to watchlist or portfolio
+         if (sourcelist == 0) and (targetlist == 1 or targetlist == 2):
+            db.session.add(UserSimbol(userid = current_user.id,
+                                   simbol = simbol,
+                                   listtype = targetlist))
+         # Moving simbol between watchlist an portfolio in any direction   
+         if (sourcelist == 1 and targetlist == 2) or (sourcelist == 2 and targetlist == 1):   
+             record = db.session.query(UserSimbol).filter(UserSimbol.userid == current_user.id and 
+                                                          UserSimbol.simbol == simbol and
+                                                          UserSimbol.listtype == sourcelist).first()
+             record.listtype = targetlist
+         
+          # Moving simbol from watchlist or portfolio to unselected   
+         if (sourcelist == 1 or sourcelist == 2) and (targetlist == 0):
+            db.session.query(UserSimbol).filter(UserSimbol.userid == current_user.id and 
+                                                          UserSimbol.simbol == simbol and
+                                                          UserSimbol.listtype == sourcelist).delete()
+         db.session.commit()
+         results = {"processed": "true", "error_descr":""}
+      except Exception as ex:
+         results = {"processed": 'false', "error_descr": ex.args}
+      
+   return jsonify(results)

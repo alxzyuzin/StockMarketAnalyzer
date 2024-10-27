@@ -56,7 +56,7 @@
                         <button type="button" class="btn btn-secondary shadow-none simbol-management-buton" onclick="remove_simbol_from_watchlist_button_click()">
                             Remove simbol from watchlist
                         </button>
-                        <button type="button" class="btn btn-secondary shadow-none simbol-management-buton" onclick="add_simbol_to_portfolio_button_click()">
+                        <button type="button" class="btn btn-secondary shadow-none simbol-management-buton" onclick="add_simbol_to_portfolio_from_watchlist_button_click()">
                             Add simbol to portfolio
                         </button>
                         {% endif %}
@@ -65,7 +65,7 @@
                         <button type="button" class="btn btn-secondary shadow-none simbol-management-buton" onclick="remove_simbol_from_portfolio_button_click()">
                             Remove simbol from portfolio
                         </button>
-                        <button type="button" class="btn btn-secondary shadow-none simbol-management-buton" onclick="move_simbol_from_portfolio_to_watclist_button_click()">
+                        <button type="button" class="btn btn-secondary shadow-none simbol-management-buton" onclick="move_simbol_from_portfolio_to_watchlist_button_click()">
                             Move simbol to watchlist
                         </button>
                         {% endif %}
@@ -77,6 +77,7 @@
  <!--
 
 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     // Ajust size of images to inner browser window.
     const MAIN_AREA_AJUSTMENT = 150
@@ -135,35 +136,101 @@
        alert("Not implemented")
     }
 
+    /*_______________________________________________________________________
+    | Request server for adding or deletinf simbol to or from specified list
+    | Parameters:
+    |   simbol - simbol name to add or delete
+    |   targetlist   - list of simbols which operation wil be performed on
+    |           Listtypes
+    |                  0 - unselected
+    |                  1 - portfolio
+    |                  2 - watchlist
+    |   operation   - "add" - add or "del" - delete simbol, "mov" - move simbol from sorce list to target list
+    |___________________________________________________________________________*/
+    function move_simbols_between_lists(simbol, sourcelist, targetlist)
+    {
+        if (simbol.length == 0)
+        {
+            alert("No selected simbols.")
+            return
+        }
+        
+        server_request_data = 
+        [
+            {
+                "simbol":simbol,
+                "sourcelist":sourcelist,
+                "targetlist":targetlist,
+            }
+         ]
+        
+        $.ajax(
+            {
+                type: "POST",
+                url: "/move_simbols_between_lists",
+                data: JSON.stringify(server_request_data),
+                contentType: "application/json",
+                dataType: "json",
+                success: function(result)
+                {
+                    if (result.processed == "true")
+                    {
+                        listname = ""
+                        switch(targetlist)
+                        {
+                            case 0: listname = "unselected"; break;
+                            case 1: listname = "portfolio"; break;
+                            case 2: listname = "watchlist"; break;
+                        }
+                        message = "Symbol " + simbol + " successfully moved to " + listname + "."
+                        $("#plots-body").html("<p style = 'font-size:xx-large'>" + message + "</p>")
+                        delete_current_simbol_from_the_list(simbol)
+                    }
+                    else
+                    {
+                        $("#plots-body").html("<p style = 'font-size:xx-large'>" + result.error_descr + "</p>")
+                    }
+                },
+                error: function(result,status)
+                {
+                    message = "<p>" + "Something get wrong."+ "</p> <p>Result:" + result + "</p><p>Status:" + status + "</p>"
+                    $("#plots-body").html(message)
+                    
+                }
+
+             }
+        );
+    }
 
     function add_simbol_to_watchlist_button_click()
     {
-        alert("Not implemented")
-        delete_current_simbol_from_the_list(CURRENT_SIMBOL)
+        
+        move_simbols_between_lists(CURRENT_SIMBOL, 0, 2)
     }
 
     function add_simbol_to_portfolio_button_click()
     {
-        alert("Not implemented")
-        delete_current_simbol_from_the_list(CURRENT_SIMBOL)
+        move_simbols_between_lists(CURRENT_SIMBOL, 0, 1)
+    }
+
+    add_simbol_to_portfolio_from_watchlist_button_click()
+    {
+        move_simbols_between_lists(CURRENT_SIMBOL, 2, 1)
     }
 
     function remove_simbol_from_watchlist_button_click()
     {
-        alert("Not implemented")
-        delete_current_simbol_from_the_list(CURRENT_SIMBOL)
+        move_simbols_between_lists(CURRENT_SIMBOL, 2, 0)
     }
 
     function remove_simbol_from_portfolio_button_click()
     {
-        alert("Not implemented")
-        delete_current_simbol_from_the_list(CURRENT_SIMBOL)
+        move_simbols_between_lists(CURRENT_SIMBOL, 1, 0)
     }
 
-    function move_simbol_from_portfolio_to_watclist_button_click()
+    function move_simbol_from_portfolio_to_watchlist_button_click()
     {
-        alert("Not implemented")
-        delete_current_simbol_from_the_list(CURRENT_SIMBOL)
+        move_simbols_between_lists(CURRENT_SIMBOL, 1, 2)
     }
 
     /*___________________________________________________________________________
@@ -184,8 +251,8 @@
                 return
            }
         });
-
     }
+
 </script>
 
 {% endblock %}
