@@ -130,14 +130,55 @@
     
     CURRENT_SIMBOL=""
 
+     /*_______________________________________________________________________
+    | Request server for carculating indicators and build plots
+    | Parameters:
+    |   simbol - simbol for calcutation indicatoer for
+    |___________________________________________________________________________*/
     function simbol_button_click(event)
     {
         CURRENT_SIMBOL = event.target.innerText
-       alert("Not implemented")
+               
+        server_request_data = 
+        [
+            {
+                "simbol":event.target.innerText,
+            }
+         ]
+
+         $.ajax(
+            {
+                type: "POST",
+                url: "/calculate_indicators",
+                data: JSON.stringify(server_request_data),
+                contentType: "application/json",
+                dataType: "json",
+                success: function(result)
+                {
+                    if (result.processed == "true")
+                    {
+                        // Insert handling results of request here
+                        $("#plots-body").html("<p style = 'font-size:xx-large'>" + result.message + "</p>")
+                    }
+                    else
+                    {
+                        $("#plots-body").html("<p style = 'font-size:xx-large'>" + result.error_descr + "</p>")
+                    }
+                },
+                error: function(result,status)
+                {
+                    message = "<p>" + "Something get wrong."+ "</p> <p>Result:" + result + "</p><p>Status:" + status + "</p>"
+                    $("#plots-body").html(message)
+                    
+                }
+
+             }
+        );
+
     }
 
     /*_______________________________________________________________________
-    | Request server for adding or deletinf simbol to or from specified list
+    | Request server for adding or delete simbol to or from specified list
     | Parameters:
     |   simbol - simbol name to add or delete
     |   targetlist   - list of simbols which operation wil be performed on

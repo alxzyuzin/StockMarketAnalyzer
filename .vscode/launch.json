@@ -16,7 +16,10 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
-                "--adduser", "o"
+                "--init","y",
+                "--file", "FondsList.csv",
+                "--adduser", "o",
+                
                 
             ]
         }

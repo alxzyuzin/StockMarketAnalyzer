@@ -105,8 +105,8 @@ def loadsimboldatafromscv(filename:str):
         
         db.session.commit()
         simbols = db.session.query(Simbol).all()
-        for simbol in simbols:
-            print(simbol)
+        
+        print(f"{len(simbols)} loaded succesfully.")
 
 
 def main():

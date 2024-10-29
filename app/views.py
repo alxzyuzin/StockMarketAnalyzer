@@ -10,10 +10,11 @@ from smtplib import SMTPException, SMTPConnectError, SMTPSenderRefused
 import datetime
 
 #from app.dbutils import select_imagedata
-from app.models import db, Simbol, User, UserSimbol
+from app.models import db, Simbol, User, UserSimbol, IndicatorsParams
 from app.userlogin  import currentusername
+from app.indicators import ChartsData
 
-
+from config import InitialIndicatorsParams
 
 
 #____________________________________________________________________________
@@ -82,6 +83,9 @@ def logout():
     logout_user()
     return redirect('/')
 
+#____________________________________________________________________________
+#   Handle request on moving simbols between lists of simbols
+#____________________________________________________________________________
 @app.route("//move_simbols_between_lists", methods = ['POST', 'GET'])
 def add_simbol_to_watchlist():
    if request.method == "POST":
@@ -120,3 +124,70 @@ def add_simbol_to_watchlist():
          results = {"processed": 'false', "error_descr": ex.args}
       
    return jsonify(results)
+
+#____________________________________________________________________________
+#   Calculate simbol indicators, build plots and return plots to client
+#____________________________________________________________________________
+@app.route("/calculate_indicators", methods = ['POST', 'GET'])
+def calculate_indicators():
+   if request.method == "POST":
+      request_data = request.get_json()
+      simbol = request_data[0]["simbol"]
+           
+      try:
+         indicators_params = get_user_indicators_params(simbol, current_user.id)
+         chartsdata = ChartsData(simbol,250)
+         chartsdata.calculate_indicators(indicators_params)
+         results = {"processed": "true", "error_descr":"", "message":"Everything is OK so far."}
+      except Exception as ex:
+         results = {"processed": 'false', "error_descr": ex.args}
+      
+   return jsonify(results)
+
+
+def get_user_indicators_params(simbol:str, userid:str):
+   params = IndicatorsParams(
+               userid = InitialIndicatorsParams.USERID,
+               simbol =  InitialIndicatorsParams.SIMBOL,
+
+               width = InitialIndicatorsParams.WIDTH,
+               heigh = InitialIndicatorsParams.HEIGH,
+               daily_prices_color = InitialIndicatorsParams.DAILY_PRICES_COLOR,
+    
+                ma_first_period = InitialIndicatorsParams.MA_FIRST_PERIOD,
+                ma_first_type = InitialIndicatorsParams.MA_FIRST_TYPE,
+                ma_first_color = InitialIndicatorsParams.MA_FIRST_COLOR,
+                show_ma_first = InitialIndicatorsParams.SHOW_MA_FIRST,
+
+                ma_second_period = InitialIndicatorsParams.MA_SECOND_PERIOD,
+                ma_second_type = InitialIndicatorsParams.MA_SECOND_TYPE,
+                ma_second_color = InitialIndicatorsParams.MA_SECOND_COLOR,
+                show_ma_second = InitialIndicatorsParams.SHOW_MA_SECOND,
+
+                ma_third_period = InitialIndicatorsParams.MA_THIRD_PERIOD,
+                ma_third_type = InitialIndicatorsParams.MA_THIRD_TYPE,
+                ma_third_color = InitialIndicatorsParams.MA_THIRD_COLOR,
+                show_ma_third = InitialIndicatorsParams.SHOW_MA_THIRD,
+                
+                ma_volume_color = InitialIndicatorsParams.VOLUME_COLOR,
+                show_volume = InitialIndicatorsParams.SHOW_VOLUME,
+    
+                rsi_period = InitialIndicatorsParams.RSI_PERIOD,
+                rsi_color = InitialIndicatorsParams.RSI_COLOR,
+                show_rsi = InitialIndicatorsParams.SHOW_RSI,
+
+                macd_short_period = InitialIndicatorsParams.MACD_SHORT_PERIOD,
+                macd_long_period = InitialIndicatorsParams.MACD_LONG_PERIOD,
+                macd_signal_period = InitialIndicatorsParams.MACD_SIGNAL_PERIOD,
+                macd_main_color = InitialIndicatorsParams.MACD_MAIN_COLOR,
+                macd_signal_color = InitialIndicatorsParams.MACD_SIGNAL_COLOR,
+                show_macd = InitialIndicatorsParams.SHOW_MACD,
+
+                bollingerband_period = InitialIndicatorsParams.BOLLINGERBAND_PERIOD,
+                bollingerband_probability = InitialIndicatorsParams.BOLLINGERBAND_PROBABILITY,
+                bollingerband_color = InitialIndicatorsParams.BOLLINGERBAND_COLOR,
+                bollingerband_opacity = InitialIndicatorsParams.BOLLINGERBAND_OPACITY,
+                show_bollingerband = InitialIndicatorsParams.SHOW_BOLINGERBAND
+   )
+   
+   return params
