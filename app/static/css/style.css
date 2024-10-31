@@ -60,8 +60,6 @@ body
     margin-top: 50px;
     margin-left: 0px;
     margin-right: 0px;
-  
-  
 }
 
 footer
@@ -107,10 +105,31 @@ footer
 .right-column
 {
     padding-left: 10px;
-    background-color: cadetblue;
     border: 1px solid white;
+    border-radius: 4px;
+    
+   
+    
 }
 
+#plots-body
+{
+    height: 100px;
+    
+        
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 4px;
+    flex-grow: 1;
+    
+}
+
+#plots-footer
+{
+    margin: 0px;
+    
+}
 .simbols-list
 {
     list-style-type: none;
@@ -146,7 +165,7 @@ footer
     text-transform: uppercase;
     height: 30px;
     font-size: small;
-    border: 1px solid greenyellow;
+   
     border-radius: 4px;
 }
 .simbol-button
@@ -169,4 +188,5 @@ footer
 {
     font-size:medium;
     text-wrap: nowrap ;
+    margin: 2px;
 }

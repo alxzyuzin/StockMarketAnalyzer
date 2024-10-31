@@ -115,6 +115,8 @@ class IndicatorsParams(db.Model):
     width  = db.Column(db.Integer)
     heigh  = db.Column(db.Integer)
     
+    history_length = db.Column(db.Integer)
+
     daily_prices_color = db.Column(db.String(6))
     
     ma_first_period = db.Column(db.Integer)
@@ -156,6 +158,7 @@ class IndicatorsParams(db.Model):
                  
                 width:int,
                 heigh:int,
+                history_length:int,
                 daily_prices_color:str,
     
                 ma_first_period:int,
@@ -199,6 +202,8 @@ class IndicatorsParams(db.Model):
         self.width  = width
         self.heigh  = heigh
 
+        self.history_length = history_length
+
         self.daily_prices_color = daily_prices_color
     
         self.ma_first_period = ma_first_period
@@ -241,6 +246,7 @@ class IndicatorsParams(db.Model):
         simbol: {self.simbol};\
         width: {self.width};\
         heigh: {self.heigh};\
+        history_length: {self.history_length};\
         daily_prices_color: {self.daily_prices_color};\
         ma_first_period: {self.ma_first_period};\
         ma_first_type: {self.ma_first_type};\
@@ -271,4 +277,14 @@ class IndicatorsParams(db.Model):
         bollingerband_opacity: {self.bollingerband_opacity};\
         show_bollingerband: {self.show_bollingerband};"
 
-
+    def get_offset(self):
+        return max(
+            self.ma_first_period,
+            self.ma_second_period,
+            self.ma_third_period,
+            self.rsi_period,
+            self.macd_short_period,
+            self.macd_long_period,
+            self.macd_signal_period,
+            self.bollingerband_period
+        )

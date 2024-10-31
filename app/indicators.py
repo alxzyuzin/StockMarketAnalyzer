@@ -10,16 +10,19 @@ from app.models import IndicatorsParams
 
 class ChartsData:
 
-    def __init__(self, simbol, numberOfDays = 250):
+    def __init__(self, simbol, indicators_params:IndicatorsParams ):
+        #numberOfDays = 250
         # Request parameters
         self.__url = 'https://financialmodelingprep.com/api/v3/historical-price-full/'
         self.__serietype = "line"
         self.__apikey = "VmvqJNpPV26D4SP554R2BkjnrCuJsJ2m"
 
         self.__simbol = simbol
-        self.__history_length = numberOfDays
-        self.__from = (datetime.now() - timedelta(days = numberOfDays)).strftime("%Y-%m-%d")
+        self.__history_length = indicators_params.history_length
+        self.__from = (datetime.now() - timedelta(days = self.__history_length)).strftime("%Y-%m-%d")
         self.__to = datetime.now().strftime("%Y-%m-%d")
+        # Params for calculating indicators
+        self.__params = indicators_params
         # Source data       
         self.__date       = []
         self.__openPrice  = []
@@ -120,25 +123,19 @@ class ChartsData:
         if matype == "ema":
             self.__first_ma = self.calcEMA(self.__closePrice, periodLength)        
 
-    def calcSecondMA(self, periodLength, matype:str):
+    def calcSecondMA(self, periodLength:int, matype:str):
         if matype == "sma":
             self.__second_ma = self.calcSMA(self.__closePrice, periodLength)
         if matype == "ema":
             self.__second_ma = self.calcEMA(self.__closePrice, periodLength) 
         
 
-    def calcThirdMA(self, periodLength, matype:str):
+    def calcThirdMA(self, periodLength:int, matype:str):
         if matype == "sma":
             self.__third_ma = self.calcSMA(self.__closePrice, periodLength)
         if matype == "ema":
             self.__third_ma = self.calcEMA(self.__closePrice, periodLength) 
-    
-    #def calcShortEMA(self, periodLength):
-    #    multiplier = 2 / (periodLength + 1)
-    #    self.__shortEMA.append(0.0)
-    #    for i in range(1, len(self.__date)):
-    #        self.__shortEMA.append(self.__closePrice[i] * multiplier + self.__shortEMA[i - 1] * (1 - multiplier))
-           
+     
     '''
         Calculate Bollinger's band for defined period
             Band's width calculated based on probability that price lay
@@ -151,7 +148,7 @@ class ChartsData:
         Return 
             no return
     '''
-    def calcBollingerBand(self, periodlength, probability):
+    def calcBollingerBand(self, periodlength:int, probability:int):
         for i in range(0, periodlength):
             self.__upperBBRangeValue.append(0.0)
             self.__lowerBBRangeValue.append(0.0)
@@ -176,7 +173,7 @@ class ChartsData:
             
         return
 
-    def calcRSI(self, periodLength):
+    def calcRSI(self, periodLength:int):
         # Calculate Gain and Loss
         gain = [0.0]
         loss = [0.0]
@@ -221,19 +218,24 @@ class ChartsData:
         signalLineData = self.calcEMA(self.__MACD[longPeriodLength - 1:], signalPeriodLength)
         self.__MACDSinalLine += signalLineData
 
-    def calculate_indicators(self, params:IndicatorsParams):
+    def calculate_indicators(self):
        
         self.load()
-        self.calcFirstMA(params.ma_first_period, params.ma_first_type)
-        self.calcSecondMA(params.ma_second_period, params.ma_second_type)
-        self.calcThirdMA(params.ma_third_period, params.ma_third_type)
-        self.calcBollingerBand(params.bollingerband_period, params.bollingerband_probability)
-        self.calcRSI(params.rsi_period)
-        self.calcMACD(params.macd_short_period, params.macd_long_period, params.macd_signal_period)
+        self.calcFirstMA(self.__params.ma_first_period, self.__params.ma_first_type)
+        self.calcSecondMA(self.__params.ma_second_period, self.__params.ma_second_type)
+        self.calcThirdMA(self.__params.ma_third_period, self.__params.ma_third_type)
+        self.calcBollingerBand(self.__params.bollingerband_period, self.__params.bollingerband_probability)
+        self.calcRSI(self.__params.rsi_period)
+        self.calcMACD(self.__params.macd_short_period, self.__params.macd_long_period, self.__params.macd_signal_period)
         #chartsdata.show(50)
     
-    def show(self, startvalue,simbol = None, description = None):
-               
+    
+    '''
+    Build plots for all indicators
+    '''
+    def build_plots(self):
+
+        startvalue = self.__params.get_offset()       
          # Define plot layout
         gs_kw = dict( height_ratios=[4, 1, 1, 1])
         fig, (ax0, ax1, ax2, ax3) = plt.subplots(4, 1,layout='constrained', gridspec_kw = gs_kw )
@@ -244,21 +246,20 @@ class ChartsData:
         # Create alias for X-axe values
         x = self.__date[startvalue:]
        
-        ax0.set_title(f'Historic prices for simbol {self.__simbol} - {description} (Last price:{self.__closePrice[-1]}).')
+        #ax0.set_title(f'Historic prices for simbol {self.__simbol} - {description} (Last price:{self.__closePrice[-1]}).')
         ax0.grid(True)
         ax0.left = 0
         # Display daily close prices and moving averages
         ax0.plot(x, self.__closePrice[startvalue:], label = "Daily prices", color='gray', linewidth = 1)
-        #ax0.plot(x, self.__shortSMA[startvalue:],   label = "Short SMA")
-        ax0.plot(x, self.__longSMA[startvalue:],    label = "Long SMA", color = 'orange')
-        ax0.plot(x, self.__shortEMA[startvalue:],   label = "Short EMA", color = 'green')
+        ax0.plot(x, self.__first_ma[startvalue:],   label = "First MA")
+        ax0.plot(x, self.__second_ma[startvalue:],  label = "Second MA", color = 'orange', linewidth = 1)
+        ax0.plot(x, self.__third_ma[startvalue:],   label = "Third EMA", color = 'green', linewidth = 1)
         
         # Display Bellingham borders
         y1 = self.__upperBBRangeValue[startvalue:]
         y2 = self.__lowerBBRangeValue[startvalue:]
         ax0.fill_between(x, y1, y2, alpha=0.2, color='green')
-        #ax0.plot(x, y1, label = "Upper Billingham border", color='red', linewidth = 1)
-        #ax0.plot(x, y2, label = "Lower Billingham border", color='red', linewidth = 1)
+        
         ax0.legend(loc='upper left')
        
         
@@ -281,7 +282,6 @@ class ChartsData:
         ax0.tick_params(axis='x', pad=15)
         
         # Set range for displayig data
-        #datemin = min(self.date) + timedelta(days=self.plotStartPointOffset +20)
         datemin = self.__date[startvalue]
         datemax = self.__date[-1] +  timedelta(days=2) 
         ax0.set_xlim(datemin, datemax)
@@ -299,7 +299,6 @@ class ChartsData:
                  label = "Volume", color='steelblue', linewidth = 1)
         ax1.set_xlim(datemin, datemax)
         
-
         #----------------------------------------------------------------------------------
         # Display RSI
         #----------------------------------------------------------------------------------
@@ -314,12 +313,9 @@ class ChartsData:
         # Define coords of rectangle's corners
         xcoords = [datemin, datemax, datemax, datemin]
         ycoords = [20, 20, -20, -20]
-        # Draw a rectangle
+        # Draw a rectangle to display Overbought and Oversold Levels
         ax2.fill(xcoords, ycoords, alpha = 0.4, color='lightsteelblue')
-        # Draw lines to display Overbought and Oversold Levels
-        #ax1.axhline( y = 70, color = 'r', linewidth=1)
-        #ax1.axhline( y = 30, color = 'r', linewidth=1 )
-
+        
         ax2.text(self.__date[startvalue + 10],23,"Overbought level", fontsize=10, color='gray')
         ax2.text(self.__date[startvalue + 10],-30,"Oversold level", fontsize=10, color='gray')
         ax2.legend(loc='lower left')    
@@ -341,6 +337,7 @@ class ChartsData:
         mng.set_window_title("Indicators for simbol " + self.__simbol)
         #mng.full_screen_toggle()
 
-        plt.show()
+        return fig
+        #plt.show()
        
     

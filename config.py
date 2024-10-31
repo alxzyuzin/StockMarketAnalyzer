@@ -13,6 +13,8 @@ class InitialIndicatorsParams(object):
 
     WIDTH = 800
     HEIGH = 600
+
+    HISTORY_LENGTH = 250
     DAILY_PRICES_COLOR = "AAAAAA"
 
     MA_FIRST_PERIOD = 4

@@ -8,6 +8,8 @@ from flask_login import current_user, user_logged_out, login_user, logout_user, 
 
 from smtplib import SMTPException, SMTPConnectError, SMTPSenderRefused
 import datetime
+from io import BytesIO
+import base64
 
 #from app.dbutils import select_imagedata
 from app.models import db, Simbol, User, UserSimbol, IndicatorsParams
@@ -136,9 +138,20 @@ def calculate_indicators():
            
       try:
          indicators_params = get_user_indicators_params(simbol, current_user.id)
-         chartsdata = ChartsData(simbol,250)
-         chartsdata.calculate_indicators(indicators_params)
-         results = {"processed": "true", "error_descr":"", "message":"Everything is OK so far."}
+         chartsdata = ChartsData(simbol,indicators_params)
+         chartsdata.calculate_indicators()
+         plt = chartsdata.build_plots()
+
+         # Save plots to a temporary buffer.
+         buf = BytesIO()
+         plt.savefig(buf, format="png")
+         # Embed the result in the html output.
+         fig_data = base64.b64encode(buf.getbuffer()).decode("ascii")
+         plotsimg = f'data:image/png;base64,{fig_data}'
+         results = {"processed": "true",
+                    "error_descr":"",
+                    "plotsimg":plotsimg
+                    }
       except Exception as ex:
          results = {"processed": 'false', "error_descr": ex.args}
       
@@ -147,12 +160,15 @@ def calculate_indicators():
 
 def get_user_indicators_params(simbol:str, userid:str):
    params = IndicatorsParams(
-               userid = InitialIndicatorsParams.USERID,
-               simbol =  InitialIndicatorsParams.SIMBOL,
+                userid = InitialIndicatorsParams.USERID,
+                simbol =  InitialIndicatorsParams.SIMBOL,
 
-               width = InitialIndicatorsParams.WIDTH,
-               heigh = InitialIndicatorsParams.HEIGH,
-               daily_prices_color = InitialIndicatorsParams.DAILY_PRICES_COLOR,
+                width = InitialIndicatorsParams.WIDTH,
+                heigh = InitialIndicatorsParams.HEIGH,
+
+                history_length = InitialIndicatorsParams.HISTORY_LENGTH,
+
+                daily_prices_color = InitialIndicatorsParams.DAILY_PRICES_COLOR,
     
                 ma_first_period = InitialIndicatorsParams.MA_FIRST_PERIOD,
                 ma_first_type = InitialIndicatorsParams.MA_FIRST_TYPE,
