@@ -2,9 +2,32 @@ class Config(object):
     DATABASE_FILE   = "app/database/appdata.db"
     USER_NAME       = "ALX.ZYUZIN@GMAIL.COM"
     USER_PASSWORD   = "PASSWORD"
+    #Secret key used for session encryption and other security features.
     SECRET_KEY      = "IkqQWV907tMmatKFsPccU6kk5L_mDfWzPUaji_3vWRk"
+    #The URI for the database to be used with SQLAlchemy.
     SQLALCHEMY_DATABASE_URI = "sqlite:///appdata.db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+	#The type of session storage to be used (e.g. ‘filesystem’, ‘redis’, ‘memcached’, etc.).    
+    SESSION_TYPE = "filesystem"
+    #The lifetime of a permanent session in seconds. Default 31 days	
+    PERMANENT_SESSION_LIFETIME = 36000
+
+    #DEBUG	False	Enables or disables debug mode.
+    #TESTING	False	Enables or disables testing mode.
+    #SERVER_NAME	None	The hostname and port number of the server.
+    #SESSION_COOKIE_NAME	‘session’	The name of the session cookie.
+    #SESSION_COOKIE_SECURE	False	Enables or disables secure session cookies (HTTPS).
+    #SESSION_COOKIE_HTTPONLY	True	Enables or disables httponly session cookies (cannot be accessed by JavaScript).	
+    #SQLALCHEMY_TRACK_MODIFICATIONS	True	Enables or disables modification tracking for SQLAlchemy.
+    #UPLOAD_FOLDER	None	The folder where uploaded files are stored.
+    #MAX_CONTENT_LENGTH	None	The maximum allowed size for uploaded files.
+    #JSONIFY_PRETTYPRINT_REGULAR	False	Enables or disables pretty-printing of JSON responses.
+    #JSON_SORT_KEYS	True	Enables or disables sorting of keys in JSON responses.
+    #JSONIFY_MIMETYPE	‘application/json’	The mimetype used for JSON responses.
+    #CORS_*	None	Various configuration options for Cross-Origin Resource Sharing (CORS).
+
+
+
 
 
 class InitialIndicatorsParams(object):

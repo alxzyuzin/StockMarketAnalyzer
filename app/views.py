@@ -1,6 +1,6 @@
 from logging import exception
 from app import app
-from flask import render_template, redirect, request, sessions, url_for, jsonify
+from flask import render_template, redirect, request, session, url_for, jsonify
 from flask_login import current_user, user_logged_out, login_user, logout_user, login_required
 
 #import secrets
@@ -33,26 +33,66 @@ def home():
 
 @app.route("/simbols")
 def simbols():
+   plots_img = "/static/images/empty_plots.png"
    if request.args:
       req = request.args
       simbols=[]
-        # Listtypes
+      try:
+         # Listtypes
          #   0 - unselected
          #   1 - portfolio
          #   2 - watchlist
-      if req["listtype"] == "portfolio":
-         subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).subquery()
-         simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
+         #if ("listtype" not in session) or ("simbols" not in session):
+         #   session["listtype"] = ""  
+         #if (session["listtype"] != req["listtype"]):
+         if req["listtype"] == "portfolio":
+            subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).subquery()
+            qresult = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
    
-      if req["listtype"] == "watchlist":
-         subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 2).subquery()
-         simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
+         if req["listtype"] == "watchlist":
+            subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 2).subquery()
+            qresult = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
           
-      if req["listtype"] == "unselected":
-         subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id).subquery()
-         simbols = db.session.query(Simbol).filter(Simbol.simbol.notin_(subquery)).order_by(Simbol.simbol).all()
-   return render_template("simbols.html", simbols = simbols, user = current_user, listtype = req["listtype"])
+         if req["listtype"] == "unselected":
+            subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id).subquery()
+            qresult = db.session.query(Simbol).filter(Simbol.simbol.notin_(subquery)).order_by(Simbol.simbol).all()
+            
+         simbols = [u.to_dic() for u in qresult]
+         #   session["listtype"] = req["listtype"]
+         #   session["simbols"] = simbols
+            
+         #else:
+         #   simbols = session["simbols"]
+         
+         
+         if (req["simbol"] != ''):
+            # and  (("simbol" not in session) or (session["simbol"] != req["simbol"])):
+            
 
+         #if ("simbol" in session) and \
+         #   (session["simbol"] == req["simbol"]) and \
+         #   ("plots_img" in session):
+         #   plots_img = session["plots_img"]
+         #   return render_template("simbols.html", simbols = simbols, user = current_user, listtype = req["listtype"], plots_image = plots_img)
+         #else:
+            indicators_params = get_user_indicators_params(req["simbol"], current_user.id)
+            chartsdata = ChartsData(req["simbol"],indicators_params)
+            chartsdata.calculate_indicators()
+            plt = chartsdata.build_plots()
+            # Save plots to a temporary buffer.
+            buf = BytesIO()
+            plt.savefig(buf, format="png")
+            # Embed the result in the html output.
+            fig_data = base64.b64encode(buf.getbuffer()).decode("ascii")
+            plots_img = f'data:image/png;base64,{fig_data}'
+            #session["simbol"] = req["simbol"]
+            #session["plots_img"] = plots_img
+        
+
+      except Exception as ex:
+          return render_template("error.html", user = current_user, error_descr = ex.args)
+
+      return render_template("simbols.html", simbols = simbols, selected_simbol = req["simbol"],  user = current_user, listtype = req["listtype"], plots_image = plots_img)             
 
 #____________________________________________________________________________
 #   Display login page 
@@ -135,8 +175,7 @@ def calculate_indicators():
    if request.method == "POST":
       request_data = request.get_json()
       simbol = request_data[0]["simbol"]
-           
-      try:
+   try:
          indicators_params = get_user_indicators_params(simbol, current_user.id)
          chartsdata = ChartsData(simbol,indicators_params)
          chartsdata.calculate_indicators()
@@ -152,10 +191,32 @@ def calculate_indicators():
                     "error_descr":"",
                     "plotsimg":plotsimg
                     }
-      except Exception as ex:
+   except Exception as ex:
          results = {"processed": 'false', "error_descr": ex.args}
       
-   return jsonify(results)
+   return render_template("simbols.html", simbols = simbols, user = current_user, listtype = request["listtype"])        
+   
+   #   try:
+   #      indicators_params = get_user_indicators_params(simbol, current_user.id)
+   #      chartsdata = ChartsData(simbol,indicators_params)
+   #      chartsdata.calculate_indicators()
+   #      plt = chartsdata.build_plots()
+
+         # Save plots to a temporary buffer.
+   #      buf = BytesIO()
+   #      plt.savefig(buf, format="png")
+   #      # Embed the result in the html output.
+   #      fig_data = base64.b64encode(buf.getbuffer()).decode("ascii")
+   #      plotsimg = f'data:image/png;base64,{fig_data}'
+   #      results = {"processed": "true",
+   #                 "error_descr":"",
+   #                 "plotsimg":plotsimg
+   #                 }
+   #   except Exception as ex:
+   #      results = {"processed": 'false', "error_descr": ex.args}
+      
+   #return jsonify(results)
+
 
 
 def get_user_indicators_params(simbol:str, userid:str):

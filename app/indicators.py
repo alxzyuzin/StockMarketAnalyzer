@@ -7,6 +7,8 @@ import matplotlib.dates as mdates
 import statistics
 
 from app.models import IndicatorsParams
+import matplotlib
+matplotlib.use('Agg')
 
 class ChartsData:
 
@@ -129,7 +131,6 @@ class ChartsData:
         if matype == "ema":
             self.__second_ma = self.calcEMA(self.__closePrice, periodLength) 
         
-
     def calcThirdMA(self, periodLength:int, matype:str):
         if matype == "sma":
             self.__third_ma = self.calcSMA(self.__closePrice, periodLength)
@@ -198,7 +199,6 @@ class ChartsData:
              # Приводим значение к диапазону -50 +50
             self.__RSI.append(50 - 100/(1 + gainEMA[i] / lossEMA[i]))
     
-
     ''' 
         Calculate Moving Average Convergence Divergence (MACD) for defined range of numbers in the list
         data - list of numbers for calculation
@@ -239,7 +239,7 @@ class ChartsData:
          # Define plot layout
         gs_kw = dict( height_ratios=[4, 1, 1, 1])
         fig, (ax0, ax1, ax2, ax3) = plt.subplots(4, 1,layout='constrained', gridspec_kw = gs_kw )
-        fig.tight_layout(h_pad = 0.5, w_pad = 0) # Set figure margins size
+        #fig.tight_layout(h_pad = 0.5, w_pad = 0) # Set figure margins size
         #plt.legend(loc='upper left')
         fig.set_size_inches(14,9) 
         #fig.suptitle('Historic prices for simbol ' + self.simbol, fontsize=16)

@@ -107,22 +107,16 @@ footer
     padding-left: 10px;
     border: 1px solid white;
     border-radius: 4px;
-    
-   
-    
 }
 
 #plots-body
 {
     height: 100px;
-    
-        
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
-    margin-right: 4px;
+    margin: 2px;
     flex-grow: 1;
-    
 }
 
 #plots-footer

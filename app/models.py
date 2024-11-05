@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
-from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, LoginManager
+
 
 
 #Set-ExecutionPolicy Unrestricted -Scope Process
@@ -87,6 +87,22 @@ class Simbol(db.Model):
                  {self.tenyearreturn}:{self.lifeoffundreturn}:\
                  {self.netto}:{self.gross}:{self.overall}"
      
+    def to_dic(self):
+        return {
+                "simbol":self.simbol,
+                "title":self.title,
+                "category":self.category,
+                "oneyearreturn":self.oneyearreturn,
+                "threeyearreturn":self.threeyearreturn,
+                "fiveyearreturn":self.fiveyearreturn,
+                "tenyearreturn":self.tenyearreturn,
+                "lifeoffundreturn":self.lifeoffundreturn,
+                "netto":self.netto,
+                "gross":self.gross,
+                "overall":self.overall
+                }
+                
+
 class UserSimbol(db.Model):  
     __tablename__ = 'usersimbol'
 
