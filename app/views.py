@@ -33,66 +33,59 @@ def home():
 
 @app.route("/simbols")
 def simbols():
+   if not current_user.is_authenticated:
+       return render_template("home.html", user = current_user)
    plots_img = "/static/images/empty_plots.png"
    if request.args:
       req = request.args
+      listtype = req["listtype"]
+      simbol   = req["simbol"]
       simbols=[]
       try:
          # Listtypes
          #   0 - unselected
          #   1 - portfolio
          #   2 - watchlist
-         #if ("listtype" not in session) or ("simbols" not in session):
-         #   session["listtype"] = ""  
-         #if (session["listtype"] != req["listtype"]):
-         if req["listtype"] == "portfolio":
-            subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).subquery()
-            qresult = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
-   
-         if req["listtype"] == "watchlist":
-            subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 2).subquery()
-            qresult = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
           
-         if req["listtype"] == "unselected":
+         if listtype == "portfolio":
+            subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).subquery()
+            simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
+   
+         if listtype == "watchlist":
+            subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 2).subquery()
+            simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
+          
+         if listtype == "unselected":
             subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id).subquery()
-            qresult = db.session.query(Simbol).filter(Simbol.simbol.notin_(subquery)).order_by(Simbol.simbol).all()
-            
-         simbols = [u.to_dic() for u in qresult]
-         #   session["listtype"] = req["listtype"]
-         #   session["simbols"] = simbols
-            
-         #else:
-         #   simbols = session["simbols"]
+            simbols = db.session.query(Simbol).filter(Simbol.simbol.notin_(subquery)).order_by(Simbol.simbol).all()
          
-         
-         if (req["simbol"] != ''):
-            # and  (("simbol" not in session) or (session["simbol"] != req["simbol"])):
-            
+         if simbol == '':
+            if "simbol" in session:
+               session.pop("simbol")
+         else:
+            filename = 'app\\appcache\\' + current_user.id + '_' + simbol + '.png' 
+            if (("simbol" not in session) or (session["simbol"] != simbol)):
+               indicators_params = get_user_indicators_params(simbol, current_user.id)
+               chartsdata = ChartsData(simbol,indicators_params)
+               chartsdata.calculate_indicators()
+               plt = chartsdata.build_plots()
+               # Save plots to a temporary buffer.
+               buf = BytesIO()
+               plt.savefig(buf, format="png")
+               # Embed the result in the html output.
+               fig_data = base64.b64encode(buf.getbuffer()).decode("ascii")
+               plots_img = f'data:image/png;base64,{fig_data}'
+               session["simbol"] = simbol
+               # Save image in application cash
+               with open(filename, 'w') as file:
+                  file.write(plots_img)
+            else:
+               with open(filename, 'r') as file:
+                  plots_img = file.read()
 
-         #if ("simbol" in session) and \
-         #   (session["simbol"] == req["simbol"]) and \
-         #   ("plots_img" in session):
-         #   plots_img = session["plots_img"]
-         #   return render_template("simbols.html", simbols = simbols, user = current_user, listtype = req["listtype"], plots_image = plots_img)
-         #else:
-            indicators_params = get_user_indicators_params(req["simbol"], current_user.id)
-            chartsdata = ChartsData(req["simbol"],indicators_params)
-            chartsdata.calculate_indicators()
-            plt = chartsdata.build_plots()
-            # Save plots to a temporary buffer.
-            buf = BytesIO()
-            plt.savefig(buf, format="png")
-            # Embed the result in the html output.
-            fig_data = base64.b64encode(buf.getbuffer()).decode("ascii")
-            plots_img = f'data:image/png;base64,{fig_data}'
-            #session["simbol"] = req["simbol"]
-            #session["plots_img"] = plots_img
-        
-
+         return render_template("simbols.html", simbols = simbols, selected_simbol = req["simbol"],  user = current_user, listtype = req["listtype"], plots_image = plots_img)             
       except Exception as ex:
-          return render_template("error.html", user = current_user, error_descr = ex.args)
-
-      return render_template("simbols.html", simbols = simbols, selected_simbol = req["simbol"],  user = current_user, listtype = req["listtype"], plots_image = plots_img)             
+          return render_template("error.html", user = current_user, error_descr = ex.args)     
 
 #____________________________________________________________________________
 #   Display login page 
