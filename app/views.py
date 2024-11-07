@@ -41,6 +41,7 @@ def simbols():
       listtype = req["listtype"]
       simbol   = req["simbol"]
       simbols=[]
+      selected_simbol_data = db.session.query(Simbol).filter(Simbol.simbol == simbol).first()  
       try:
          # Listtypes
          #   0 - unselected
@@ -79,11 +80,16 @@ def simbols():
                # Save image in application cash
                with open(filename, 'w') as file:
                   file.write(plots_img)
+               
             else:
                with open(filename, 'r') as file:
                   plots_img = file.read()
 
-         return render_template("simbols.html", simbols = simbols, selected_simbol = req["simbol"],  user = current_user, listtype = req["listtype"], plots_image = plots_img)             
+         return render_template("simbols.html", simbols = simbols,
+                                 selected_simbol = req["simbol"],
+                                 selected_simbol_data = selected_simbol_data,  
+                                 user = current_user,
+                                 listtype = req["listtype"], plots_image = plots_img)             
       except Exception as ex:
           return render_template("error.html", user = current_user, error_descr = ex.args)     
 

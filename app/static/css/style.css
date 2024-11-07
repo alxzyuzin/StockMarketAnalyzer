@@ -115,6 +115,7 @@ footer
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
+    
     margin: 2px;
     flex-grow: 1;
 }
@@ -164,7 +165,7 @@ footer
 }
 .simbol-button
 {
-   
+   background-color: #505050;
     width:95%;
     margin: 2px;
     font-size: small;
@@ -180,7 +181,10 @@ footer
 
 .simbol-management-buton
 {
+
+    padding-top: -5px;
     font-size:medium;
     text-wrap: nowrap ;
+    vertical-align:middle;
     margin: 2px;
 }
