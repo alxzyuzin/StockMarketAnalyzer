@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, LoginManager
+from datetime import date
 
 
 
@@ -304,3 +305,30 @@ class IndicatorsParams(db.Model):
             self.macd_signal_period,
             self.bollingerband_period
         )
+
+class Operation(db.Model):  
+    __tablename__ = 'operation'
+
+    userid = db.Column(db.String(100), primary_key=True)
+    simbol = db.Column(db.String(10))
+    operation_date = db.column(db.Date)
+    operation_type = db.column(db.String(4))
+    price  = db.Column(db.Float)
+    amount = db.column(db.Float)
+    
+    def __init__(self,  userid:str, simbol:str, 
+                 operation_date:date,  operation_type:str,
+                 price:float, amount:float):
+        self.userid = userid
+        self.simbol = simbol
+        self.operation_date = operation_date
+        self.operation_type = operation_type # buy or sell
+        self.price = price
+        self.amount = amount
+        
+
+    def __repr__(self):
+        return f"simbol: {self.simbol}; userid: {self.userid};\
+                operation date: {self.operation_date}\
+                operationtype: {self.operation_type}\
+                price: {self.price}; amount: {self.amount} "

@@ -2,30 +2,39 @@
 
 {% block main %}
 
-<div id="LoginDialog" class = "dialog">
-    <div class = "container"  style="width:50%; max-width:300px">
-    <form class = "base-form" action="/login" method="POST">
-        <h4>Login</h4>   
+<div id="LoginDialog" class = "container dialog">
+    
+    <form id = "login-form" class = "base-form" action="/login" method="POST">
+        <h4 class = "base-form-header">Login</h4>   
         <div class = "container">
-            <div class = "row" >             
-                <input type="text" class="form-control col-sm" id="inputUserName" 
-                name="inputUserName" placeholder="User name" required>
-            
+            <div class = "row" >    
+                <div class = "col-sm-12">         
+                    <input  type="text" class="form-control col-sm" id="inputUserName" 
+                            name="inputUserName" placeholder="User name" required>
+                </div>
             </div>
-            <div class = "row"  style = "max-width: 80;">
-            <input type="password" class="form-control  col-sm" id="inputPassword"
-                name="inputPassword" placeholder="Password" required>
-               
+            <div class = "row">
+                <div class = "col-sm-12">
+                    <input  type="password" class="form-control  col-sm" id="inputPassword"
+                            name="inputPassword" placeholder="Password" required>
+                </div>   
             </div>
         </div>
-        <div class="base-footer">
-            <button id="btnCancel" class="btn btn-submit btn-outline-secondary" 
-                        type="reset">Cancel</button>
-            
-            <button id="btnSubmit" type="submit" class="btn btn-submit btn-outline-secondary" >Login</button>
-            <div class = "feedback">&nbsp{{loginRes}}</div> 
+        
+        <div class="base-footer  container-fluid">
+            <div class = "row "> 
+                <div class="col-sm-12 d-flex float-end"> 
+                        <button id="btnCancel" class="btn btn-submit btn-outline-secondary" type="reset">Cancel</button>
+                        <button id="btnSubmit" type="submit" class="btn btn-submit btn-outline-secondary">Login</button>
+                </div>      
+            </div>
+            <div class = "row">
+                <div class = "col-sm-12 d-flex  justify-content-center">
+                    <p class = "feedback">&nbsp{{loginRes}}</p>
+                </div>
+            </div> 
         </div>
     </form>
-</div>
+
 </div>
 {% endblock %}
