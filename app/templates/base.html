@@ -4,7 +4,7 @@
         <!-- Required meta tags -->
         <meta http-equiv="content-type" content="text/html" charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="Alexander Ziuzin. Stck Market Analizer" />
+        <meta name="description" content="Alexander Ziuzin. Stock Market Analyzer" />
 	      <meta name="keywords" content="stock mutual funds SMA EMA RSI MACD" />
         <meta name="theme-color" content="#7952b3">
         <!-- Import the Bootstarp stylesheet -->
@@ -38,7 +38,7 @@
               {% if user.is_authenticated %}
               <!-- Simbols.menu -->
               <li class = "nav-item dropdown">
-               <a class="nav-link dropdown-toggle href="#"
+               <a class="nav-link dropdown-toggle {% if pageName == 'Simbols' %} active {% endif %}" href="#"
                  id="navbarDropdownGalleries" role="button" data-bs-toggle="dropdown" 
                  aria-expanded="false">Simbols</a>
                <ul class="dropdown-menu" aria-labelledby="navbarDropdownGalleries">
@@ -48,7 +48,10 @@
                </ul>
               </li>
               <li class = "nav-item">
-                <a class="nav-link {% if pageName == 'Works' %} active {% endif %}" href="/portfolio">Portfolio</a>
+                <a class="nav-link {% if pageName == 'Portfolio' %} active {% endif %}" href="/portfolio">Portfolio</a>
+              </li>
+              <li class = "nav-item">
+                <a class="nav-link {% if pageName == 'Settings' %} active {% endif %}" href="/settings">Settings</a>
               </li>
               {% endif %}
               <li class = "nav-item">

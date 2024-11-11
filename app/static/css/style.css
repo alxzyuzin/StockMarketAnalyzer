@@ -130,6 +130,10 @@ footer
 	}
   }
 
+  .active{
+    color:white;
+  }
+
   #brand-icon{
     margin-left: 16px;
   }

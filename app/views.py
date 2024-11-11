@@ -24,7 +24,7 @@ from config import InitialIndicatorsParams
 #____________________________________________________________________________
 @app.route("/")
 def home():
-   return render_template("home.html", user = current_user)
+   return render_template("home.html", pageName = "Home", user = current_user)
 
 
 #____________________________________________________________________________
@@ -34,7 +34,7 @@ def home():
 @app.route("/simbols")
 def simbols():
    if not current_user.is_authenticated:
-       return render_template("home.html", user = current_user)
+       return render_template("home.html", pageName = "Home", user = current_user)
    plots_img = "/static/images/empty_plots.png"
    if request.args:
       req = request.args
@@ -85,14 +85,26 @@ def simbols():
                with open(filename, 'r') as file:
                   plots_img = file.read()
 
-         return render_template("simbols.html", simbols = simbols,
+         return render_template("simbols.html" , pageName = "Simbols", simbols = simbols,
                                  selected_simbol = req["simbol"],
                                  selected_simbol_data = selected_simbol_data,  
                                  user = current_user,
                                  listtype = req["listtype"], plots_image = plots_img)             
       except Exception as ex:
-          return render_template("error.html", user = current_user, error_descr = ex.args)     
+          return render_template("error.html", pageName = "Simbols", user = current_user, error_descr = ex.args)     
 
+@app.route('/portfolio')
+def portfolio():
+   return render_template("portfolio.html", pageName = "Portfolio", user = current_user) 
+
+
+@app.route('/settings')
+def settings():
+   return render_template("settings.html", pageName = "Settings", user = current_user) 
+
+@app.route('/contacts')
+def contacts():
+   return render_template("contacts.html", pageName = "Contacts", user = current_user) 
 #____________________________________________________________________________
 #   Display login page 
 #____________________________________________________________________________
@@ -124,6 +136,9 @@ def logout():
     logout_user()
     return redirect('/')
 
+#============================================================================
+#     AJAX requests handlers
+#============================================================================
 #____________________________________________________________________________
 #   Handle request on moving simbols between lists of simbols
 #____________________________________________________________________________
