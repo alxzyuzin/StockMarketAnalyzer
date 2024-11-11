@@ -308,13 +308,13 @@ class IndicatorsParams(db.Model):
 
 class Operation(db.Model):  
     __tablename__ = 'operation'
-
-    userid = db.Column(db.String(100), primary_key=True)
-    simbol = db.Column(db.String(10))
-    operation_date = db.column(db.Date)
-    operation_type = db.column(db.String(4))
-    price  = db.Column(db.Float)
-    amount = db.column(db.Float)
+    rowid = db.Column(db.Integer, primary_key=True, nullable = False)
+    userid = db.Column(db.String(100), nullable = False)
+    simbol = db.Column(db.String(10), nullable = False)
+    operation_date = db.Column(db.Date, nullable = False)
+    operation_type = db.Column(db.String(4), nullable = False)
+    price  = db.Column(db.Float, nullable = False)
+    amount = db.Column(db.Float, nullable = False)
     
     def __init__(self,  userid:str, simbol:str, 
                  operation_date:date,  operation_type:str,
