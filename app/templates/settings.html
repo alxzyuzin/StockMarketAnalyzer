@@ -2,8 +2,407 @@
 
 {% block main %}
 
-    <p>&nbsp;</p><p>&nbsp;</p>
-    <p class="cinzel-800 text-center">Stocks Analyzer</p>
-    <p class="cinzel-800 text-center">Settings page</p>
+<div id="SettingsDialog" class = "container">
+    
+    <form id = "settings-form" class = "base-form" action="/savesettings" method="POST">
+           
+        <div class = "container">
+            <div class ="row">
+                <div class = "col-sm-4">
+                    <h3 class = "base-form-header">Settings for simbol</h3>
+                </div>
+                <div class = "col-sm-2">
+                    <input  type="text" id="simbol"  class="form-control" name="simbol" placeholder="simbol" required>
+                </div>
+                <div class = "col-sm-1"></div>
+                <div class = "col-sm-3">
+                    <label class="form-control-label" for="history-length">History length (days)</label>
+                </div>
+                <div class = "col-sm-2">
+                    <input  type="text" id="history-length"  class="form-control" name="historyLength" placeholder="days" required>
+                </div>
+            </div>
+            
+            <!-- Common plots parameters -->
+            <div class = "row">
+                <div class = "col-sm-12">
+                    <h4>Common plots parameters</h4>
+                </div>
+            </div>
+            
+            <div class = "row" >    
+                <div class = "col-sm-1">
+                    <label class="form-control-label" for="plots-width">Width</label>
+                </div>
+                <div class = "col-sm-2">         
+                    <input  type="text" class="form-control" id="plots-width" 
+                            name="plotsWidth" placeholder="Width" required>
+                </div>
+                <div class = "col-sm-1">
+                    <label class="form-control-label" for="plots-height">Height</label>
+                </div>
+                <div class = "col-sm-2">         
+                    <input  type="text" class="form-control" id="plots-height" 
+                            name="plotsHeight" placeholder="Height" required>
+                </div>
+                <div class = "col-sm-2">
+                    <label class="form-control-label" for="plots-bg-color">Background color</label>
+                </div>
+                <div class = "col-sm-1">         
+                    <input  type="color" id="plots-bg-color" 
+                            name="plotsBgColor" placeholder="color" required>
+                </div>               
+                <div class = "col-sm-2">
+                    <label class="form-control-label" for="plots-default-color">Plots default color</label>
+                </div>
+                <div class = "col-sm-1">         
+                    <input  type="color" id="plots-default-color" 
+                            name="plotsDefaultColor" placeholder="color" required>
+                </div>
+            </div>
+        
+            <div class = "row">
+                <div class = "col-sm-12 form-label"><h4>Moving averages</h4></div>
+            </div>
+            <!-- MA parameters header -->
+            <div class = "row">
+                <div class = "col-sm-4 form-label"><h5>First line</h5></div>
+                <div class = "col-sm-4 form-label"><h5>Second line</h5></div>
+                <div class = "col-sm-4 form-label"><h5>Third line</h5></div>
+            </div>
+            <!-- MA parameters inputs -->
+            <div class = "row ma-parameters-row">
+                <!-- Input parameters for first line -->
+                <div class = "col-sm-4"> 
+                    <div class = "container parameters-group">
+                        <div class = "row line-parameters-row">
+                            <div class = "col-sm-6">
+                                <label class="form-control-label" for="first-ma-period-length">Period length</label>
+                            </div>
+                            <div class = "col-sm-6">
+                                <input  type="text" class="form-control" id="first-ma-period-length"
+                                        name="firstMaPriodLength" placeholder="Days" required>
+                            </div>
+                        </div>
+                        <div class = "row line-parameters-row">
+                            <div class = "col-sm-6">
+                                <label class="form-select-label" for="first-ma-type">Type</label>
+                            </div>
+                            <div class = "col-sm-6">
+                                <select id  = "first-ma-type" class="form-select" name = "firstMaType">
+                                    <option value="SMA" selected >SMA</option>
+                                    <option value="EMA">EMA</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class = "row line-parameters-row">
+                            <div class = "col-sm-6">
+                                <label class="form-control-label" for="first-ma-color">Color</label>
+                            </div>
+                            <div class = "col-sm-6">
+                                <input type="color" id="first-ma-color" name="firstMaColor" value="#F0F0F0" />
+                            </div>
+                        </div>
+                        <div class = "row line-parameters-row">
+                            <div class = "col-sm-6">
+                                <label class="form-check-label" for="first-ma-hide">Hide line</label>
+                            </div>
+                            <div class = "col-sm-6">
+                                <input  type="checkbox" class="form-check-input" id="first-ma-hide"
+                                        name="firstMaHide" placeholder="Hide" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Input parameters for second line -->
+                <div class = "col-sm-4"> 
+                    <div class = "container parameters-group">
+                        <div class = "row line-parameters-row">
+                            <div class = "col-sm-6">
+                                <label class="form-control-label" for="second-ma-period-length">Period length</label>
+                            </div>
+                            <div class = "col-sm-6">
+                                <input  type="text" class="form-control" id="second-ma-period-length"
+                                        name="secondMaPriodLength" placeholder="Days" required>
+                            </div>
+                        </div>
+                        <div class = "row line-parameters-row">
+                            <div class = "col-sm-6">
+                                <label class="form-select-label" for="second-ma-type">Type</label>
+                            </div>
+                            <div class = "col-sm-6">
+                                <select id  = "second-ma-type" class="form-select" name = "secondMaType">
+                                    <option value="SMA" selected >SMA</option>
+                                    <option value="EMA">EMA</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class = "row line-parameters-row">
+                            <div class = "col-sm-6">
+                                <label class="form-control-label" for="second-ma-color">Color</label>
+                            </div>
+                            <div class = "col-sm-6">
+                                <input type="color" id="second-ma-color" name="secondMaColor" value="#F0F0F0" />
+                            </div>
+                        </div>
+                        <div class = "row line-parameters-row">
+                            <div class = "col-sm-6">
+                                <label class="form-check-label" for="second-ma-hide">Hide line</label>
+                            </div>
+                            <div class = "col-sm-6">
+                                <input  type="checkbox" class="form-check-input" id="second-ma-hide"
+                                        name="secondMaHide" placeholder="Hide" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Input parameters for third line -->
+                 <div class = "col-sm-4"> 
+                    <div class = "container parameters-group">
+                        <div class = "row line-parameters-row">
+                            <div class = "col-sm-6">
+                                <label class="form-control-label" for="third-ma-period-length">Period length</label>
+                            </div>
+                            <div class = "col-sm-6">
+                                <input  type="text" class="form-control" id="third-ma-period-length"
+                                        name="thirdMaPriodLength" placeholder="Days" required>
+                            </div>
+                        </div>
+                        <div class = "row line-parameters-row">
+                            <div class = "col-sm-6">
+                                <label class="form-select-label" for="third-ma-type">Type</label>
+                            </div>
+                            <div class = "col-sm-6">
+                                <select id  = "third-ma-type" class="form-select" name = "thirdMaType">
+                                    <option value="SMA" selected >SMA</option>
+                                    <option value="EMA">EMA</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class = "row line-parameters-row">
+                            <div class = "col-sm-6">
+                                <label class="form-control-label" for="third-ma-color">Color</label>
+                            </div>
+                            <div class = "col-sm-6">
+                                <input type="color" id="third-ma-color" name="thirdMaColor" value="#F0F0F0" />
+                            </div>
+                        </div>
+                        <div class = "row line-parameters-row">
+                            <div class = "col-sm-6">
+                                <label class="form-check-label" for="third-ma-hide">Hide line</label>
+                            </div>
+                            <div class = "col-sm-6">
+                                <input  type="checkbox" class="form-check-input" id="third-ma-hide"
+                                        name="thirdMaHide" placeholder="Hide" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "row ma-parameters-row">
+                <!-- Volume and RSI parameters -->
+                <div class = "col-sm-4">
+                    <div class = "container">
+                        <div class = "row">
+                            <h5>Volume parameters</h5>
+                        </div>
+                        <div class = "row">
+                            <div class = "container parameters-group">
+                                <div class = "row line-parameters-row">
+                                    <div class = "col-sm-6">
+                                        <label class="form-control-label" for="volume-color">Color</label>
+                                    </div>
+                                    <div class = "col-sm-6">
+                                        <input type="color" id="volume-color" name="VolumeColor" value="#F0F0F0" />
+                                    </div>
+                                </div>
+                                <div class = "row line-parameters-row">
+                                    <div class = "col-sm-6">
+                                        <label class="form-check-label" for="volume-hide">Hide volume</label>
+                                    </div>
+                                    <div class = "col-sm-6">
+                                        <input  type="checkbox" class="form-check-input" id="volume-hide"
+                                                name="VolumeHide" placeholder="Hide" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class = "row">
+                            <h5>RSI parameters</h5>
+                        </div>
+                        <div class = "row">                  
+                            <div class = "container parameters-group">
+                                <div class = "row line-parameters-row">
+                                    <div class = "col-sm-6">
+                                        <label class="form-control-label" for="rsi-period-length">Period length</label>
+                                    </div>
+                                    <div class = "col-sm-6">
+                                        <input  type="text" class="form-control" id="rsi-period-length"
+                                                name="RSIPeriodLength" placeholder="Days" required>
+                                    </div>
+                                </div>
+                                <div class = "row line-parameters-row">
+                                    <div class = "col-sm-6">
+                                        <label class="form-control-label" for="rsi-color">Color</label>
+                                    </div>
+                                    <div class = "col-sm-6">
+                                        <input type="color" id="rsi-color" name="RSIColor" value="#F0F0F0" />
+                                    </div>
+                                </div>
+                                <div class = "row line-parameters-row">
+                                    <div class = "col-sm-6">
+                                        <label class="form-check-label" for="rsi-hide">Hide volume</label>
+                                    </div>
+                                    <div class = "col-sm-6">
+                                        <input  type="checkbox" class="form-check-input" id="rsi-hide"
+                                                name="RSIHide" placeholder="Hide" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- MACD parameters -->
+                <div class = "col-sm-4">
+                    <div class = "container">
+                        <div class = "row">
+                            <h5>MACD parameters</h5>
+                        </div>
+                        <div class = "row">
+                            <div class = "container parameters-group">
+                                <div class = "row line-parameters-row">
+                                    <div class = "col-sm-6">
+                                        <label class="form-control-label" for="macd-short-period-length">Short period length</label>
+                                    </div>
+                                    <div class = "col-sm-6">
+                                        <input  type="text" class="form-control" id="macd-short-period-length"
+                                                name="MACDShortPeriodLength" placeholder="Days" required>
+                                    </div>
+                                </div>
+                                <div class = "row line-parameters-row">
+                                    <div class = "col-sm-6">
+                                        <label class="form-control-label" for="macd-long-period-length">Long period length</label>
+                                    </div>
+                                    <div class = "col-sm-6">
+                                        <input  type="text" class="form-control" id="macd-long-period-length"
+                                                name="MACDLongPeriodLength" placeholder="Days" required>
+                                    </div>
+                                </div>
+                                <div class = "row line-parameters-row">
+                                    <div class = "col-sm-6">
+                                        <label class="form-control-label" for="macd-signal-period-length">Signal period length</label>
+                                    </div>
+                                    <div class = "col-sm-6">
+                                        <input  type="text" class="form-control" id="macd-signal-period-length"
+                                                name="MACDSignalPeriodLength" placeholder="Days" required>
+                                    </div>
+                                </div>
+                                <div class = "row line-parameters-row">
+                                    <div class = "col-sm-6">
+                                        <label class="form-control-label" for="macd-main-color">Main color</label>
+                                    </div>
+                                    <div class = "col-sm-6">
+                                        <input type="color" id="macd-main-color" name="MACDMainColor" value="#F0F0F0" />
+                                    </div>
+                                </div>
+                                <div class = "row line-parameters-row">
+                                    <div class = "col-sm-6">
+                                        <label class="form-control-label" for="macd-signal-color">Signal color</label>
+                                    </div>
+                                    <div class = "col-sm-6">
+                                        <input type="color" id="macd-signal-color" name="MACDSignalColor" value="#F0F0F0" />
+                                    </div>
+                                </div>
+                                <div class = "row line-parameters-row">
+                                    <div class = "col-sm-6">
+                                        <label class="form-check-label" for="macd-hide">Hide MACD</label>
+                                    </div>
+                                    <div class = "col-sm-6">
+                                        <input  type="checkbox" class="form-check-input" id="macd-hide"
+                                                name="MACDHide" placeholder="Hide" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Bollinger band parameters -->
+                <div class = "col-sm-4">
+                    <div class = "container">
+                        <div class = "row">
+                            <h5>Bollinger Band parameters</h5>
+                        </div>
+                        <div class = "row">
+                            <div class = "container parameters-group">
+                                <div class = "row line-parameters-row">
+                                    <div class = "col-sm-6">
+                                        <label class="form-control-label" for="bollinger-band-period-length">Period length</label>
+                                    </div>
+                                    <div class = "col-sm-6">
+                                        <input  type="text" class="form-control" id="bollinger-band-period-length"
+                                                name="bollingerBandPeriodLength" placeholder="Days" required>
+                                    </div>
+                                </div>
+                                <div class = "row line-parameters-row">
+                                    <div class = "col-sm-6">
+                                        <label class="form-control-label" for="bollinger-band-probability">Probability</label>
+                                    </div>
+                                    <div class = "col-sm-6">
+                                        <input  type="text" class="form-control" id="bollinger-band-probability"
+                                                name="bollingerBandProbability" placeholder="%" required>
+                                    </div>
+                                </div>
+                                <div class = "row line-parameters-row">
+                                    <div class = "col-sm-6">
+                                        <label class="form-control-label" for="bollinger-band-color">Color</label>
+                                    </div>
+                                    <div class = "col-sm-6">
+                                        <input type="color" id="bollinger-band-color" name="bollingerBandColor" value="#F0F0F0" />
+                                    </div>
+                                </div>
+                                <div class = "row line-parameters-row">
+                                    <div class = "col-sm-6">
+                                        <label class="form-control-label" for="bollinger-band-opacity">Opacity</label>
+                                    </div>
+                                    <div class = "col-sm-6">
+                                        <input type="text" class = "form-control" id="bollinger-band-opacity" name="bollingerBandOpacity" value="0.1" />
+                                    </div>
+                                </div>
+                                <div class = "row line-parameters-row">
+                                    <div class = "col-sm-6">
+                                        <label class="form-check-label" for="bollinger-bend-hide">Hide line</label>
+                                    </div>
+                                    <div class = "col-sm-6">
+                                        <input  type="checkbox" class="form-check-input" id="bollinger-bend-hide"
+                                                name="firstMaHide" placeholder="Hide" required>
+                                    </div>
+                                </div>
+                                <div class = "row line-parameters-row">
+                                    <div class = "col-sm-12">&nbsp</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="base-footer  container-fluid">
+            <div class = "row "> 
+                <div class="col-sm-12 d-flex float-end"> 
+                        <button id="btnCancel" class="btn btn-submit btn-outline-secondary" type="reset">Cancel</button>
+                        <button id="btnSubmit" type="submit" class="btn btn-submit btn-outline-secondary">Save</button>
+                        <button id="btnSubmit" type="submit" class="btn btn-submit btn-outline-secondary">Reset to default</button>
+                </div>      
+            </div>
+            <div class = "row">
+                <div class = "col-sm-12 d-flex  justify-content-center">
+                    <p class = "feedback">&nbsp{{message}}</p>
+                </div>
+            </div> 
+        </div>
+    </form>
+
+</div>
    
 {% endblock %}

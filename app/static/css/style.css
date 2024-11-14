@@ -291,13 +291,13 @@ footer
 	padding-left: 30px;
     padding-right: 30px;
     padding-top: 20px;
-	margin-top: 100px;
+	
 	margin-left: auto;
 	margin-right: auto;
 	border-radius: 4px;
     margin-bottom: 0px;
 	padding-bottom: 0px;
-	font-size: small;
+	
     color: #ffffff;
 }
 
@@ -312,8 +312,16 @@ footer
     outline: none;
     border-radius: 4px  !important;
     transition: all 0.5s;
-	/*margin-left: 20px;*/
-	/*padding-left: 10px;*/
+	font-size: 17px;	
+}
+
+.base-form .form-label  {
+	border-color: #d5d5d5;
+    box-shadow: none;
+ 	height: 35px;
+    outline: none;
+    border-radius: 4px  !important;
+    transition: all 0.5s;
 	font-size: 17px;	
 }
 
@@ -353,6 +361,8 @@ footer
 
 #login-form{
     width:300px;
+    margin-top: 100px;
+    font-size: small;
 }
 
 .feedback{
@@ -362,4 +372,26 @@ footer
     text-wrap-mode: nowrap;
     margin-left: -50px;
  
+}
+
+.parameters-group{
+    border:solid white 1px;
+    border-radius: 4px;
+    padding-left:12px;
+    padding-right: 12px;
+    padding-top: 4px;
+    padding-bottom: 4.px; 
+}
+
+.ma-parameters-row{
+    --bs-gutter-x: .1rem; 
+}
+.line-parameters-row{
+    /*
+    padding-right: calc(var(--bs-gutter-x)* .1);
+    padding-left: calc(var(--bs-gutter-x)* .1);
+    */
+    padding-left: 4px;
+    padding-right: 4px;
+    margin: 2px 0px 2px 0px;
 }

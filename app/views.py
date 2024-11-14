@@ -32,6 +32,7 @@ def home():
 #____________________________________________________________________________
 
 @app.route("/simbols")
+@login_required
 def simbols():
    if not current_user.is_authenticated:
        return render_template("home.html", pageName = "Home", user = current_user)
@@ -99,8 +100,16 @@ def portfolio():
 
 
 @app.route('/settings')
+@login_required
 def settings():
-   return render_template("settings.html", pageName = "Settings", user = current_user) 
+   return render_template("settings.html", pageName = "Settings", user = current_user, colorsmap = colorsmap,  message = "") 
+
+@app.route('/savesettings')
+def savesettings():
+   settingsSavingResult = "Settings saved successfully."
+   return render_template("settings.html", pageName = "Settings", user = current_user, message = settingsSavingResult) 
+
+
 
 @app.route('/contacts')
 def contacts():
@@ -282,3 +291,36 @@ def get_user_indicators_params(simbol:str, userid:str):
    )
    
    return params
+
+colorsmap = {
+    "Red":      "#FF0000",
+    "Green":    "#00FF00",
+    "Blue":     "#0000FF",
+    "Yellow":   "#FFFF00",
+    "Orange":   "#FFA500",
+    "Purple":   "#800080",
+    "Cyan":     "#00FFFF",
+    "Magenta":  "#FF00FF",
+    "Lime":     "#00FF00",
+    "Pink":     "#FFC0CB",
+    "Teal":     "#008080",
+    "Lavender": "#E6E6FA",
+    "Brown":    "#A52A2A",
+    "Beige":    "#F5F5DC",
+    "Coral":    "#FF7F50",
+    "Navy":     "#000080",
+    "Olive":    "#808000",
+    "Maroon":   "#800000",
+    "Aqua":     "#00FFFF",
+    "Salmon":   "#FA8072",
+    "Gold":     "#FFD700",
+    "Silver":   "#C0C0C0",
+    "Chocolate":"#D2691E",
+    "Orchid":   "#DA70D6",
+    "Mint":     "#98FF98",
+    "Khaki":    "#F0E68C",
+    "Plum":     "#DDA0DD",
+    "Wheat":    "#F5DEB3",
+    "Indigo":   "#4B0082",
+    "Chartreuse":"#7FFF00"
+}
