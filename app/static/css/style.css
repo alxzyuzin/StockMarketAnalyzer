@@ -260,6 +260,11 @@ footer
     width:95%;
     margin: 2px;
     font-size: small;
+
+    background-image: url('../images/Red_100x70_gray_small.png');
+    background-repeat: no-repeat;
+    background-size: 15px 10px;
+    background-position: right 10px top 2px;
     
 }
 
@@ -341,16 +346,17 @@ footer
 	resize: vertical;
 	border-radius: 4px;
 }
-#btnSubmit, #btnCancel
+#btnSubmit, #btnCancel, #btnReset
 {
-    width:80px;
+    
     background-color: #404040;
     color:#A0A0A0;
     font-size: 17px;
     margin: 2px;
 }
 
-#btnSubmit:hover, #btnCancel:hover{
+
+#btnSubmit:hover, #btnCancel:hover, #btnReset:hover{
     color:white;
 }
 .base-footer{
@@ -434,11 +440,16 @@ footer
     padding-right: 0px;
 }
 
+.row{
+    --bs-gutter-x:0rem
+}
 .row-parameters-group{
     border:solid white 1px;
     border-radius: 4px;
     padding-bottom: 4px;
     margin-bottom: 4px;
+    padding-left: 12px;
+    padding-right: 12px;
 }
 
 .col-parameters-group{
@@ -462,4 +473,31 @@ footer
 }
 .delimiter-row{
     height: 4px;
+}
+
+.btn-submit{
+    text-wrap: nowrap;
+}
+
+#btnCancel{
+    width: 80px;
+}
+
+#btnSubmit{
+    width: 80px;
+}
+#btnReset{
+    width: auto;
+}
+
+#settings-form{
+    margin-bottom: 60px;
+}
+
+#settings-form-footer{
+    width:100%
+}
+
+.empty-row{
+    height: 10px;
 }

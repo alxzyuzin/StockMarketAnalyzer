@@ -24,12 +24,13 @@
                 <ul id = "list-of-simbols" class = "simbols-list">
                     {% for simbol in simbols %}
                     <li>
-                        <button type="button" class="btn  btn-secondary shadow-none simbol-button" 
-                        {% if simbol.simbol == selected_simbol %}
-                            autofocus style = "color: orange;"
-                        {% endif %}
-                        onclick="simbol_button_click(event)">   
-                            {{simbol.simbol}}                     
+                        <button type="button" class="btn  btn-secondary shadow-none 
+                                simbol-button"  
+                                {% if simbol.simbol == selected_simbol %}
+                                    autofocus style = "color: orange;"
+                                {% endif %}
+                                onclick="simbol_button_click(event)">   
+                                {{simbol.simbol}}                     
                         </button>
                     </li>
                     {% endfor %}

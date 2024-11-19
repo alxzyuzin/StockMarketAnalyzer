@@ -7,6 +7,7 @@
     <form id = "settings-form" class = "base-form" action="/savesettings" method="POST">
         <div class = "container">
             
+            <!-- Simbol for settings and period length -->
             <div class ="row row-cols-4 align-items-center row-parameters-group">
                 <div class = "col">
                    <h3 class = "base-form-header">Settings for simbol</h3>
@@ -31,8 +32,7 @@
                             <div class = "col">
                                 <h4>Common plots parameters</h4>
                             </div>
-                        </div>
-                
+                        </div>               
                         <div class = "row row-cols-auto" >
                             <div class = "col-md">
                                 <div class = "row row-cols-auto" >
@@ -94,8 +94,6 @@
             <!-- MA parameters -->
             <div class = "row row-cols-1 row-parameters-group">
                 <div class = "col">
-                    
-                    <div class = "container-sm">
 
                         <div class = "row row-cols-1">
                             <div class = "col form-label"><h4>Moving averages</h4></div>
@@ -245,34 +243,34 @@
                         </div>
                             </div>
                         </div>
-                    </div>
+                 
                 </div>
             </div>
+            <!--
             <div class = "row delimiter-row">
                 <div class = "col-sm-12">&nbsp</div>
             </div>
-            <!-- Other parameters -->
-            <div class = "row">
+        -->
+            <!-- Other RSI MACD Bollinger bands and Volume parameters -->
+            <div class = "row row-cols-auto">
                 <!-- Volume and RSI parameters -->
-                <div class = "col-sm-4">
-                    <!--
-                    <div class = "container volume-and-rsi-container">               
+                <div class = "col-md">
+                    <div class = "row">
+                        <div class = "container container-parameters-group">
                             <div class = "row">
-                                <div class = "container parameters-group-container">
-                                    <div class = "row">
                                     <div class = "col-sm-12">
                                         <h5 class  = "parameters-group-header">Volume parameters</h5>
                                     </div>
-                                    </div>
-                                    <div class = "row line-parameters-row">
+                            </div>
+                            <div class = "row line-parameters-row">
                                     <div class = "col-sm-6">
                                         <label class="form-control-label" for="volume-color">Color</label>
                                     </div>
                                     <div class = "col-sm-6">
                                         <input type="color" id="volume-color" name="VolumeColor" value="#F0F0F0" />
                                     </div>
-                                    </div>
-                                    <div class = "row line-parameters-row">
+                            </div>
+                            <div class = "row line-parameters-row">
                                     <div class = "col-sm-6">
                                         <label class="form-check-label" for="volume-hide">Hide volume</label>
                                     </div>
@@ -280,18 +278,18 @@
                                         <input  type="checkbox" class="form-check-input" id="volume-hide"
                                                 name="VolumeHide" placeholder="Hide" required>
                                     </div>
-                                    </div>
-                                </div>
                             </div>
+                        </div>
+                    </div>
 
+                    <div class = "row">
+                        <div class = "container container-parameters-group">                                                                                      
                             <div class = "row">
-                                <div class = "container parameters-group">                                                                                      
-                                    <div class = "row">
                                         <div class = "col-sm-12">
                                             <h5 class  = "parameters-group-header">RSI parameters</h5>
                                         </div>
-                                    </div>
-                                    <div class = "row line-parameters-row">
+                            </div>
+                            <div class = "row line-parameters-row">
                                         <div class = "col-sm-6">
                                             <label class="form-control-label" for="rsi-period-length">Period length</label>
                                         </div>
@@ -299,16 +297,16 @@
                                             <input  type="text" class="form-control" id="rsi-period-length"
                                                     name="RSIPeriodLength" placeholder="Days" required>
                                         </div>
-                                    </div>
-                                    <div class = "row line-parameters-row">
+                            </div>
+                            <div class = "row line-parameters-row">
                                         <div class = "col-sm-6">
                                         <label class="form-control-label" for="rsi-color">Color</label>
                                         </div>
                                         <div class = "col-sm-6">
                                         <input type="color" id="rsi-color" name="RSIColor" value="#F0F0F0" />
                                         </div>
-                                    </div>
-                                    <div class = "row line-parameters-row">
+                            </div>
+                            <div class = "row line-parameters-row">
                                         <div class = "col-sm-6">
                                         <label class="form-check-label" for="rsi-hide">Hide volume</label>
                                         </div>
@@ -316,17 +314,14 @@
                                         <input  type="checkbox" class="form-check-input" id="rsi-hide"
                                                 name="RSIHide" placeholder="Hide" required>
                                         </div>
-                                    </div>
-                                </div>
                             </div>
+                        </div>
                     </div>
-                -->
                 </div>
                 <!-- MACD parameters -->
 
-                <div class = "col-sm-4">
-                    <!--
-                    <div class = "container parameters-group">                    
+                <div class = "col-md">
+                    <div class = "container container-parameters-group">                    
                         <div class = "row">
                             <div class = "container">
                                 <div class = "row">
@@ -389,12 +384,12 @@
                             </div>
                         </div>
                     </div>
-                -->
+                
                 </div>
                 <!-- Bollinger band parameters -->
-                <div class = "col-sm-4">
-                    <!--
-                    <div class = "container parameters-group">                    
+                <div class = "col-md">
+                    
+                    <div class = "container container-parameters-group">                    
                         <div class = "row">
                             <div class = "container ">
                                 <div class = "row">
@@ -451,18 +446,19 @@
                             </div>
                         </div>
                     </div>
-                -->
+                
                 </div>
 
             </div>
         </div>
-        <div class="base-footer  container-fluid">
-            <div class = "row "> 
-                <div class="col-sm-12 d-flex float-end"> 
-                        <button id="btnCancel" class="btn btn-submit btn-outline-secondary" type="reset">Cancel</button>
-                        <button id="btnSubmit" type="submit" class="btn btn-submit btn-outline-secondary">Save</button>
-                        <button id="btnSubmit" type="submit" class="btn btn-submit btn-outline-secondary">Reset to default</button>
-                </div>      
+        <div class = "row empty-row"></div>
+        <div id = "settings-form-footer" class="container-fluid">
+            <div class = "row ro-cols-auto">
+                <div class = "col text-end">
+                    <button id="btnCancel" type="reset"  class="btn btn-submit btn-outline-secondary">Cancel</button>
+                    <button id="btnSubmit" type="submit" class="btn btn-submit btn-outline-secondary">Save</button>
+                    <button id="btnReset"  type="submit" class="btn btn-submit btn-outline-secondary">Reset to default</button>
+                </div>
             </div>
             <div class = "row">
                 <div class = "col-sm-12 d-flex  justify-content-center">
