@@ -107,12 +107,11 @@ class SimbolData(db.Model):
     __tablename__ = "simboldata"
 
     simbol = db.Column(db.String(10), primary_key=True)
+    warning_level = db.Column(db.Integer)
     date_of_loading = db.Column(db.Date)             
     historical_data = db.Column(db.LargeBinary)
 
-    def __init(self, simbol:str):
-        self.simbol = simbol
-        
+    
     def __init__(self, simbol:str, warning_level:int, date_of_loading:date, historical_data):
         self.simbol = simbol
         self.warning_level = warning_level

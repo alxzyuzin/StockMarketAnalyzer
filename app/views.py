@@ -68,37 +68,9 @@ def simbols():
             simbols = db.session.query(Simbol).filter(Simbol.simbol.notin_(subquery)).order_by(Simbol.simbol).all()
          
          if simbol != '':
-            historydata = None
-         # Get history price data for simbol calculate indicators and build plots
-
-            # Try to find simbol's history data in cache
-            simboldata = db.session.query(SimbolData).filter(SimbolData.simbol == simbol).first()
-            if simboldata == None or simboldata.date_of_loading < date.today():
-               # If no data for simbol in e cache or data outdated
-               indicators_params = get_user_indicators_params(simbol, current_user.id)
-               historydata = ChartsData(simbol, indicators_params)
-               historydata.load(indicators_params.history_length)
-               historydata.calculate_indicators()
-               serialized_historycaldata = pickle.dumps(historydata)
-               # Save simbol's history data to the cache
-               if simboldata == None:
-                  # No simbol data in the cache   
-                  simboldata = SimbolData(simbol = simbol,
-                                          warning_level=historydata.warningLevel,
-                                          date_of_loading=date.today(),
-                                          historical_data = serialized_historycaldata)
-                  db.session.add(simboldata)
-               else:
-                  # simbol data exist in the cache but outdated
-                  simboldata.warning_level = historydata.warningLevel
-                  simboldata.date_of_loading = date.today()
-                  simboldata.historical_data = serialized_historycaldata
-               db.session.commit()
-            else:
-               # There is simbol data in the cache
-               # Restore simbol's history data from cache
-               historydata = pickle.loads(simboldata.historical_data)
-            
+            # Get history price data for simbol calculate indicators
+            historydata = download_historical_data(simbol = simbol)
+            # Build plots
             if historydata != None:
                plt = historydata.build_plots()
                # Save plots to a temporary buffer.
@@ -107,18 +79,14 @@ def simbols():
                # Embed the result in the html output.
                fig_data = base64.b64encode(buf.getbuffer()).decode("ascii")
                plots_img = f'data:image/png;base64,{fig_data}'
+            else:
+                return render_template("error.html", pageName = "Simbols", user = current_user, error_descr = "There ia a problem with historical data")     
                
-         #Recalculate warning levels for selected list type
+         # Refresh historical data for current list of simbols and calculate warning levels
          if rwl == 'true':    
-            download_historical_data()       
             # We already read list of simbols for carrent page into variable "simbols" 
             for smb in simbols:
-               indicators_params = get_user_indicators_params(simbol, current_user.id)
-               chartsdata = ChartsData(simbol,indicators_params)
-               chartsdata = ChartsData(smb.simbol, indicators_params)
-               chartsdata.load(10)
-            #warning_level = chartsdata.calcWarningLevel(10)
-            #trend_direction = chartsdata.calcTrendDirection(10)
+               download_historical_data(simbol = smb.simbol)
  
          return render_template("simbols.html" , pageName = "Simbols", simbols = simbols,
                                  selected_simbol = req["simbol"],
@@ -274,38 +242,47 @@ def calculate_indicators():
       
    #return jsonify(results)
 
-def download_historical_data():
+#____________________________________________________________________________
+# If fresh history price data exist in the cache 
+#  Restore data from the cache and return object with data
+# else
+#  Download history price data for simbol, calculate indicators,
+#  save data to the cache and return object with data
+#____________________________________________________________________________
+def download_historical_data( simbol:str):
    try:
-      #simbols = db.session.query(UserSimbol).all()
-      #subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).subquery()
-      #simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(
-      #   db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1)
-      #   )).order_by(Simbol.simbol).all()
-
-      today = date.today()
-      for smb in simbols:
-         simboldata = db.session.query(SimbolData).filter(SimbolData.simbol == smb.simbol).first()
-         
-         if simboldata == None or simboldata.date_of_loading < today:
-            indicators_params = get_user_indicators_params(smb.simbol, current_user.id)
-            historydata = ChartsData(smb.simbol, indicators_params)
-            historydata.load(indicators_params.history_length)
-            warning_level = historydata.calcWarningLevel(10)
-         
+      historydata = None
+      # Try to find simbol's history data in cache
+      simboldata = db.session.query(SimbolData).filter(SimbolData.simbol == simbol).first()
+      if simboldata == None or simboldata.date_of_loading < date.today():
+         # If no data for simbol in the cache or data outdated
+         indicators_params = get_user_indicators_params(simbol, current_user.id)
+         historydata = ChartsData(simbol, indicators_params)
+         historydata.load(indicators_params.history_length)
+         historydata.calculate_indicators()
+         serialized_historycaldata = pickle.dumps(historydata)
+         # Save simbol's history data to the cache
          if simboldata == None:
-            serialized_historycaldata = pickle.dumps(historydata)
-            simboldata = SimbolData(simbol = smb.simbol, warning_level = warning_level,
-                                    date_of_loading = today, historical_data = serialized_historycaldata)
+            # No simbol data in the cache   
+            simboldata = SimbolData(simbol = simbol,
+                                    warning_level=historydata.warningLevel,
+                                    date_of_loading=date.today(),
+                                    historical_data = serialized_historycaldata)
             db.session.add(simboldata)
-         
-         if simboldata.date_of_loading < date.today():
-            simboldata.warning_level = warning_level
-            simboldata.date_of_loading = today
-            simboldata.historical_data = historydata
-         
+         else:
+            # Simbol data exist in the cache but outdated
+            simboldata.warning_level = historydata.warningLevel
+            simboldata.date_of_loading = date.today()
+            simboldata.historical_data = serialized_historycaldata
          db.session.commit()
+      else:
+         # There is simbol data in the cache
+         # Restore simbol's history data from cache
+         historydata = pickle.loads(simboldata.historical_data)
+         
    except Exception as ex:
-      return render_template("error.html", pageName = "Simbols", user = current_user, error_descr = ex.args)     
+     return None
+   return historydata
 
 
             
