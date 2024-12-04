@@ -4,6 +4,7 @@
 <div class = "container-fluid">
     <div id = "main-row" class = "row">
         <div class = "col-sm-2 left-column">
+            <!-- Simbol list header -->
             <div class = "row simbols-list-header">
                 {% if listtype == "unselected" %}
                  Unselected simbols   
@@ -15,10 +16,12 @@
                  Portolio  
                 {% endif %}
             </div>
+            <!-- simbl search field -->
             <div class = "row">
                 <input id = "simbol-search" type="text" class = "form-control search-simbol-input" 
                     placeholder="Type simbol">
             </div>
+            <!-- Simbols list itself -->
             <div class = "row">
                 <div class = "col-sm simbols-list-border" >
                 <ul id = "list-of-simbols" class = "simbols-list">
@@ -37,8 +40,22 @@
                 </ul>
                 </div>
             </div>
+            <!-- button for culculating simbols warning levels-->
+            {% if listtype == "watchlist" or listtype == "portfolio" %}
+            <div class = "row">
+                <div class = "col-sm">
+                    <button type="button" class="btn btn-secondary shadow-none" 
+                        style="width: 100%;"
+                        onclick="set_warning_levels_button_click()">
+                        Set warn. levels.
+                    </button>
+                </div>
+             </div>
+             {% endif %}
         </div>
+        <!-- Right part of screen containing plots -->
         <div class = "col-sm-10 right-column">
+            <!-- Plots header -->
             <div id = "plots-header" class = "row">
                 <div class="col-sm text-center">
                     <div id = "plots-header-content">
@@ -46,9 +63,11 @@
                     </div>
                 </div>
             </div>
+            <!-- plots itself -->
             <div id = "plots-body" class = "row" style="background-image: url('{{plots_image}}')">
                 <div id = "plots-body-message" class = "col-sm text-center"></div>
             </div>
+            <!-- Section with buttons to manage simbols lists -->
             <div id = "plots-footer" class = "row">
                 <div class = "col-sm-6">
 
@@ -138,10 +157,10 @@
     function set_main_row_heigh()
     {
         main_row_height = window.innerHeight - MAIN_AREA_AJUSTMENT
-        list_of_simbols_height = main_row_height
+        list_of_simbols_height = main_row_height - 100
         if (window.innerWidth > 575)
         {             
-            $("#list-of-simbols").css("max-height", main_row_height)
+            $("#list-of-simbols").css("max-height", main_row_height - 35)
             $("#plots-body").css("min-height", main_row_height)
         }
         else
@@ -185,7 +204,7 @@
     {
         CURRENT_SIMBOL = event.target.innerText
                
-        window.location.href = "/simbols?listtype={{listtype}}&simbol=" + event.target.innerText;
+        window.location.href = "/simbols?listtype={{listtype}}&rwl=false&simbol=" + event.target.innerText;
         /*
         server_request_data = 
         [
@@ -349,6 +368,11 @@
         });
     }
 
+
+    function set_warning_levels_button_click()
+    {
+        window.location.href = "/simbols?listtype={{listtype}}&rwl=true&simbol=";
+    }
 </script>
 
 {% endblock %}

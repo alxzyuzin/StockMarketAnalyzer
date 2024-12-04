@@ -7,12 +7,13 @@ from flask_login import current_user, user_logged_out, login_user, logout_user, 
 #import smtplib
 
 from smtplib import SMTPException, SMTPConnectError, SMTPSenderRefused
-import datetime
+from datetime import date
 from io import BytesIO
 import base64
+import pickle
 
 #from app.dbutils import select_imagedata
-from app.models import db, Simbol, User, UserSimbol, IndicatorsParams
+from app.models import db, Simbol, User, UserSimbol, IndicatorsParams, SimbolData
 from app.userlogin  import currentusername
 from app.indicators import ChartsData
 
@@ -41,51 +42,84 @@ def simbols():
       req = request.args
       listtype = req["listtype"]
       simbol   = req["simbol"]
+      rwl      = req["rwl"]
       simbols=[]
+      # If page requested for specific simbol get simbol description from database
       selected_simbol_data = db.session.query(Simbol).filter(Simbol.simbol == simbol).first()  
       try:
          # Listtypes
          #   0 - unselected
          #   1 - portfolio
          #   2 - watchlist
-          
-         if listtype == "portfolio":
+         
+         # Get list of simbols in portfolio
+         if listtype == "portfolio": 
             subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).subquery()
             simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
    
+         # Get list of simbols in watchlist
          if listtype == "watchlist":
             subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 2).subquery()
             simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
-          
+
+         # Get list of all simbols that are in application databace 
          if listtype == "unselected":
             subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id).subquery()
             simbols = db.session.query(Simbol).filter(Simbol.simbol.notin_(subquery)).order_by(Simbol.simbol).all()
          
-         if simbol == '':
-            if "simbol" in session:
-               session.pop("simbol")
-         else:
-            filename = 'app\\appcache\\' + current_user.id + '_' + simbol + '.png' 
-            if (("simbol" not in session) or (session["simbol"] != simbol)):
+         if simbol != '':
+            historydata = None
+         # Get history price data for simbol calculate indicators and build plots
+
+            # Try to find simbol's history data in cache
+            simboldata = db.session.query(SimbolData).filter(SimbolData.simbol == simbol).first()
+            if simboldata == None or simboldata.date_of_loading < date.today():
+               # If no data for simbol in e cache or data outdated
                indicators_params = get_user_indicators_params(simbol, current_user.id)
-               chartsdata = ChartsData(simbol,indicators_params)
-               chartsdata.calculate_indicators()
-               plt = chartsdata.build_plots()
+               historydata = ChartsData(simbol, indicators_params)
+               historydata.load(indicators_params.history_length)
+               historydata.calculate_indicators()
+               serialized_historycaldata = pickle.dumps(historydata)
+               # Save simbol's history data to the cache
+               if simboldata == None:
+                  # No simbol data in the cache   
+                  simboldata = SimbolData(simbol = simbol,
+                                          warning_level=historydata.warningLevel,
+                                          date_of_loading=date.today(),
+                                          historical_data = serialized_historycaldata)
+                  db.session.add(simboldata)
+               else:
+                  # simbol data exist in the cache but outdated
+                  simboldata.warning_level = historydata.warningLevel
+                  simboldata.date_of_loading = date.today()
+                  simboldata.historical_data = serialized_historycaldata
+               db.session.commit()
+            else:
+               # There is simbol data in the cache
+               # Restore simbol's history data from cache
+               historydata = pickle.loads(simboldata.historical_data)
+            
+            if historydata != None:
+               plt = historydata.build_plots()
                # Save plots to a temporary buffer.
                buf = BytesIO()
                plt.savefig(buf, format="png")
                # Embed the result in the html output.
                fig_data = base64.b64encode(buf.getbuffer()).decode("ascii")
                plots_img = f'data:image/png;base64,{fig_data}'
-               session["simbol"] = simbol
-               # Save image in application cash
-               with open(filename, 'w') as file:
-                  file.write(plots_img)
                
-            else:
-               with open(filename, 'r') as file:
-                  plots_img = file.read()
-
+         #Recalculate warning levels for selected list type
+         if rwl == 'true':    
+            download_historical_data()       
+            # We already read list of simbols for carrent page into variable "simbols" 
+            for smb in simbols:
+               indicators_params = get_user_indicators_params(simbol, current_user.id)
+               chartsdata = ChartsData(simbol,indicators_params)
+               chartsdata = ChartsData(smb.simbol, indicators_params)
+               chartsdata.load(10)
+            #warning_level = chartsdata.calcWarningLevel(10)
+            #trend_direction = chartsdata.calcTrendDirection(10)
+ 
          return render_template("simbols.html" , pageName = "Simbols", simbols = simbols,
                                  selected_simbol = req["simbol"],
                                  selected_simbol_data = selected_simbol_data,  
@@ -102,7 +136,7 @@ def portfolio():
 @app.route('/settings')
 @login_required
 def settings():
-   return render_template("settings.html", pageName = "Settings", user = current_user, colorsmap = colorsmap,  message = "") 
+   return render_template("settings.html", pageName = "Settings", user = current_user,  message = "") 
 
 @app.route('/savesettings')
 def savesettings():
@@ -240,8 +274,41 @@ def calculate_indicators():
       
    #return jsonify(results)
 
+def download_historical_data():
+   try:
+      #simbols = db.session.query(UserSimbol).all()
+      #subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).subquery()
+      #simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(
+      #   db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1)
+      #   )).order_by(Simbol.simbol).all()
+
+      today = date.today()
+      for smb in simbols:
+         simboldata = db.session.query(SimbolData).filter(SimbolData.simbol == smb.simbol).first()
+         
+         if simboldata == None or simboldata.date_of_loading < today:
+            indicators_params = get_user_indicators_params(smb.simbol, current_user.id)
+            historydata = ChartsData(smb.simbol, indicators_params)
+            historydata.load(indicators_params.history_length)
+            warning_level = historydata.calcWarningLevel(10)
+         
+         if simboldata == None:
+            serialized_historycaldata = pickle.dumps(historydata)
+            simboldata = SimbolData(simbol = smb.simbol, warning_level = warning_level,
+                                    date_of_loading = today, historical_data = serialized_historycaldata)
+            db.session.add(simboldata)
+         
+         if simboldata.date_of_loading < date.today():
+            simboldata.warning_level = warning_level
+            simboldata.date_of_loading = today
+            simboldata.historical_data = historydata
+         
+         db.session.commit()
+   except Exception as ex:
+      return render_template("error.html", pageName = "Simbols", user = current_user, error_descr = ex.args)     
 
 
+            
 def get_user_indicators_params(simbol:str, userid:str):
    params = IndicatorsParams(
                 userid = InitialIndicatorsParams.USERID,
@@ -292,35 +359,3 @@ def get_user_indicators_params(simbol:str, userid:str):
    
    return params
 
-colorsmap = {
-    "Red":      "#FF0000",
-    "Green":    "#00FF00",
-    "Blue":     "#0000FF",
-    "Yellow":   "#FFFF00",
-    "Orange":   "#FFA500",
-    "Purple":   "#800080",
-    "Cyan":     "#00FFFF",
-    "Magenta":  "#FF00FF",
-    "Lime":     "#00FF00",
-    "Pink":     "#FFC0CB",
-    "Teal":     "#008080",
-    "Lavender": "#E6E6FA",
-    "Brown":    "#A52A2A",
-    "Beige":    "#F5F5DC",
-    "Coral":    "#FF7F50",
-    "Navy":     "#000080",
-    "Olive":    "#808000",
-    "Maroon":   "#800000",
-    "Aqua":     "#00FFFF",
-    "Salmon":   "#FA8072",
-    "Gold":     "#FFD700",
-    "Silver":   "#C0C0C0",
-    "Chocolate":"#D2691E",
-    "Orchid":   "#DA70D6",
-    "Mint":     "#98FF98",
-    "Khaki":    "#F0E68C",
-    "Plum":     "#DDA0DD",
-    "Wheat":    "#F5DEB3",
-    "Indigo":   "#4B0082",
-    "Chartreuse":"#7FFF00"
-}

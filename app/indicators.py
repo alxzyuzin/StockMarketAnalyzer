@@ -10,10 +10,24 @@ from app.models import IndicatorsParams
 import matplotlib
 matplotlib.use('Agg')
 
+class PriceChange:
+    def __init__(self, startPrice, endPrice, priceDecreasingOfset):
+        self.startPrice = startPrice
+        self.endPrice = endPrice
+        self.priceDecreasingOfset = priceDecreasingOfset
+
+    def __lt__(self, other):
+         if (self.startPrice < other.startPrice) and (self.endPrice < other.endPrice):
+            return True
+         else:
+             return False
+        
+
+
 class ChartsData:
 
     def __init__(self, simbol, indicators_params:IndicatorsParams ):
-        #numberOfDays = 250
+        # numberOfDays = 250
         # Request parameters
         self.__url = 'https://financialmodelingprep.com/api/v3/historical-price-full/'
         self.__serietype = "line"
@@ -23,8 +37,10 @@ class ChartsData:
         self.__history_length = indicators_params.history_length
         self.__from = (datetime.now() - timedelta(days = self.__history_length)).strftime("%Y-%m-%d")
         self.__to = datetime.now().strftime("%Y-%m-%d")
-        # Params for calculating indicators
+       
+       # Params for calculating indicators
         self.__params = indicators_params
+        
         # Source data       
         self.__date       = []
         self.__openPrice  = []
@@ -57,8 +73,15 @@ class ChartsData:
         self.__MACD = []
         self.__MACDSinalLine = []
 
+        self.lastPrice = 0
+        self.warningLevel = 0
 
-    def load(self):
+    def load(self, history_length:int):
+
+        self.__history_length = history_length
+        self.__from = (datetime.now() - timedelta(days = history_length)).strftime("%Y-%m-%d")
+        self.__to   = datetime.now().strftime("%Y-%m-%d")
+
         url = self.__url + self.__simbol+"?from=" + self.__from +"&to=" + self.__to + "&apikey=" + self.__apikey# + "&serietype=" + self.__serietype
         #test url with constant range for tests
         #url = 'https://financialmodelingprep.com/api/v3/historical-price-full/FSELX?from=2024-01-01&to=2024-09-07&apikey=VmvqJNpPV26D4SP554R2BkjnrCuJsJ2m'
@@ -88,7 +111,8 @@ class ChartsData:
             self.__label.append(datastr["label"])
             self.__changeOverTime.append(float(datastr["changeOverTime"]))
             
- 
+        self.lastPrice = self.__closePrice[len(self.__closePrice) - 1]
+        
     '''
         Calculate Simple Moving Average for defined range of numbers in the list
         data - list of numbers for average calculation
@@ -219,22 +243,19 @@ class ChartsData:
         self.__MACDSinalLine += signalLineData
 
     def calculate_indicators(self):
-       
-        self.load()
         self.calcFirstMA(self.__params.ma_first_period, self.__params.ma_first_type)
         self.calcSecondMA(self.__params.ma_second_period, self.__params.ma_second_type)
         self.calcThirdMA(self.__params.ma_third_period, self.__params.ma_third_type)
         self.calcBollingerBand(self.__params.bollingerband_period, self.__params.bollingerband_probability)
         self.calcRSI(self.__params.rsi_period)
         self.calcMACD(self.__params.macd_short_period, self.__params.macd_long_period, self.__params.macd_signal_period)
-        #chartsdata.show(50)
+        self.calcWarningLevel()
     
     
     '''
     Build plots for all indicators
     '''
     def build_plots(self):
-
         startvalue = self.__params.get_offset()       
          # Define plot layout
         gs_kw = dict( height_ratios=[4, 1, 1, 1])
@@ -340,4 +361,123 @@ class ChartsData:
         return fig
         #plt.show()
        
-    
+    def calcTrendDirection(self, number_of_days):
+        events = 0
+        day = 0
+        
+        # Look at close prices one by one and count events when 
+        # price for current day less then price for previouse day
+        # stop when count three such events
+        # Don't take into account days when price didn't change
+         
+        #while events < 3:
+        #    if prices[day] < prices[day + 1]:
+        #        events+=1
+        #    if prices[day] > prices[day + 1]:
+        #        events-=1
+        #    day+=1
+        
+        # Take prices for last days in reversed order
+        prices = []
+        for i in range(0,number_of_days + 1):
+            prices.append(self.__closePrice[len(self.__closePrice)-i - 1])
+        # Calculate price trend for peroid from prices[0] to prices[day]
+        # Actually we don't need a trend line, just it's slope sign
+        # in order to define positive or negative trend
+        # Trend line described by equation y = ax+b
+        # Pretend we have a set of points with coords x,y
+        # Full formula for calculation parameters a and b in above aquation is:
+
+        #a = ( n*S(x*y) - Sx*Sy) / n*Sx^2 - (Sx)^2
+        # where:
+        #  S(x*y)   - summ of multiplication x and y for each pair of coords
+        #  Sx       - sum of all values of x in set
+        #  Sy       - sum of all values of y in set
+
+
+         # First in one cycle calculate S(x*y) 
+         #  where:
+         #   x - number of day
+         #   y - price for that day
+         #      and
+         #  Sx
+         #      and
+         #  Sy
+        sum_xy = 0
+        sum_x = 0
+        sum_y = 0
+        sum_xx = 0
+        days = number_of_days +1
+        for x in range(0, days):
+            sum_xy += prices[x]*x
+            sum_x  += x
+            sum_y  += prices[x]
+            sum_xx += x*x
+
+        a = ( days * sum_xy - sum_x * sum_y ) / ( days * sum_xx - sum_x * sum_x)
+
+        return 0 - a
+
+    def comparePriceChanging(priceChange1:PriceChange, priceChange2:PriceChange):
+        if (priceChange1.startPrice < priceChange2.startPrice) and (priceChange1.endPrice < priceChange2.endPrice):
+            return True
+
+    def calcWarningLevel(self, number_of_days = 10):
+        # Take prices for last days in reversed order
+        WarningLevel = 0
+        prices = []
+        for i in range(0,number_of_days + 1):
+            prices.append(self.__closePrice[len(self.__closePrice)-i - 1])
+
+        # Put into the list last 3 price decreasing 
+        listOfChangingPrice = []
+        j = 0
+        for i in range (0,number_of_days):
+            if prices[i] < prices[i + 1]:
+                listOfChangingPrice.append(PriceChange(startPrice = prices[i + 1],
+                                                       endPrice=prices[i],
+                                                       priceDecreasingOfset = i))
+                j +=1
+            if j >= 3:
+                break
+        if len(listOfChangingPrice) == 0:
+             # Price didn'decrease last time Warning level == 0
+            self.warningLevel = 0
+            return 0   
+        
+        if len(listOfChangingPrice) == 1 and listOfChangingPrice[0].priceDecreasingOfset > 0:
+            # Price price decreased in watched period but it wasn't last change
+            # Actualy price went down and then went up 
+            # Warning level == 0
+            self.warningLevel = 0
+            return 0
+
+        if len(listOfChangingPrice) == 1 and listOfChangingPrice[0].priceDecreasingOfset == 0:
+            # Price price decreased in last day of watched period
+            # Warning level == 1
+            self.warningLevel = 1
+            return 1  
+
+        if len(listOfChangingPrice) == 2 and listOfChangingPrice[0] < listOfChangingPrice[1]:
+            # We have price decreased two times in watched period
+            # and second decreasing started from lower value than first decreasing and
+            # second decrising stopped on the lover value then stopped first decreasing 
+            # Warning level == 2
+            self.warningLevel = 2
+            return 2  
+        
+        if (len(listOfChangingPrice) == 3 and
+            listOfChangingPrice[0] < listOfChangingPrice[1] and
+            listOfChangingPrice[1] < listOfChangingPrice[2]
+            ):
+            # We have price decreased three times in watched period
+            # and each time prices decreased more
+            # It means that ttrend changing from positiv to negative 
+            # Warning level == 3
+            self.warningLevel = 3
+            return 3
+        
+        # No one alarming event happened so wornong level is 0
+        self.warningLevel = 0
+        return 0
+        

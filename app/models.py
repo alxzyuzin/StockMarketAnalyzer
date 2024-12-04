@@ -102,7 +102,25 @@ class Simbol(db.Model):
                 "gross":self.gross,
                 "overall":self.overall
                 }
-                
+
+class SimbolData(db.Model):
+    __tablename__ = "simboldata"
+
+    simbol = db.Column(db.String(10), primary_key=True)
+    date_of_loading = db.Column(db.Date)             
+    historical_data = db.Column(db.LargeBinary)
+
+    def __init(self, simbol:str):
+        self.simbol = simbol
+        
+    def __init__(self, simbol:str, warning_level:int, date_of_loading:date, historical_data):
+        self.simbol = simbol
+        self.warning_level = warning_level
+        self.date_of_loading = date_of_loading
+        self.historical_data = historical_data
+
+    def __repr__(self):
+        return f"simbol: {self.simbol}; warning_level: {self.warning_level}; date_of_loading: {self.date_of_loading}; historical_data: BLOB"
 
 class UserSimbol(db.Model):  
     __tablename__ = 'usersimbol'
@@ -110,18 +128,28 @@ class UserSimbol(db.Model):
     simbol = db.Column(db.String(10), primary_key=True)
     userid = db.Column(db.String(100), primary_key=True)
     listtype  = db.Column(db.Integer)
+    warning_level = db.Column(db.Integer)
+    calculation_date = db.Column(db.Date)
+    plots_image = db.Column(db.Text)
+
     # Listtypes
     #   0 - unselected
     #   1 - portfolio
     #   2 - watchlist
     
-    def __init__(self, simbol:str, userid:str, listtype:int):
+    def __init__(self, simbol:str, userid:str, listtype:int,
+                 warning_level:int = 0, calculation_date:date = date.today(), 
+                 plots_image:str = ""):
         self.simbol = simbol
         self.userid = userid
         self.listtype = listtype
+        self.warning_level = warning_level
+        self.calculation_date = calculation_date
+        self.plots_image = plots_image
 
     def __repr__(self):
-        return f"simbol: {self.simbol}; userid: {self.userid}; list type: {self.listtype} "
+        return f"simbol: {self.simbol}; userid: {self.userid}; list type: {self.listtype};\
+              warning_level: {self.warning_level}; calculation date: {self.calculation_date}"
     
 class IndicatorsParams(db.Model):
     __tablename__ = 'indicatorsparams'
