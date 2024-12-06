@@ -110,13 +110,15 @@ class SimbolData(db.Model):
     warning_level = db.Column(db.Integer)
     date_of_loading = db.Column(db.Date)             
     historical_data = db.Column(db.LargeBinary)
+    last_price = db.Column(db.Float)
 
     
-    def __init__(self, simbol:str, warning_level:int, date_of_loading:date, historical_data):
+    def __init__(self, simbol:str, warning_level:int, date_of_loading:date, historical_data, last_price:float):
         self.simbol = simbol
         self.warning_level = warning_level
         self.date_of_loading = date_of_loading
         self.historical_data = historical_data
+        self.last_price = last_price
 
     def __repr__(self):
         return f"simbol: {self.simbol}; warning_level: {self.warning_level}; date_of_loading: {self.date_of_loading}; historical_data: BLOB"

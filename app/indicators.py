@@ -257,9 +257,16 @@ class ChartsData:
     '''
     def build_plots(self):
         startvalue = self.__params.get_offset()       
-         # Define plot layout
-        gs_kw = dict( height_ratios=[4, 1, 1, 1])
-        fig, (ax0, ax1, ax2, ax3) = plt.subplots(4, 1,layout='constrained', gridspec_kw = gs_kw )
+        # Define plot layout
+        #_________________________________________________________________________
+        # Temporaly remove volume plot 
+        #gs_kw = dict( height_ratios=[4, 1, 1, 1])
+        gs_kw = dict( height_ratios=[5, 1, 1])
+        # ________________________________________________________________________
+        # Temporaly remove volume plot
+        #fig, (ax0, ax1, ax2, ax3) = plt.subplots(4, 1,layout='constrained', gridspec_kw = gs_kw )
+        fig, (ax0, ax2, ax3) = plt.subplots(3, 1,layout='constrained', gridspec_kw = gs_kw )
+        # ________________________________________________________________________
         #fig.tight_layout(h_pad = 0.5, w_pad = 0) # Set figure margins size
         #plt.legend(loc='upper left')
         fig.set_size_inches(14,9) 
@@ -314,11 +321,12 @@ class ChartsData:
         #----------------------------------------------------------------------------------
         # Display volumes
         #----------------------------------------------------------------------------------
-        ax1.set_title('Volumes for simbol ' + self.__simbol)
-        ax1.grid(True)
-        ax1.plot(self.__date[startvalue:], self.__volume[startvalue:],
-                 label = "Volume", color='steelblue', linewidth = 1)
-        ax1.set_xlim(datemin, datemax)
+        # Temporaly remove
+        #ax1.set_title('Volumes for simbol ' + self.__simbol)
+        #ax1.grid(True)
+        #ax1.plot(self.__date[startvalue:], self.__volume[startvalue:],
+        #         label = "Volume", color='steelblue', linewidth = 1)
+        #ax1.set_xlim(datemin, datemax)
         
         #----------------------------------------------------------------------------------
         # Display RSI

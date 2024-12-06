@@ -27,20 +27,21 @@
                 <ul id = "list-of-simbols" class = "simbols-list">
                     {% for simbol in simbols %}
                     <li>
-                        <button type="button" class="btn  btn-secondary shadow-none 
-                                simbol-button"  
-                                {% if simbol.simbol == selected_simbol %}
+                        <button type="button" 
+                                class="btn  btn-secondary shadow-none 
+                                simbol-button warning-level-{{simbol[1].warning_level}}"  
+                                {% if simbol[0].simbol == selected_simbol %}
                                     autofocus style = "color: orange;"
                                 {% endif %}
                                 onclick="simbol_button_click(event)">   
-                                {{simbol.simbol}}                     
+                                {{simbol[0].simbol}}                     
                         </button>
                     </li>
                     {% endfor %}
                 </ul>
                 </div>
             </div>
-            <!-- button for culculating simbols warning levels-->
+            <!-- button for calculating simbols warning levels-->
             {% if listtype == "watchlist" or listtype == "portfolio" %}
             <div class = "row">
                 <div class = "col-sm">
@@ -70,7 +71,11 @@
             <!-- Section with buttons to manage simbols lists -->
             <div id = "plots-footer" class = "row">
                 <div class = "col-sm-6">
-
+                    <div class = "float-start">
+                        {% if last_price > 0 %}
+                        Last price: {{last_price}}  |  Warning_level: {{warning_level}}
+                        {% endif %}
+                    </div>
                 </div>
                 <div class = "col-sm-6">
                     <div class="float-end">

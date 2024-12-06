@@ -55,18 +55,30 @@ def simbols():
          # Get list of simbols in portfolio
          if listtype == "portfolio": 
             subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).subquery()
-            simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
+            simbols = db.session.query(Simbol, SimbolData)\
+                     .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
+                     .filter(Simbol.simbol.in_(subquery))\
+                     .order_by(Simbol.simbol).all()
    
          # Get list of simbols in watchlist
          if listtype == "watchlist":
             subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 2).subquery()
-            simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
-
+            #simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
+            simbols = db.session.query(Simbol, SimbolData)\
+                     .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
+                     .filter(Simbol.simbol.in_(subquery))\
+                     .order_by(Simbol.simbol).all()
+            
          # Get list of all simbols that are in application databace 
          if listtype == "unselected":
             subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id).subquery()
-            simbols = db.session.query(Simbol).filter(Simbol.simbol.notin_(subquery)).order_by(Simbol.simbol).all()
-         
+            simbols = db.session.query(Simbol, SimbolData)\
+                     .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
+                     .filter(Simbol.simbol.notin_(subquery))\
+                     .order_by(Simbol.simbol).all()
+         # Create mock history data object to provide all nessesery values for html template
+         # if no one simbol selected
+         historydata = ChartsData("-----", get_user_indicators_params("-----", current_user.id))
          if simbol != '':
             # Get history price data for simbol calculate indicators
             historydata = download_historical_data(simbol = simbol)
@@ -86,17 +98,20 @@ def simbols():
          if rwl == 'true':    
             # We already read list of simbols for carrent page into variable "simbols" 
             for smb in simbols:
-               download_historical_data(simbol = smb.simbol)
+               download_historical_data(simbol = smb[0].simbol)
  
          return render_template("simbols.html" , pageName = "Simbols", simbols = simbols,
                                  selected_simbol = req["simbol"],
                                  selected_simbol_data = selected_simbol_data,  
                                  user = current_user,
-                                 listtype = req["listtype"], plots_image = plots_img)             
+                                 listtype = req["listtype"], plots_image = plots_img,
+                                 last_price = historydata.lastPrice,
+                                 warning_level = historydata.warningLevel)             
       except Exception as ex:
           return render_template("error.html", pageName = "Simbols", user = current_user, error_descr = ex.args)     
 
 @app.route('/portfolio')
+@login_required
 def portfolio():
    return render_template("portfolio.html", pageName = "Portfolio", user = current_user) 
 
@@ -104,9 +119,11 @@ def portfolio():
 @app.route('/settings')
 @login_required
 def settings():
+   indicators_params = get_user_indicators_params("-----", current_user.id)
    return render_template("settings.html", pageName = "Settings", user = current_user,  message = "") 
 
 @app.route('/savesettings')
+@login_required
 def savesettings():
    settingsSavingResult = "Settings saved successfully."
    return render_template("settings.html", pageName = "Settings", user = current_user, message = settingsSavingResult) 
@@ -154,6 +171,7 @@ def logout():
 #   Handle request on moving simbols between lists of simbols
 #____________________________________________________________________________
 @app.route("//move_simbols_between_lists", methods = ['POST', 'GET'])
+@login_required
 def add_simbol_to_watchlist():
    if request.method == "POST":
       request_data = request.get_json()
@@ -196,6 +214,7 @@ def add_simbol_to_watchlist():
 #   Calculate simbol indicators, build plots and return plots to client
 #____________________________________________________________________________
 @app.route("/calculate_indicators", methods = ['POST', 'GET'])
+@login_required
 def calculate_indicators():
    if request.method == "POST":
       request_data = request.get_json()
@@ -267,13 +286,15 @@ def download_historical_data( simbol:str):
             simboldata = SimbolData(simbol = simbol,
                                     warning_level=historydata.warningLevel,
                                     date_of_loading=date.today(),
-                                    historical_data = serialized_historycaldata)
+                                    historical_data = serialized_historycaldata,
+                                    last_price = historydata.lastPrice)
             db.session.add(simboldata)
          else:
             # Simbol data exist in the cache but outdated
             simboldata.warning_level = historydata.warningLevel
             simboldata.date_of_loading = date.today()
             simboldata.historical_data = serialized_historycaldata
+            simboldata.last_price = historydata.lastPrice
          db.session.commit()
       else:
          # There is simbol data in the cache
@@ -287,6 +308,7 @@ def download_historical_data( simbol:str):
 
             
 def get_user_indicators_params(simbol:str, userid:str):
+
    params = IndicatorsParams(
                 userid = InitialIndicatorsParams.USERID,
                 simbol =  InitialIndicatorsParams.SIMBOL,
