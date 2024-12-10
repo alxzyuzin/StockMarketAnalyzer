@@ -277,15 +277,18 @@ footer
 }
 
 .warning-level-1{
-    background-image: url('../images/Gold_100x70_gray_small.png');
+    background-image: none;
+    /*background-image: url('../images/Gold_100x70_gray_small.png');*/
 }
 
 .warning-level-2{
-    background-image: url('../images/Orange_100x70_gray_small.png');
+    background-image: none;
+    /*background-image: url('../images/Orange_100x70_gray_small.png');*/
 }
 
 .warning-level-3{
-    background-image: url('../images/Red_100x70_gray_small.png');
+    background-image: none;
+    /*background-image: url('../images/Red_100x70_gray_small.png');*/
 }
 
 

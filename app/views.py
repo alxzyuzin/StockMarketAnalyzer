@@ -119,8 +119,22 @@ def portfolio():
 @app.route('/settings')
 @login_required
 def settings():
-   indicators_params = get_user_indicators_params("-----", current_user.id)
-   return render_template("settings.html", pageName = "Settings", user = current_user,  message = "") 
+   if request.args:
+      req = request.args
+      simbol   = req["simbol"]
+      # Select simbols that are in user's portfolio
+      simbols = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).all()
+   
+      if simbol == '':
+         indicators_params = None
+      else:
+         indicators_params = get_user_indicators_params(simbol, current_user.id)
+   
+   return render_template("settings.html", pageName = "Settings", 
+                          simbols = simbols,
+                          user = current_user,
+                          par_values = indicators_params,
+                          message = "") 
 
 @app.route('/savesettings')
 @login_required
