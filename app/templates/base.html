@@ -38,20 +38,38 @@
               {% if user.is_authenticated %}
               <!-- Simbols.menu -->
               <li class = "nav-item dropdown">
-               <a class="nav-link dropdown-toggle {% if pageName == 'Simbols' %} active {% endif %}" href="#"
-                 id="navbarDropdownSimbols" role="button" data-bs-toggle="dropdown" 
-                 aria-expanded="false">Simbols</a>
-               <ul class="dropdown-menu" aria-labelledby="navbarDropdownGalleries">
-                <li><a class="dropdown-item" href="/simbols?listtype=portfolio&rwl=false&simbol=">Portfolio</a></li>
-                <li><a class="dropdown-item" href="/simbols?listtype=watchlist&rwl=false&simbol=">Wachlist</a></li>
-                <li><a class="dropdown-item" href="/simbols?listtype=unselected&rwl=false&simbol=">All</a></li>
+                <a  id="navbarDropdownSimbols" 
+                    class="nav-link dropdown-toggle {% if pageName == 'Simbols' %} active {% endif %}" 
+                    href="#"
+                    role="button" data-bs-toggle="dropdown" 
+                    aria-expanded="false">Simbols</a>
+               <ul class="dropdown-menu" aria-labelledby="navbarDropdownSimbols">
+                  <li><a class="dropdown-item" href="/simbols?listtype=portfolio&rwl=false&simbol=">Portfolio</a></li>
+                  <li><a class="dropdown-item" href="/simbols?listtype=watchlist&rwl=false&simbol=">Wachlist</a></li>
+                  <li><a class="dropdown-item" href="/simbols?listtype=unselected&rwl=false&simbol=">All</a></li>
                </ul>
               </li>
-              <li class = "nav-item">
-                <a class="nav-link {% if pageName == 'Portfolio' %} active {% endif %}" href="/portfolio">Portfolio</a>
+              <li class = "nav-item dropdown">
+                <a id ="navbarDropdownPortfolio" 
+                   class="nav-link dropdown-toggle {% if pageName == 'Portfolio' %} active {% endif %}" 
+                   href="#"
+                   role="button" data-bs-toggle="dropdown" 
+                  aria-expanded="false">Portfolio</a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdownPortfolio">
+                    <li><a class="dropdown-item" href="/activity">Activity</a></li>
+                    <li><a class="dropdown-item" href="/perfomance">Perfomance</a></li>
+                </ul>
               </li>
-              <li class = "nav-item">
-                <a class="nav-link {% if pageName == 'Settings' %} active {% endif %}" href="/settings?simbol=">Settings</a>
+              <li class = "nav-item dropdown">
+                <a id ="navbarDropdownSettings" 
+                   class="nav-link dropdown-toggle {% if pageName == 'Settings' %} active {% endif %}"
+                   href="#"
+                   role="button" data-bs-toggle="dropdown" 
+                   aria-expanded="false">Settings</a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdownSettings">
+                    <li><a class="dropdown-item" href="/settings?simbol=">Indicator's preferences</a></li>
+                    <li><a class="dropdown-item" href="/userprofile">User profile</a></li>
+                 </ul>
               </li>
               {% endif %}
               <li class = "nav-item">

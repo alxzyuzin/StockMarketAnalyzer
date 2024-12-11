@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, LoginManager
 from datetime import date
+from config import InitialIndicatorsParams
 
 
 
@@ -361,3 +362,55 @@ class Operation(db.Model):
                 operation date: {self.operation_date}\
                 operationtype: {self.operation_type}\
                 price: {self.price}; amount: {self.amount} "
+    
+
+def get_user_indicators_params(simbol:str, userid:str):
+
+   params = IndicatorsParams(
+                userid = InitialIndicatorsParams.USERID,
+                simbol =  InitialIndicatorsParams.SIMBOL,
+
+                width = InitialIndicatorsParams.WIDTH,
+                heigh = InitialIndicatorsParams.HEIGH,
+
+                history_length = InitialIndicatorsParams.HISTORY_LENGTH,
+
+                daily_prices_color = InitialIndicatorsParams.DAILY_PRICES_COLOR,
+    
+                ma_first_period = InitialIndicatorsParams.MA_FIRST_PERIOD,
+                ma_first_type = InitialIndicatorsParams.MA_FIRST_TYPE,
+                ma_first_color = InitialIndicatorsParams.MA_FIRST_COLOR,
+                show_ma_first = InitialIndicatorsParams.SHOW_MA_FIRST,
+
+                ma_second_period = InitialIndicatorsParams.MA_SECOND_PERIOD,
+                ma_second_type = InitialIndicatorsParams.MA_SECOND_TYPE,
+                ma_second_color = InitialIndicatorsParams.MA_SECOND_COLOR,
+                show_ma_second = InitialIndicatorsParams.SHOW_MA_SECOND,
+
+                ma_third_period = InitialIndicatorsParams.MA_THIRD_PERIOD,
+                ma_third_type = InitialIndicatorsParams.MA_THIRD_TYPE,
+                ma_third_color = InitialIndicatorsParams.MA_THIRD_COLOR,
+                show_ma_third = InitialIndicatorsParams.SHOW_MA_THIRD,
+                
+                ma_volume_color = InitialIndicatorsParams.VOLUME_COLOR,
+                show_volume = InitialIndicatorsParams.SHOW_VOLUME,
+    
+                rsi_period = InitialIndicatorsParams.RSI_PERIOD,
+                rsi_color = InitialIndicatorsParams.RSI_COLOR,
+                show_rsi = InitialIndicatorsParams.SHOW_RSI,
+
+                macd_short_period = InitialIndicatorsParams.MACD_SHORT_PERIOD,
+                macd_long_period = InitialIndicatorsParams.MACD_LONG_PERIOD,
+                macd_signal_period = InitialIndicatorsParams.MACD_SIGNAL_PERIOD,
+                macd_main_color = InitialIndicatorsParams.MACD_MAIN_COLOR,
+                macd_signal_color = InitialIndicatorsParams.MACD_SIGNAL_COLOR,
+                show_macd = InitialIndicatorsParams.SHOW_MACD,
+
+                bollingerband_period = InitialIndicatorsParams.BOLLINGERBAND_PERIOD,
+                bollingerband_probability = InitialIndicatorsParams.BOLLINGERBAND_PROBABILITY,
+                bollingerband_color = InitialIndicatorsParams.BOLLINGERBAND_COLOR,
+                bollingerband_opacity = InitialIndicatorsParams.BOLLINGERBAND_OPACITY,
+                show_bollingerband = InitialIndicatorsParams.SHOW_BOLINGERBAND
+   )
+   
+   return params
