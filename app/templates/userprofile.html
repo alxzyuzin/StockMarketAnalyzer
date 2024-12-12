@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+<div id="UserProfileDialog" class = "container dialog">
+    
+    <form id = "userprofile-form" class = "base-form" action="/userprofile" method="POST">
+        <h4 class = "base-form-header">User profile</h4>   
+        <div class = "container">
+            <div class = "row" >    
+                <div class = "col-sm-12">         
+                    <input  type="text" class="form-control col-sm" id="inputUserName" 
+                            name="inputUserName" placeholder="User name" required
+                            value="{{user.username}}">
+                </div>
+            </div>
+            <div class = "row" >    
+                <div class = "col-sm-12">         
+                    <input  type="text" class="form-control col-sm" id="inputUserEmail" 
+                            name="inputUserEMail" placeholder="E-Mail" required
+                            value="{{user.email}}">
+                </div>
+            </div>
+            <div class = "row">
+                <div class = "col-sm-12">
+                    <input  type="password" class="form-control  col-sm" id="inputPassword_1"
+                            name="inputPassword_1" placeholder="Password" required>
+                </div>   
+            </div>
+            <div class = "row">
+                <div class = "col-sm-12">
+                    <input  type="password" class="form-control  col-sm" id="inputPassword_2"
+                            name="inputPassword_2" placeholder="Password" required>
+                </div>   
+            </div>
+        </div>
+        
+        <div class="base-footer  container-fluid">
+            <div class = "row "> 
+                <div class="col-sm-12 d-flex float-end"> 
+                        <button id="btnCancel" class="btn btn-submit btn-outline-secondary" type="reset">Cancel</button>
+                        <button id="btnSubmit" type="submit" class="btn btn-submit btn-outline-secondary">Save</button>
+                </div>      
+            </div>
+            <div class = "row">
+                <div class = "col-sm-12 d-flex  justify-content-center">
+                    <p class = "feedback">&nbsp{{operationResult}}</p>
+                </div>
+            </div> 
+        </div>
+    </form>
+
+</div>
+{% endblock %}

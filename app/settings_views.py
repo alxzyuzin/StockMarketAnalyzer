@@ -7,7 +7,7 @@ from app.models import ( db,
                          get_user_indicators_params)
 
 
-@app.route('/settings')
+@app.route('/settings', methods=["GET","POST"])
 @login_required
 def settings():
    if request.args:
@@ -33,3 +33,26 @@ def savesettings():
    settingsSavingResult = "Settings saved successfully."
    return render_template("settings.html", pageName = "Settings", user = current_user, message = settingsSavingResult) 
 
+@app.route('/userprofile', methods=["GET","POST"])
+@login_required
+def userprfile():
+    _operationResult = ""
+    if request.method == "POST":
+        _UserName = request.form["inputUserName"]
+        _EMail = request.form["inputUserEMail"]
+        _Password_1 = request.form["inputPassword_1"]
+        _Password_2 = request.form["inputPassword_2"]
+        if _Password_1 != _Password_2:
+            _operationResult = "Entered passwords do not match."
+            return render_template("userprofile.html", pageName = "UserProfile", user = current_user, operationResult = _operationResult)
+
+        try:
+            user = db.session.query(User).filter(User.id == current_user.id).first()
+            user.username = _UserName
+            user.email = _EMail
+            user.set_password(_Password_1)
+            db.session.commit() 
+            _operationResult = "User's data updated succesfully."
+        except Exception as ex:  
+             return render_template("error.html", pageName = "UserProfile", user = current_user, error_descr = ex.args)            
+    return render_template("userprofile.html", pageName = "UserProfile", user = current_user, operationResult = _operationResult)
