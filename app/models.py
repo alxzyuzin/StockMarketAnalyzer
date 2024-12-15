@@ -164,40 +164,41 @@ class IndicatorsParams(db.Model):
     
     history_length = db.Column(db.Integer)
 
-    daily_prices_color = db.Column(db.String(6))
+    default_color = db.Column(db.String(9))
+    background_color   = db.Column(db.String(9))
     
     ma_first_period = db.Column(db.Integer)
     ma_first_type  = db.Column(db.String(4)) # SMA EMA e.s.on
-    ma_first_color = db.Column(db.String(6))
+    ma_first_color = db.Column(db.String(9))
     show_ma_first  = db.Column(db.Boolean)
 
     ma_second_period = db.Column(db.Integer)
     ma_second_type  = db.Column(db.String(4)) # SMA EMA e.s.on
-    ma_second_color = db.Column(db.String(6))
+    ma_second_color = db.Column(db.String(9))
     show_ma_second  = db.Column(db.Boolean)
 
     ma_third_period = db.Column(db.Integer)
     ma_third_type  = db.Column(db.String(4)) # SMA EMA e.s.on
-    ma_third_color = db.Column(db.String(6))
+    ma_third_color = db.Column(db.String(9))
     show_ma_third  = db.Column(db.Boolean)
 
-    ma_volume_color = db.Column(db.String(6))
+    ma_volume_color = db.Column(db.String(9))
     show_volume  = db.Column(db.Boolean)
     
     rsi_period = db.Column(db.Integer)
-    rsi_color = db.Column(db.String(6))
+    rsi_color = db.Column(db.String(9))
     show_rsi  = db.Column(db.Boolean)
 
     macd_short_period = db.Column(db.Integer)
     macd_long_period = db.Column(db.Integer)
     macd_signal_period = db.Column(db.Integer)
-    macd_main_color = db.Column(db.String(6))
-    macd_signal_color = db.Column(db.String(6))
+    macd_main_color = db.Column(db.String(9))
+    macd_signal_color = db.Column(db.String(9))
     show_macd  = db.Column(db.Boolean)
 
     bollingerband_period = db.Column(db.Integer)
     bollingerband_probability = db.Column(db.Integer) # in percents
-    bollingerband_color = db.Column(db.String(6))
+    bollingerband_color = db.Column(db.String(9))
     bollingerband_opacity = db.Column(db.Float)
     show_bollingerband  = db.Column(db.Boolean)
 
@@ -206,7 +207,8 @@ class IndicatorsParams(db.Model):
                 width:int,
                 heigh:int,
                 history_length:int,
-                daily_prices_color:str,
+                default_color:str,
+                background_color:str,
     
                 ma_first_period:int,
                 ma_first_type:str,
@@ -251,7 +253,8 @@ class IndicatorsParams(db.Model):
 
         self.history_length = history_length
 
-        self.daily_prices_color = daily_prices_color
+        self.default_color = default_color
+        self.background_color = background_color
     
         self.ma_first_period = ma_first_period
         self.ma_first_type  = ma_first_type
@@ -294,7 +297,8 @@ class IndicatorsParams(db.Model):
         width: {self.width};\
         heigh: {self.heigh};\
         history_length: {self.history_length};\
-        daily_prices_color: {self.daily_prices_color};\
+        default_color: {self.default_color};\
+        background_color: {self.background_color};\
         ma_first_period: {self.ma_first_period};\
         ma_first_type: {self.ma_first_type};\
         ma_first_color: {self.ma_first_color};\
@@ -364,7 +368,7 @@ class Operation(db.Model):
                 price: {self.price}; amount: {self.amount} "
     
 
-def get_user_indicators_params(simbol:str, userid:str):
+def get_default_indicators_params():
 
    params = IndicatorsParams(
                 userid = InitialIndicatorsParams.USERID,
@@ -375,7 +379,8 @@ def get_user_indicators_params(simbol:str, userid:str):
 
                 history_length = InitialIndicatorsParams.HISTORY_LENGTH,
 
-                daily_prices_color = InitialIndicatorsParams.DAILY_PRICES_COLOR,
+                default_color = InitialIndicatorsParams.DEFAULT_COLOR,
+                background_color = InitialIndicatorsParams.BACKGROUND_COLOR,
     
                 ma_first_period = InitialIndicatorsParams.MA_FIRST_PERIOD,
                 ma_first_type = InitialIndicatorsParams.MA_FIRST_TYPE,
@@ -414,3 +419,6 @@ def get_user_indicators_params(simbol:str, userid:str):
    )
    
    return params
+
+def get_user_indicators_params(simbol:str, userid:str):
+    return get_default_indicators_params()

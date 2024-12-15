@@ -346,16 +346,36 @@ footer
 	font-size: 17px;	
 }
 
-.base-form .form-control:focus {
-    border: solid #202020 1px;
-	border-width: 2px;
-   
 
+
+.base-form .form-control:focus {
+    border-color: #656565;
+	border-width: 2px;
+    box-shadow: inset;
+ 
+}
+
+.base-form .form-color-control{
+    border-color: #7F7F7F;
+    outline: none;
+    border-radius: 4px  !important;
+    transition: all 0.5s;}
+
+.base-form .form-color-control:focus{
+    border-width: 2px;
+    border-color: #656565;
 }
 
 .base-form select{
 	padding-top: 0px;
 }
+
+.base-form select:focus{
+    border-width: 2px;
+	border-color: #656565;
+    box-shadow: none;
+}
+
 .base-form textarea {
     min-height: 50px;
 	margin-top: 6px;
@@ -400,19 +420,60 @@ footer
     font-size: small;
 }
 
-.feedback{
-	color: orange;
-	font-size: medium;
-    width:100%;
-    text-wrap-mode: nowrap;
-    margin-left: -50px;
- 
-}
+
 
 #settings-form{
     padding-top: 10px;
     padding-left:20px;
     padding-right: 20px;
+}
+
+#settings-form input[type="checkbox"]{
+    width: 20px;
+    height: 20px;
+    background-color:#f0f0f0;
+    border-color: #656565;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    box-shadow: none;
+}
+
+#settings-form input[type="checkbox"]:focus {
+    border-width: 2px;
+    border-color: #656565;
+}
+
+#settings-form input[type="checkbox"]:checked {
+  
+  background-color: #606060; 
+  box-shadow: none;
+     
+}
+
+#settings-form .form-control-label{
+    text-wrap: wrap;
+}
+/*
+input[type="checkbox"]:checked::after {
+     content: '';
+      position: absolute;
+       width: 10px;
+        height: 10px;
+         top: 4px;
+          left: 4px; 
+    background-color: #ff0000;  Set the color of the checkmark  
+    border-radius: 2px; 
+}
+*/
+.feedback{
+	color: orange;
+	font-size: large;
+    width:100%;
+    text-wrap-mode: nowrap;
+    margin-left: -50px;
+ 
 }
 .parameters-group{
     border:solid white 1px;

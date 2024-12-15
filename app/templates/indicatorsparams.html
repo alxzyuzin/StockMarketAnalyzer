@@ -1,0 +1,563 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+<div id = "main-row" class = "row">
+     <!-- Left part of screen containing list of simbols -->
+      <!--
+    <div class = "col-sm-2 left-column">
+        <!- Simbol list header ->
+        <div class = "row simbols-list-header">
+            Select simbol
+        </div>
+        <!- simbl search field ->
+        <div class = "row">
+            <input id = "simbol-search" type="text" class = "form-control search-simbol-input" 
+                placeholder="Type simbol">
+        </div>
+        <!- Simbols list itself ->
+        <div class = "row">
+            <div class = "col-sm simbols-list-border" >
+            <ul id = "list-of-simbols" class = "simbols-list">
+                {% if simbols != None %}
+                {% for simbol in simbols %}
+                <li>
+                    <button type="button" 
+                            class="btn  btn-secondary shadow-none 
+                            simbol-button warning-level-"  
+                            {% if simbol.simbol == selected_simbol %}
+                                autofocus style = "color: orange;"
+                            {% endif %}
+                            onclick="simbol_button_click(event)">   
+                            {{simbol.simbol}}                     
+                    </button>
+                </li>
+                {% endfor %}
+                {% endif %}
+            </ul>
+            </div>
+        </div>
+    </div>
+    -->
+    <!-- Right part of screen containing plots -->
+    <!--div class = "col-sm-10 right-column"-->
+    <div class = "col-sm">
+        <div id="SettingsDialog" class = "container">   
+            {% if par_values != None %}
+            <form id = "settings-form" class = "base-form" action="/setindicatorsparams?simbol=-----" method="POST">
+                <div class = "container">
+                    
+                    <!-- Common plots parameters -->
+                    <div class = "row row-cols-1 row-parameters-group">
+                        <div class = "col">
+                            <div class = "container container-commmon-parameters">
+                                <div class = "row row-cols-1">
+                                    <div class = "col">
+                                        <h4>Common plots parameters</h4>
+                                    </div>
+                                </div>               
+                                <div class = "row row-cols-auto" >
+                                    <div class = "col-md"> <!-- Simbol & History length -->
+                                        <div class = "row row-cols-auto" >
+                                            <div class = "col-md"> <!-- Simbol -->
+                                                <div class = "row row-cols-auto" hidden> 
+                                                    <div class = "col-sm col-label">
+                                                        <label class="form-control-label" for="simbol">Simbol:</label>
+                                                    </div>
+                                                    <div class = "col-sm col-input">         
+                                                        <input  type="text" class="form-control" id="simbol" 
+                                                            name="simbol" value="{{par_values.simbol}}" disabled required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class = "col-md"> <!-- History length -->
+                                                <div class = "row row-cols-auto"> 
+                                                    <div class = "col-sm col-label">
+                                                        <label class="form-control-label" for="historylength" style = "word-wrap: normal;">History length</label>
+                                                    </div>
+                                                    <div class = "col-sm col-input">         
+                                                        <input  type="text" class="form-control" id="historylength" 
+                                                            name="historyLength" placeholder="days" required
+                                                            value = "{{par_values.history_length}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class = "col-md"> <!-- Width & Height -->
+                                        <div class = "row row-cols-auto" >
+                                            <div class = "col-md">    <!-- Width -->
+                                                <div class = "row row-cols-auto"> 
+                                                    <div class = "col-sm col-label">
+                                                        <label class="form-control-label" for="plots-width">Width</label>
+                                                    </div>
+                                                    <div class = "col-sm col-input">         
+                                                        <input  type="text" class="form-control" id="plots-width" 
+                                                            name="plotsWidth" placeholder="Width" required
+                                                            value = "{{par_values.width}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class = "col-md"> <!-- Height -->
+                                                <div class = "row row-cols-auto"> 
+                                                    <div class = "col-sm col-label">
+                                                        <label class="form-control-label" for="plots-height">Height</label>
+                                                    </div>
+                                                    <div class = "col-sm col-input">         
+                                                        <input  type="text" class="form-control" id="plots-height" 
+                                                            name="plotsHeight" placeholder="Height" required
+                                                            value = "{{par_values.heigh}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class = "col-md"> <!-- Background color & Plots def. color -->
+                                        <div class = "row row-cols-auto" >
+                                            <div class = "col-md"> <!-- Background color -->
+                                                <div class = "row row-cols-auto">
+                                                    <div class = "col-md col-label text-end">
+                                                        <label class="form-control-label" for="plots-bg-color">Backgr. color</label>
+                                                    </div>
+                                                    <div class = "col-sm col-input">         
+                                                        <input  type="color" id="plots-bg-color" 
+                                                            name="plotsBgColor" required
+                                                            value = "{{par_values.background_color}}">
+                                                    </div>
+                                                </div>             
+                                            </div>
+                                            <div class = "col-md">  <!-- Plots def. color -->
+                                                <div class = "row row-cols-auto">
+                                                    <div class = "col-md col-label text-end">
+                                                        <label class="form-control-label" for="plots-default-color">Plots def. color</label>
+                                                    </div>
+                                                    <div class = "col-sm col-input">         
+                                                        <input  type="color" id="plots-default-color" 
+                                                            name="plotsDefaultColor" required
+                                                            value = "{{par_values.default_color}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MA parameters -->
+                    <div class = "row row-cols-1 row-parameters-group">
+                        <div class = "col">
+                            <div class = "row row-cols-1">
+                                <div class = "col form-label"><h4>Moving averages</h4></div>
+                            </div>
+                                    <!-- MA parameters inputs -->
+                            <div class = "row">
+                                    <!-- Input parameters for first line -->
+                                    <div class = "col-12 col-md-4 col-parameters-group">                  
+                                        <div class = "container container-parameters-group">
+                                            <div class = "row">
+                                                <div class = "col-sm-12 form-label">
+                                                    <h5 class  = "parameters-group-header">First line</h5>
+                                                </div>
+                                            </div>        
+                                            <div class = "row line-parameters-row">
+                                                <div class = "col-sm-6 col-label">
+                                                    <label class="form-control-label" for="first-ma-period-length">Period length</label>
+                                                </div>
+                                                <div class = "col-sm-6 col-input">
+                                                    <input  type="text" class="form-control" 
+                                                            id="first-ma-period-length"
+                                                            name="firstMaPriodLength" placeholder="Days" required
+                                                            value="{{par_values.ma_first_period}}">
+                                                </div>
+                                            </div>
+                                            <div class = "row line-parameters-row">
+                                                <div class = "col-sm-6 col-label">
+                                                    <label class="form-select-label" for="first-ma-type">Type</label>
+                                                </div>
+                                                <div class = "col-sm-6 col-input">
+                                                    <select id  = "first-ma-type" class="form-select" 
+                                                            name = "firstMaType">
+                                                        <option value="sma" {% if par_values.ma_first_type =="sma" %} selected {% endif %} >SMA</option>
+                                                        <option value="ema" {% if par_values.ma_first_type =="ema" %} selected {% endif %}>EMA</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class = "row line-parameters-row">
+                                                <div class = "col-sm-6 col-label">
+                                                    <label class="form-control-label" for="first-ma-color">Color</label>
+                                                </div>
+                                                <div class = "col-sm-6 col-input">
+                                                    <input type="color" id="first-ma-color" 
+                                                           name="firstMaColor"
+                                                           value = "{{par_values.ma_first_color}}" />
+                                                </div>
+                                            </div>
+                                            <div class = "row line-parameters-row">
+                                                <div class = "col-sm-6 col-label">
+                                                    <label class="form-check-label" for="first-ma-hide">Show line</label>
+                                                </div>
+                                                <div class = "col-sm-6 col-input">
+                                                    <input  type="checkbox" class="form-check-input" id="first-ma-hide"
+                                                            name="firstMaShow" 
+                                                            {% if par_values.show_ma_first %}checked value = "True" {% endif %}>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Input parameters for second line -->
+                                    <div class = "col-12 col-md-4 col-parameters-group"> 
+                                        <div class = "container container-parameters-group">
+                                            <div class = "row">
+                                                <div class = "col-sm-12 form-label">
+                                                    <h5 class  = "parameters-group-header">Second line</h5>
+                                                </div>
+                                            </div>
+                                            <div class = "row line-parameters-row">
+                                                <div class = "col-sm-6 col-label">
+                                                    <label class="form-control-label" for="second-ma-period-length">Period length</label>
+                                                </div>
+                                                <div class = "col-sm-6 col-input">
+                                                    <input  type="text" class="form-control" id="second-ma-period-length"
+                                                            name="secondMaPriodLength" placeholder="Days" required
+                                                            value = {{par_values.ma_second_period}}>
+                                                </div>
+                                            </div>
+                                            <div class = "row line-parameters-row">
+                                                <div class = "col-sm-6 col-label">
+                                                    <label class="form-select-label" for="second-ma-type">Type</label>
+                                                </div>
+                                                <div class = "col-sm-6 col-input">
+                                                    <select id  = "second-ma-type" class="form-select" name = "secondMaType">
+                                                        <option value="sma" {% if par_values.ma_second_type =="sma" %} selected {% endif %} >SMA</option>
+                                                        <option value="ema" {% if par_values.ma_second_type =="ema" %} selected {% endif %}>EMA</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class = "row line-parameters-row">
+                                                <div class = "col-sm-6 col-label">
+                                                    <label class="form-control-label" for="second-ma-color">Color</label>
+                                                </div>
+                                                <div class = "col-sm-6 col-input">
+                                                    <input type="color" id="second-ma-color" name="secondMaColor"
+                                                        value="{{par_values.ma_second_color}}" />
+                                                </div>
+                                            </div>
+                                            <div class = "row line-parameters-row">
+                                                <div class = "col-sm-6 col-label">
+                                                    <label class="form-check-label" for="second-ma-hide">Show line</label>
+                                                </div>
+                                                <div class = "col-sm-6 col-input">
+                                                    <input  type="checkbox" class="form-check-input" id="second-ma-hide"
+                                                            name="secondMaShow" 
+                                                            {% if par_values.show_ma_second %}checked{% endif %}>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Input parameters for third line -->                          
+                                    <div class = "col-12 col-md-4 col-parameters-group"> 
+                                    <div class = "container container-parameters-group">
+                                        <div class = "row">
+                                            <div class = "col-sm-12 form-label">
+                                                <h5 class  = "parameters-group-header">Third line</h5>
+                                            </div>
+                                        </div>
+                                        <div class = "row line-parameters-row">
+                                            <div class = "col-sm-6 col-label">
+                                                <label class="form-control-label" for="third-ma-period-length">Period length</label>
+                                            </div>
+                                            <div class = "col-sm-6 col-input">
+                                                <input  type="text" class="form-control" id="third-ma-period-length"
+                                                        name="thirdMaPriodLength" placeholder="Days" required
+                                                        value = "{{par_values.ma_third_period}}">
+                                            </div>
+                                        </div>
+                                        <div class = "row line-parameters-row">
+                                            <div class = "col-sm-6 col-label">
+                                                <label class="form-select-label" for="third-ma-type">Type</label>
+                                            </div>
+                                            <div class = "col-sm-6 col-input">
+                                                <select id  = "third-ma-type" class="form-select" name = "thirdMaType">
+                                                    <option value="sma" {% if par_values.ma_third_type =="sma" %} selected {% endif %} >SMA</option>
+                                                    <option value="ema" {% if par_values.ma_third_type =="ema" %} selected {% endif %}>EMA</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class = "row line-parameters-row">
+                                            <div class = "col-sm-6 col-label">
+                                                <label class="form-control-label" for="third-ma-color">Color</label>
+                                            </div>
+                                            <div class = "col-sm-6 col-input">
+                                                <input type="color" id="third-ma-color" name="thirdMaColor"
+                                                    value="{{par_values.ma_third_color}}" />
+                                            </div>
+                                        </div>
+                                        <div class = "row line-parameters-row">
+                                            <div class = "col-sm-6 col-label">
+                                                <label class="form-check-label" for="third-ma-hide">Show line</label>
+                                            </div>
+                                            <div class = "col-sm-6 col-input">
+                                                <input  type="checkbox" class="form-check-input" id="third-ma-hide"
+                                                        name="thirdMaShow"
+                                                        {% if par_values.show_ma_third %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                       
+                        </div>
+                    </div>
+                    
+                    <!-- Other RSI MACD Bollinger bands and Volume parameters -->
+                    <div class = "row row-cols-auto">
+                        <!-- Volume and RSI parameters -->
+                        <div class = "col-md">
+                            <div class = "row">
+                                <div class = "container container-parameters-group"> <!-- Volume -->
+                                    <div class = "row">
+                                            <div class = "col-sm-12">
+                                                <h5 class  = "parameters-group-header">Volume parameters</h5>
+                                            </div>
+                                    </div>
+                                    <div class = "row line-parameters-row">
+                                            <div class = "col-sm-6">
+                                                <label class="form-control-label" for="volume-color">Color</label>
+                                            </div>
+                                            <div class = "col-sm-6">
+                                                <input type="color" id="volume-color" name="volumeColor"
+                                                       value = "{{par_values.ma_volume_color}}" />
+                                            </div>
+                                    </div>
+                                    <div class = "row line-parameters-row">
+                                            <div class = "col-sm-6">
+                                                <label class="form-check-label" for="volume-hide">Show volume</label>
+                                            </div>
+                                            <div class = "col-sm-6">
+                                                <input  type="checkbox" class="form-check-input" id="volume-hide"
+                                                        name="volumeShow"
+                                                        {% if par_values.show_volume %} checked {% endif %}>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class = "row"> <!-- RSI -->
+                                <div class = "container container-parameters-group">                                                                                      
+                                    <div class = "row">
+                                                <div class = "col-sm-12">
+                                                    <h5 class  = "parameters-group-header">RSI parameters</h5>
+                                                </div>
+                                    </div>
+                                    <div class = "row line-parameters-row">
+                                                <div class = "col-sm-6">
+                                                    <label class="form-control-label" for="rsi-period-length">Period length</label>
+                                                </div>
+                                                <div class = "col-sm-6">
+                                                    <input  type="text" class="form-control" id="rsi-period-length"
+                                                            name="RSIPeriodLength" placeholder="Days" required
+                                                            value="{{par_values.rsi_period}}">
+                                                </div>
+                                    </div>
+                                    <div class = "row line-parameters-row">
+                                                <div class = "col-sm-6">
+                                                <label class="form-control-label" for="rsi-color">Color</label>
+                                                </div>
+                                                <div class = "col-sm-6">
+                                                <input type="color" id="rsi-color" name="RSIColor"
+                                                       value="{{par_values.rsi_color}}" />
+                                                </div>
+                                    </div>
+                                    <div class = "row line-parameters-row">
+                                                <div class = "col-sm-6">
+                                                <label class="form-check-label" for="rsi-hide">Show RSI</label>
+                                                </div>
+                                                <div class = "col-sm-6">
+                                                <input  type="checkbox" class="form-check-input" id="rsi-show"
+                                                        name="RSIShow"
+                                                        {% if par_values.show_rsi %} checked {% endif %}>
+                                                </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- MACD parameters -->
+                        <div class = "col-md">
+                            <div class = "container container-parameters-group">                    
+                                <div class = "row">
+                                    <div class = "container">
+                                        <div class = "row">
+                                            <div class = "col-sm-12">
+                                                <h5 class  = "parameters-group-header">MACD parameters</h5>
+                                            </div>
+                                        </div>
+                                        <div class = "row line-parameters-row">
+                                            <div class = "col-sm-6">
+                                                <label class="form-control-label" for="macd-short-period-length">Short period length</label>
+                                            </div>
+                                            <div class = "col-sm-6">
+                                                <input  type="text" class="form-control" id="macd-short-period-length"
+                                                        name="MACDShortPeriodLength" placeholder="Days" required
+                                                        value="{{par_values.macd_short_period}}">
+                                            </div>
+                                        </div>
+                                        <div class = "row line-parameters-row">
+                                            <div class = "col-sm-6">
+                                                <label class="form-control-label" for="macd-long-period-length">Long period length</label>
+                                            </div>
+                                            <div class = "col-sm-6">
+                                                <input  type="text" class="form-control" id="macd-long-period-length"
+                                                        name="MACDLongPeriodLength" placeholder="Days" required
+                                                        value="{{par_values.macd_long_period}}">
+                                            </div>
+                                        </div>
+                                        <div class = "row line-parameters-row">
+                                            <div class = "col-sm-6">
+                                                <label class="form-control-label" for="macd-signal-period-length">Signal period length</label>
+                                            </div>
+                                            <div class = "col-sm-6">
+                                                <input  type="text" class="form-control" id="macd-signal-period-length"
+                                                        name="MACDSignalPeriodLength" placeholder="Days" required
+                                                        value="{{par_values.macd_signal_period}}">
+                                            </div>
+                                        </div>
+                                        <div class = "row line-parameters-row">
+                                            <div class = "col-sm-6">
+                                                <label class="form-control-label" for="macd-main-color">Main color</label>
+                                            </div>
+                                            <div class = "col-sm-6">
+                                                <input type="color" id="macd-main-color" name="MACDMainColor" 
+                                                value="{{par_values.macd_main_color}}" />
+                                            </div>
+                                        </div>
+                                        <div class = "row line-parameters-row">
+                                            <div class = "col-sm-6">
+                                                <label class="form-control-label" for="macd-signal-color">Signal color</label>
+                                            </div>
+                                            <div class = "col-sm-6">
+                                                <input type="color" id="macd-signal-color" name="MACDSignalColor" 
+                                                value="{{par_values.macd_signal_color}}" />
+                                            </div>
+                                        </div>
+                                        <div class = "row line-parameters-row">
+                                            <div class = "col-sm-6">
+                                                <label class="form-check-label" for="macd-hide">Show MACD</label>
+                                            </div>
+                                            <div class = "col-sm-6">
+                                                <input  type="checkbox" class="form-check-input" id="showMACD"
+                                                        name="showMACD"
+                                                        {% if par_values.show_macd %} checked {% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        </div>
+                        <!-- Bollinger band parameters -->
+                        <div class = "col-md">
+                            
+                            <div class = "container container-parameters-group">                    
+                                <div class = "row">
+                                    <div class = "container ">
+                                        <div class = "row">
+                                            <div class = "col-sm-12">
+                                                <h5 class  = "parameters-group-header">Bollinger Band parameters</h5>
+                                            </div>    
+                                        </div>
+                                        <div class = "row line-parameters-row">
+                                            <div class = "col-sm-6">
+                                                <label class="form-control-label" for="bollinger-band-period-length">Period length</label>
+                                            </div>
+                                            <div class = "col-sm-6">
+                                                <input  type="text" class="form-control" id="bollinger-band-period-length"
+                                                        name="bollingerBandPeriodLength" placeholder="Days" required
+                                                        value="{{par_values.bollingerband_period}}">
+                                            </div>
+                                        </div>
+                                        <div class = "row line-parameters-row">
+                                            <div class = "col-sm-6">
+                                                <label class="form-control-label" for="bollinger-band-probability">Probability</label>
+                                            </div>
+                                            <div class = "col-sm-6">
+                                                <input  type="text" class="form-control" id="bollinger-band-probability"
+                                                        name="bollingerBandProbability" placeholder="%" required
+                                                        value="{{par_values.bollingerband_probability}}">
+                                            </div>
+                                        </div>
+                                        <div class = "row line-parameters-row">
+                                            <div class = "col-sm-6">
+                                                <label class="form-control-label" for="bollinger-band-color">Color</label>
+                                            </div>
+                                            <div class = "col-sm-6">
+                                                <input type="color" id="bollinger-band-color" name="bollingerBandColor"
+                                                       value="{{par_values.bollingerband_color}}" />
+                                            </div>
+                                        </div>
+                                        <div class = "row line-parameters-row">
+                                            <div class = "col-sm-6">
+                                                <label class="form-control-label" for="bollinger-band-opacity">Opacity</label>
+                                            </div>
+                                            <div class = "col-sm-6">
+                                                <input type="text" class = "form-control" id="bollinger-band-opacity" name="bollingerBandOpacity" 
+                                                value="{{par_values.bollingerband_opacity}}" />
+                                            </div>
+                                        </div>
+                                        <div class = "row line-parameters-row">
+                                            <div class = "col-sm-6">
+                                                <label class="form-check-label" for="bollinger-bend-hide">Show bands</label>
+                                            </div>
+                                            <div class = "col-sm-6">
+                                                <input  type="checkbox" class="form-check-input" id="bollinger-bend-hide"
+                                                        name="showBollingerBand" 
+                                                        {% if par_values.show_bollingerband %} checked {% endif %}>
+                                            </div>
+                                        </div>
+                                        <div class = "row line-parameters-row">
+                                            <div class = "col-sm-12">&nbsp</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        </div>
+
+                    </div>
+                
+                <div class = "row empty-row"></div>
+                
+                <div class = "row ro-cols-auto">
+                        <div class = "col text-end">
+                            <div class = "justify-content-center">
+                                <p class = "feedback">&nbsp{{message}}</p>
+                            </div>
+                        </div>
+                        <div class = "col text-end">
+                            <button id="btnCancel" type="reset"  class="btn btn-submit btn-outline-secondary">Cancel</button>
+                            <button id="btnSubmit" type="submit" class="btn btn-submit btn-outline-secondary">Save</button>
+                            <button id="btnReset"  type="submit" class="btn btn-submit btn-outline-secondary">Reset to default</button>
+                        </div>
+                </div>
+            </div>
+                
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<script>
+         /*_______________________________________________________________________
+    | Request server for carculating indicators and build plots
+    | Parameters:
+    |   simbol - simbol for calcutation indicatoer for
+    |___________________________________________________________________________*/
+    function simbol_button_click(event)
+    {
+        CURRENT_SIMBOL = event.target.innerText
+        window.location.href = "/setindicatorsparams?simbol=" + event.target.innerText;
+    }
+
+</script>
+   
+{% endblock %}

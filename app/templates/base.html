@@ -67,15 +67,29 @@
                    role="button" data-bs-toggle="dropdown" 
                    aria-expanded="false">Settings</a>
                   <ul class="dropdown-menu" aria-labelledby="navbarDropdownSettings">
-                    <li><a class="dropdown-item" href="/settings?simbol=">Indicator's preferences</a></li>
+                    <li><a class="dropdown-item" href="/setindicatorsparams?simbol=-----">Indicator's preferences</a></li>
                     <li><a class="dropdown-item" href="/userprofile">User profile</a></li>
-                 </ul>
+                  </ul>
               </li>
               {% endif %}
               <li class = "nav-item">
                 <a class="nav-link {% if pageName == 'Contacts' %} active {% endif %}" href="/contacts">Contacts</a>            
               </li>
              
+              {% if user.admin %}
+              <li class = "nav-item dropdown">
+                <a id ="navbarDropdownSettings" 
+                   class="nav-link dropdown-toggle {% if pageName == 'AdminTasks' %} active {% endif %}"
+                   href="#"
+                   role="button" data-bs-toggle="dropdown" 
+                   aria-expanded="false">Admin tasks</a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdownAdminTasks">
+                  <li><a class="dropdown-item" href="/manageusers">Manage users</a></li>
+                  <li><a class="dropdown-item" href="/managesimbols">Manage simbols</a></li>
+                </ul>
+              {% endif %}
+              
+
               <li class = "nav-item">
                 {% if user.is_authenticated %}
                   <a class="nav-link {% if pageName == 'Login' %} active {% endif %}" href="/logout">Logout</a>            
