@@ -340,6 +340,90 @@ class IndicatorsParams(db.Model):
             self.bollingerband_period
         )
 
+    def __eq__(self, other):  
+        if isinstance(other, IndicatorsParams):
+            if self.userid == other.userid and\
+                self.simbol == other.simbol and\
+                self.width  == other.width and\
+                self.heigh  == other.heigh and\
+                self.history_length == other.history_length and\
+                self.default_color == other.default_color and\
+                self.background_color == other.background_color and\
+                self.ma_first_period == other.ma_first_period and\
+                self.ma_first_type  == other.ma_first_type and\
+                self.ma_first_color == other.ma_first_color and\
+                self.show_ma_first == other.show_ma_first and\
+                self.ma_second_period == other.ma_second_period and\
+                self.ma_second_type  == other.ma_second_type and\
+                self.ma_second_color == other.ma_second_color and\
+                self.show_ma_second == other.show_ma_second and\
+                self.ma_third_period == other.ma_third_period and\
+                self.ma_third_type  == other.ma_third_type and\
+                self.ma_third_color == other.ma_third_color and\
+                self.show_ma_third == other.show_ma_third and\
+                self.ma_volume_color == other.ma_volume_color and\
+                self.show_volume == other.show_volume and\
+                self.rsi_period == other.rsi_period and\
+                self.rsi_color == other.rsi_color and\
+                self.show_rsi == other.show_rsi and\
+                self.macd_short_period == other.macd_short_period and\
+                self.macd_long_period == other.macd_long_period and\
+                self.macd_signal_period == other.macd_signal_period and\
+                self.macd_main_color == other.macd_main_color and\
+                self.macd_signal_color == other.macd_signal_color and\
+                self.show_macd == other.show_macd and\
+                self.bollingerband_period == other.bollingerband_period and\
+                self.bollingerband_probability == other.bollingerband_probability and\
+                self.bollingerband_color == other.bollingerband_color and\
+                self.bollingerband_opacity == other.bollingerband_opacity and\
+                self.show_bollingerband == other.show_bollingerband:
+                return True 
+            else:
+                return False
+        else:
+            return False
+
+    def is_equal(self, other)->bool:
+        if  self.userid == other.userid and\
+            self.simbol == other.simbol and\
+            self.width  == other.width and\
+            self.heigh  == other.heigh and\
+            self.history_length == other.history_length and\
+            self.default_color == other.default_color and\
+            self.background_color == other.background_color and\
+            self.ma_first_period == other.ma_first_period and\
+            self.ma_first_type  == other.ma_first_type and\
+            self.ma_first_color == other.ma_first_color and\
+            self.show_ma_first == other.show_ma_first and\
+            self.ma_second_period == other.ma_second_period and\
+            self.ma_second_type  == other.ma_second_type and\
+            self.ma_second_color == other.ma_second_color and\
+            self.show_ma_second == other.show_ma_second and\
+            self.ma_third_period == other.ma_third_period and\
+            self.ma_third_type  == other.ma_third_type and\
+            self.ma_third_color == other.ma_third_color and\
+            self.show_ma_third == other.show_ma_third and\
+            self.ma_volume_color == other.ma_volume_color and\
+            self.show_volume == other.show_volume and\
+            self.rsi_period == other.rsi_period and\
+            self.rsi_color == other.rsi_color and\
+            self.show_rsi == other.show_rsi and\
+            self.macd_short_period == other.macd_short_period and\
+            self.macd_long_period == other.macd_long_period and\
+            self.macd_signal_period == other.macd_signal_period and\
+            self.macd_main_color == other.macd_main_color and\
+            self.macd_signal_color == other.macd_signal_color and\
+            self.show_macd == other.show_macd and\
+            self.bollingerband_period == other.bollingerband_period and\
+            self.bollingerband_probability == other.bollingerband_probability and\
+            self.bollingerband_color == other.bollingerband_color and\
+            self.bollingerband_opacity == other.bollingerband_opacity and\
+            self.show_bollingerband == other.show_bollingerband:
+            return True 
+        else:
+            return False
+
+
 class Operation(db.Model):  
     __tablename__ = 'operation'
     rowid = db.Column(db.Integer, primary_key=True, nullable = False)
@@ -368,7 +452,7 @@ class Operation(db.Model):
                 price: {self.price}; amount: {self.amount} "
     
 
-def get_default_indicators_params():
+def get_default_indicators_params()->IndicatorsParams:
 
    params = IndicatorsParams(
                 userid = InitialIndicatorsParams.USERID,
@@ -420,5 +504,23 @@ def get_default_indicators_params():
    
    return params
 
-def get_user_indicators_params(simbol:str, userid:str):
-    return get_default_indicators_params()
+def get_user_indicators_params(simbol:str, userid:str)->IndicatorsParams:
+    # Try to get params for defined user and simbol
+    user_indicators_params  = db.session\
+                                .query(IndicatorsParams)\
+                                .filter(IndicatorsParams.userid == userid,
+                                        IndicatorsParams.simbol == simbol)\
+                                .first()   
+    if user_indicators_params == None:
+        # if set of parameters not found try to get default parameters for that user 
+        user_indicators_params  = db.session\
+                                .query(IndicatorsParams)\
+                                .filter(IndicatorsParams.userid == userid,
+                                        IndicatorsParams.simbol == "-----")\
+                                .first()
+        if user_indicators_params == None:   
+            # if default set of parameters for that user not found
+            # use system default set of parameters 
+            user_indicators_params = get_default_indicators_params()
+    
+    return user_indicators_params

@@ -12,15 +12,11 @@ from io import BytesIO
 import base64
 import pickle
 
-#from app.dbutils import select_imagedata
 from app.models import ( db, 
                         Simbol, User, UserSimbol, IndicatorsParams, SimbolData,
                         get_user_indicators_params )
 from app.userlogin  import currentusername
 from app.indicators import ChartsData
-
-
-
 
 #____________________________________________________________________________
 #   Display homepage
@@ -37,8 +33,8 @@ def home():
 @app.route("/simbols")
 @login_required
 def simbols():
-   if not current_user.is_authenticated:
-       return render_template("home.html", pageName = "Home", user = current_user)
+   #if not current_user.is_authenticated:
+   #    return render_template("home.html", pageName = "Home", user = current_user)
    plots_img = "/static/images/empty_plots.png"
    if request.args:
       req = request.args
@@ -78,13 +74,13 @@ def simbols():
                      .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
                      .filter(Simbol.simbol.notin_(subquery))\
                      .order_by(Simbol.simbol).all()
-         # Create mock history data object to provide all nessesery values for html template
+         # Create mosck history data object to provide all nessesery values for html template
          # if no one simbol selected
          historydata = ChartsData("-----", get_user_indicators_params("-----", current_user.id))
          if simbol != '':
-            # Get history price data for simbol calculate indicators
-            historydata = download_historical_data(simbol = simbol)
-            # Build plots
+            # Get history price data for simbol and calculate indicators
+            historydata = load_historical_data(simbol = simbol)
+            # Build plots 
             if historydata != None:
                plt = historydata.build_plots()
                # Save plots to a temporary buffer.
@@ -100,7 +96,7 @@ def simbols():
          if rwl == 'true':    
             # We already read list of simbols for carrent page into variable "simbols" 
             for smb in simbols:
-               download_historical_data(simbol = smb[0].simbol)
+               load_historical_data(simbol = smb[0].simbol)
  
          return render_template("simbols.html" , pageName = "Simbols", simbols = simbols,
                                  selected_simbol = req["simbol"],
@@ -258,21 +254,26 @@ def calculate_indicators():
 #  Download history price data for simbol, calculate indicators,
 #  save data to the cache and return object with data
 #____________________________________________________________________________
-def download_historical_data( simbol:str):
+def load_historical_data( simbol:str):
    try:
       historydata = None
       # Try to find simbol's history data in cache
       simboldata = db.session.query(SimbolData).filter(SimbolData.simbol == simbol).first()
-      if simboldata == None or simboldata.date_of_loading < date.today():
-         # If no data for simbol in the cache or data outdated
-         indicators_params = get_user_indicators_params(simbol, current_user.id)
+      historydata = pickle.loads(simboldata.historical_data)
+      indicators_params = get_user_indicators_params(simbol, current_user.id)
+       # If no data for simbol in the cache or data outdated or data loaded with outdated params
+       # load new history data  
+      if simboldata == None\
+         or simboldata.date_of_loading < date.today()\
+         or (not (historydata.get_indicators_params() == indicators_params)):
+        
          historydata = ChartsData(simbol, indicators_params)
-         historydata.load(indicators_params.history_length)
+         historydata.load()
          historydata.calculate_indicators()
          serialized_historycaldata = pickle.dumps(historydata)
          # Save simbol's history data to the cache
          if simboldata == None:
-            # No simbol data in the cache   
+            # No simbol data in the cache so save history data in the cache
             simboldata = SimbolData(simbol = simbol,
                                     warning_level=historydata.warningLevel,
                                     date_of_loading=date.today(),
@@ -287,12 +288,13 @@ def download_historical_data( simbol:str):
             simboldata.last_price = historydata.lastPrice
          db.session.commit()
       else:
-         # There is simbol data in the cache
+         # There is valid simbol data in the cache 
          # Restore simbol's history data from cache
          historydata = pickle.loads(simboldata.historical_data)
-         
+
    except Exception as ex:
      return None
+  
    return historydata
 
 

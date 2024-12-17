@@ -38,7 +38,7 @@ class ChartsData:
         self.__from = (datetime.now() - timedelta(days = self.__history_length)).strftime("%Y-%m-%d")
         self.__to = datetime.now().strftime("%Y-%m-%d")
        
-       # Params for calculating indicators
+       # Params for calculating indicators and building plots
         self.__params = indicators_params
         
         # Source data       
@@ -75,11 +75,17 @@ class ChartsData:
 
         self.lastPrice = 0
         self.warningLevel = 0
+    
+    def set_indicators_params(self, indicators_params:IndicatorsParams):
+        self.__params = indicators_params
 
-    def load(self, history_length:int):
+    def get_indicators_params(self)->IndicatorsParams:
+        return self.__params
 
-        self.__history_length = history_length
-        self.__from = (datetime.now() - timedelta(days = history_length)).strftime("%Y-%m-%d")
+    def load(self):
+
+        self.__history_length = self.__params.history_length
+        self.__from = (datetime.now() - timedelta(days = self.__history_length)).strftime("%Y-%m-%d")
         self.__to   = datetime.now().strftime("%Y-%m-%d")
 
         url = self.__url + self.__simbol+"?from=" + self.__from +"&to=" + self.__to + "&apikey=" + self.__apikey# + "&serietype=" + self.__serietype
@@ -93,9 +99,6 @@ class ChartsData:
         except  Exception as msg:
             print(msg)
         
-        #data_file = open("uploads\\testData.csv", "w")
-       
-
         for datastr in reversed(sourceData["historical"]):
             self.__date.append(datetime.strptime(datastr["date"], '%Y-%m-%d').date())
             self.__openPrice.append(float(datastr["open"]))
@@ -256,6 +259,11 @@ class ChartsData:
     Build plots for all indicators
     '''
     def build_plots(self):
+        def expand_ma_name(short_ma_name:str):
+            if short_ma_name == "sma":
+                return "Simple moving avr."
+            if short_ma_name == "ema":
+                return "Exp. moving avr."
         startvalue = self.__params.get_offset()       
         # Define plot layout
         #_________________________________________________________________________
@@ -268,25 +276,35 @@ class ChartsData:
         fig, (ax0, ax2, ax3) = plt.subplots(3, 1,layout='constrained', gridspec_kw = gs_kw )
         # ________________________________________________________________________
         #fig.tight_layout(h_pad = 0.5, w_pad = 0) # Set figure margins size
-        #plt.legend(loc='upper left')
+       
         fig.set_size_inches(14,9) 
-        #fig.suptitle('Historic prices for simbol ' + self.simbol, fontsize=16)
+        
         # Create alias for X-axe values
         x = self.__date[startvalue:]
        
-        #ax0.set_title(f'Historic prices for simbol {self.__simbol} - {description} (Last price:{self.__closePrice[-1]}).')
         ax0.grid(True)
         ax0.left = 0
         # Display daily close prices and moving averages
         ax0.plot(x, self.__closePrice[startvalue:], label = "Daily prices", color='gray', linewidth = 1)
-        ax0.plot(x, self.__first_ma[startvalue:],   label = "First MA")
-        ax0.plot(x, self.__second_ma[startvalue:],  label = "Second MA", color = 'orange', linewidth = 1)
-        ax0.plot(x, self.__third_ma[startvalue:],   label = "Third EMA", color = 'green', linewidth = 1)
+        ax0.plot(x, self.__first_ma[startvalue:],
+                    label = f"{expand_ma_name(self.__params.ma_first_type)}: period {self.__params.ma_first_period} days.",
+                    color = self.__params.ma_first_color,
+                    linewidth = 1)
+        ax0.plot(x, self.__second_ma[startvalue:],  
+                    label = f"{expand_ma_name(self.__params.ma_second_type)}: period {self.__params.ma_second_period} days.",
+                    color = self.__params.ma_second_color,
+                    linewidth = 1)
+        ax0.plot(x, self.__third_ma[startvalue:],
+                    label = f"{expand_ma_name(self.__params.ma_third_type)}: period {self.__params.ma_third_period} days.",
+                    color = self.__params.ma_third_color,
+                    linewidth = 1)
         
         # Display Bellingham borders
         y1 = self.__upperBBRangeValue[startvalue:]
         y2 = self.__lowerBBRangeValue[startvalue:]
-        ax0.fill_between(x, y1, y2, alpha=0.2, color='green')
+        ax0.fill_between(x, y1, y2,
+                          alpha = self.__params.bollingerband_opacity,
+                          color = self.__params.bollingerband_color)
         
         ax0.legend(loc='upper left')
        
@@ -336,7 +354,9 @@ class ChartsData:
         ax2.grid(True)
         
         ax2.plot(self.__date[startvalue:], self.__RSI[startvalue:],
-                 label = "RSI", color='steelblue', linewidth = 1)
+                 label = f"RSI: period {self.__params.rsi_period} days", 
+                 color= self.__params.rsi_color,
+                 linewidth = 1)
         ax2.set_xlim(datemin, datemax)
         ax2.set_ylim(-40, 40)
         # Define coords of rectangle's corners
@@ -356,8 +376,14 @@ class ChartsData:
         ax3.set_title('MACD for simbol ' + self.__simbol)
         ax3.grid(True)
         
-        ax3.plot(x, self.__MACD[startvalue:], label = "MACD", color='green', linewidth = 1)
-        ax3.plot(x, self.__MACDSinalLine[startvalue:], label = "Signal line", color='blue', linewidth = 1)
+        ax3.plot(x, self.__MACD[startvalue:],
+                 label = f"MACD: long period {self.__params.macd_long_period}days, short period {self.__params.macd_short_period} days.",
+                 color= self.__params.macd_main_color,
+                 linewidth = 1)
+        ax3.plot(x, self.__MACDSinalLine[startvalue:],
+                 label = f"Signal line: period {self.__params.macd_signal_period} days.",
+                 color= self.__params.macd_signal_color,
+                 linewidth = 1)
         ax3.set_xlim(datemin, datemax)
         ax3.legend(loc='upper left')
         
