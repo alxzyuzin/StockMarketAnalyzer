@@ -45,8 +45,10 @@
                     aria-expanded="false">Simbols</a>
                <ul class="dropdown-menu" aria-labelledby="navbarDropdownSimbols">
                   <li><a class="dropdown-item" href="/simbols?listtype=portfolio&rwl=false&simbol=">Portfolio</a></li>
+                  <li><a class="dropdown-item" href="/simbols?listtype=shortlis&rwl=false&simbol=">Shortlist</a></li>
                   <li><a class="dropdown-item" href="/simbols?listtype=watchlist&rwl=false&simbol=">Wachlist</a></li>
                   <li><a class="dropdown-item" href="/simbols?listtype=unselected&rwl=false&simbol=">All</a></li>
+                  <li><a class="dropdown-item" onclick="reset_simbol_data_click(event)" href="">Reset simbol data</a></li>
                </ul>
               </li>
               <li class = "nav-item dropdown">
@@ -89,7 +91,6 @@
                 </ul>
               {% endif %}
               
-
               <li class = "nav-item">
                 {% if user.is_authenticated %}
                   <a class="nav-link {% if pageName == 'Login' %} active {% endif %}" href="/logout">Logout</a>            
@@ -97,9 +98,7 @@
                   <a class="nav-link {% if pageName == 'Logout' %} active {% endif %}" href="/login">Login</a>            
                 {% endif %}
               </li>
-                            
             </ul>  
-           
           </div>
         </nav>
       </header>
@@ -139,6 +138,46 @@
     {
 	      $("html")[0].style.visibility = "visible";
     });
+
+    function reset_simbol_data_click(event)
+    {
+      alert("Event:" + event.target + "\nSecond line")
+      
+        server_request_data = 
+        [
+            {
+                "request":event.target,
+            }
+         ]
+
+         $.ajax(
+            {
+                type: "POST",
+                url: "/clear_simbols_historical_data",
+                data: JSON.stringify(server_request_data),
+                contentType: "application/json",
+                dataType: "json",
+                success: function(result)
+                {
+                    if (result.processed == "true")
+                    {
+                        // Insert handling results of request here
+                       alert("Simbols historical data cleared")
+                    }
+                    else
+                    {
+                        alert("Error:" + result.error_descr)
+                    }
+                },
+                error: function(result, status, errorThrown)
+                {
+                  alert("Something get wrong.\nResult: "+result.responseText+"\n"+"Status: "+status + "\n" + errorThrown)                
+                }
+
+             }
+        );
+      
+    }
 
   </script>
         {% block script %}

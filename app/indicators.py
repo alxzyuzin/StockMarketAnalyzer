@@ -264,7 +264,66 @@ class ChartsData:
                 return "Simple moving avr."
             if short_ma_name == "ema":
                 return "Exp. moving avr."
-        startvalue = self.__params.get_offset()       
+            
+        def set_common_axis_params(axis, title:str = "", legend_position:str = "upper left"):
+
+            import matplotlib.ticker as ticker
+            axis.grid(True)
+            axis.left = 0 
+            axis.right = 0
+            axis.top = 0
+            axis.bottom = 0
+            axis.set_title(title, color = self.__params.default_color)
+            axis.legend(loc = legend_position)
+            axis.set_facecolor(self.__params.background_color) 
+            axis.grid(color = self.__params.default_color)
+       
+            datemin = self.__date[startvalue]
+            datemax = self.__date[-1] +  timedelta(days=2) 
+            axis.set_xlim(datemin, datemax)
+
+            axis.spines['bottom'].set_color(self.__params.default_color)
+            axis.spines['top'].set_color(self.__params.default_color)
+            axis.spines['left'].set_color(self.__params.default_color)
+            axis.spines['right'].set_color(self.__params.default_color)
+            axis.xaxis.label.set_color(self.__params.default_color)
+            #ax0.tick_params(axis='x', colors = self.__params.default_color)
+            #ax0.tick_params(axis='y', colors = self.__params.default_color)
+            axis.tick_params(colors = self.__params.default_color, which = 'both')  # 'both' refers to minor and major axes
+
+            # Set the grid frequency 
+            axis.xaxis.set_major_locator(ticker.MultipleLocator(10))     # Major grid lines every 1 unit 
+            #axis.xaxis.set_minor_locator(ticker.MultipleLocator(5))     # Minor grid lines every 0.5 units 
+            #axis.yaxis.set_major_locator(ticker.MultipleLocator(10))    # Major grid lines every 10 units 
+            #axis.yaxis.set_minor_locator(ticker.MultipleLocator(5))     # Minor grid lines every 5 units 
+            #-------------------------------------------------------------
+            # format the major ticks
+            #years = mdates.YearLocator()    # every year
+            months = mdates.MonthLocator()  # every month
+            monthsFmt = mdates.DateFormatter('%Y-%m')
+            axis.xaxis.set_major_locator(months)
+            axis.xaxis.set_major_formatter(monthsFmt)
+            
+            # format the minor ticks
+            days   = mdates.DayLocator(interval = 5)    # every 5 day
+            #week = mdates.WeekdayLocator()
+            daysFmt = mdates.DateFormatter('%d')
+            axis.xaxis.set_minor_locator(days)
+            axis.xaxis.set_minor_formatter(daysFmt)  # Display days numbers on x axis 
+            axis.tick_params(axis='x', pad=15)
+            #_____________________________________________________________
+            # Enable the grid 
+            axis.grid(which='both') # Show both major and minor grid lines 
+            # Customize the grid appearance 
+            axis.grid(which='major', linestyle='-', linewidth='0.5', color='gray') 
+            axis.grid(which='minor', linestyle=':', linewidth='0.5', color='gray')
+
+
+        # Set range for displayig data
+        startvalue = self.__params.get_offset()      
+        datemin = self.__date[startvalue]
+        datemax = self.__date[-1] +  timedelta(days=2)  
+        
         # Define plot layout
         #_________________________________________________________________________
         # Temporaly remove volume plot 
@@ -273,19 +332,19 @@ class ChartsData:
         # ________________________________________________________________________
         # Temporaly remove volume plot
         #fig, (ax0, ax1, ax2, ax3) = plt.subplots(4, 1,layout='constrained', gridspec_kw = gs_kw )
-        fig, (ax0, ax2, ax3) = plt.subplots(3, 1,layout='constrained', gridspec_kw = gs_kw )
+        fig, (ax0, ax2, ax3) = plt.subplots(3, 1, layout='constrained', gridspec_kw = gs_kw )
+        fig.set_facecolor(self.__params.background_color)
+        fig.set_size_inches(14,9)
+        fig.tight_layout(h_pad = 3.0, w_pad = 0) # Set figure margins size
         # ________________________________________________________________________
-        #fig.tight_layout(h_pad = 0.5, w_pad = 0) # Set figure margins size
-       
-        fig.set_size_inches(14,9) 
         
         # Create alias for X-axe values
         x = self.__date[startvalue:]
        
-        ax0.grid(True)
-        ax0.left = 0
         # Display daily close prices and moving averages
-        ax0.plot(x, self.__closePrice[startvalue:], label = "Daily prices", color='gray', linewidth = 1)
+        ax0.plot(x, self.__closePrice[startvalue:], label = "Daily prices",
+                 color = self.__params.default_color,
+                 linewidth = 1)
         ax0.plot(x, self.__first_ma[startvalue:],
                     label = f"{expand_ma_name(self.__params.ma_first_type)}: period {self.__params.ma_first_period} days.",
                     color = self.__params.ma_first_color,
@@ -305,77 +364,41 @@ class ChartsData:
         ax0.fill_between(x, y1, y2,
                           alpha = self.__params.bollingerband_opacity,
                           color = self.__params.bollingerband_color)
-        
-        ax0.legend(loc='upper left')
-       
-        
-        # format the major ticks
-        #years = mdates.YearLocator()    # every year
-        months = mdates.MonthLocator()  # every month
-        monthsFmt = mdates.DateFormatter('%Y-%m')
-        ax0.xaxis.set_major_locator(months)
-        ax0.xaxis.set_major_formatter(monthsFmt)
-        #
-        # format the minor ticks
-        days   = mdates.DayLocator(interval = 5)    # every 5 day
-        daysFmt = mdates.DateFormatter('%d')
-        ax0.xaxis.set_minor_locator(days)
-        ax0.xaxis.set_minor_formatter(daysFmt)  # Display days numbers on x axis 
-
-        #ax.xaxis.set_major_formatter(
-        #    ConciseDateFormatter(ax.xaxis.get_major_locator()))
-
-        ax0.tick_params(axis='x', pad=15)
-        
-        # Set range for displayig data
-        datemin = self.__date[startvalue]
-        datemax = self.__date[-1] +  timedelta(days=2) 
-        ax0.set_xlim(datemin, datemax)
-        
+               
         # rotates and right aligns the x labels, and moves the bottom of the
         # axes up to make room for them
         #fig.autofmt_xdate()
-
+        set_common_axis_params(ax0)
         #----------------------------------------------------------------------------------
         # Display volumes
         #----------------------------------------------------------------------------------
         # Temporaly remove
-        #ax1.set_title('Volumes for simbol ' + self.__simbol)
-        #ax1.grid(True)
         #ax1.plot(self.__date[startvalue:], self.__volume[startvalue:],
         #         label = "Volume", color='steelblue', linewidth = 1)
-        #ax1.set_xlim(datemin, datemax)
-        
+        #set_common_axis_params(axis = ax1, title=f'Volume for simbol {self.__simbol}',legend_position='lower left')
+
         #----------------------------------------------------------------------------------
         # Display RSI
         #----------------------------------------------------------------------------------
-        
-        ax2.set_title('RSI for simbol ' + self.__simbol)
-        ax2.grid(True)
-        
         ax2.plot(self.__date[startvalue:], self.__RSI[startvalue:],
                  label = f"RSI: period {self.__params.rsi_period} days", 
                  color= self.__params.rsi_color,
                  linewidth = 1)
-        ax2.set_xlim(datemin, datemax)
-        ax2.set_ylim(-40, 40)
+        ax2.set_ylim(-50, 50)
         # Define coords of rectangle's corners
         xcoords = [datemin, datemax, datemax, datemin]
         ycoords = [20, 20, -20, -20]
         # Draw a rectangle to display Overbought and Oversold Levels
-        ax2.fill(xcoords, ycoords, alpha = 0.4, color='lightsteelblue')
+        ax2.fill(xcoords, ycoords, alpha = 0.3, color='lightsteelblue')
         
         ax2.text(self.__date[startvalue + 10],23,"Overbought level", fontsize=10, color='gray')
         ax2.text(self.__date[startvalue + 10],-30,"Oversold level", fontsize=10, color='gray')
-        ax2.legend(loc='lower left')    
         
+        set_common_axis_params(axis = ax2, title=f'RSI for simbol {self.__simbol}',legend_position='lower left')
+
         #----------------------------------------------------------------------------------
         # Display MACD
         #----------------------------------------------------------------------------------       
-               
-        ax3.set_title('MACD for simbol ' + self.__simbol)
-        ax3.grid(True)
-        
         ax3.plot(x, self.__MACD[startvalue:],
                  label = f"MACD: long period {self.__params.macd_long_period}days, short period {self.__params.macd_short_period} days.",
                  color= self.__params.macd_main_color,
@@ -384,16 +407,16 @@ class ChartsData:
                  label = f"Signal line: period {self.__params.macd_signal_period} days.",
                  color= self.__params.macd_signal_color,
                  linewidth = 1)
-        ax3.set_xlim(datemin, datemax)
-        ax3.legend(loc='upper left')
         
-        # Open full screen window
-        mng = plt.get_current_fig_manager()
-        mng.set_window_title("Indicators for simbol " + self.__simbol)
-        #mng.full_screen_toggle()
+        set_common_axis_params(axis = ax3, title=f'MACD for simbol {self.__simbol}',legend_position='lower left')
 
+        # Open full screen window
+        #mng = plt.get_current_fig_manager()
+        #mng.set_window_title("Indicators for simbol " + self.__simbol)
+        #mng.full_screen_toggle()
+       
         return fig
-        #plt.show()
+
        
     def calcTrendDirection(self, number_of_days):
         events = 0
