@@ -20,6 +20,7 @@ body
     /*font-family: "Varela Round", sans-serif;*/    
 	font-family: "HvDTrial_Brandon_Grotesque_regular";
     font-size: large;
+    text-size-adjust: 100%;
 	
 }
 
@@ -300,13 +301,24 @@ footer
 
 .simbol-management-buton
 {
-    padding-top: -5px;
     font-size:medium;
     text-wrap: nowrap ;
     vertical-align:middle;
-    margin: 2px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
+.move-simbol-label{
+    text-wrap-mode: nowrap;
+}
+
+.select-destination-list{
+    height:40px;
+    font-size: large;
+    margin-left: 10px;
+    margin-right: 10px;
+    box-shadow: none;
+}
 /*_______________________________________________________________________ 
 |                                                                        |
 |              Forms styles                                              |

@@ -15,6 +15,9 @@
                 {% if listtype == "portfolio" %}
                  Portolio  
                 {% endif %}
+                {% if listtype == "shortlist" %}
+                 Shortlist  
+                {% endif %}
             </div>
             <!-- simbl search field -->
             <div class = "row">
@@ -79,34 +82,31 @@
                 </div>
                 <div class = "col-sm-6">
                     <div class="float-end">
-                        <div id="simbol-control-buttons">
-                            {% if listtype == "unselected" %}
-                            <button type="button" class="btn btn-secondary shadow-none simbol-management-buton" onclick="add_simbol_to_watchlist_button_click()">
-                                Add simbol to watchlist
+                        <div id="simbol-control-buttons" class = "d-flex">
+                            <!--
+                            # Listtypes
+                            #   0 - unselected
+                            #   1 - portfolio
+                            #   2 - watchlist
+                            #   3 - shortlist
+                            -->
+                            
+                            <label class="move-simbol-label" for="dest-list-type" value ="QWERTY">Move simbol to&nbsp</label>
+                            <select id  = "dest-list-type" class="form-select select-destination-list" 
+                                    name = "destListType"
+                                    onchange = "set_destination_list_type">
+                                    {% if listtype != "watchlist" %}<option value="2">watchlist</option>{% endif %}
+                                    {% if listtype != "shortlist" %}<option value="3">shortlist</option>{% endif %}
+                                    {% if listtype != "portfolio" %}<option value="1">portfolio</option>{% endif %}
+                                    {% if listtype != "unselected" %}<option value="0">all simbols</option>{% endif %}
+                            </select>
+                            <button type="button" 
+                                    class="btn btn-secondary shadow-none simbol-management-buton" 
+                                    onclick="move_simbols_between_lists()">
+                                Move
                             </button>
-                            <button type="button" class="btn btn-secondary shadow-none simbol-management-buton" onclick="add_simbol_to_portfolio_button_click()">
-                                Add simbol to portfolio
-                            </button>
-                            {% endif %}
-
-                            {% if listtype == "watchlist" %}
-                            <button type="button" class="btn btn-secondary shadow-none simbol-management-buton" onclick="remove_simbol_from_watchlist_button_click()">
-                                Remove simbol from watchlist
-                            </button>
-                            <button type="button" class="btn btn-secondary shadow-none simbol-management-buton" onclick="add_simbol_to_portfolio_from_watchlist_button_click()">
-                                Add simbol to portfolio
-                            </button>
-                            {% endif %}
-
-                            {% if listtype == "portfolio" %}
-                            <button type="button" class="btn btn-secondary shadow-none simbol-management-buton" onclick="remove_simbol_from_portfolio_button_click()">
-                                Remove simbol from portfolio
-                            </button>
-                            <button type="button" class="btn btn-secondary shadow-none simbol-management-buton" onclick="move_simbol_from_portfolio_to_watchlist_button_click()">
-                                Move simbol to watchlist
-                            </button>
-                            {% endif %}
-                        </div>
+                           
+                       </div>
                     </div>
             </div>
         </div>
@@ -199,6 +199,7 @@
     })
     
     CURRENT_SIMBOL="{{selected_simbol}}"
+    SOURCE_LIST = 0
 
      /*_______________________________________________________________________
     | Request server for calculating indicators and build plots
@@ -255,13 +256,25 @@
     |   simbol - simbol name to add or delete
     |   targetlist   - list of simbols which operation wil be performed on
     |           Listtypes
-    |                  0 - unselected
-    |                  1 - portfolio
-    |                  2 - watchlist
+    |               0 - unselected
+    |               1 - portfolio
+    |               2 - watchlist
+    |               3 - shortlist
     |   operation   - "add" - add or "del" - delete simbol, "mov" - move simbol from sorce list to target list
     |___________________________________________________________________________*/
+    
+   
     function move_simbols_between_lists(simbol, sourcelist, targetlist)
     {
+        {% if listtype == 'unselected' %} var sourcelist = 0  {% endif %}
+        {% if listtype == 'portfolio'  %} var sourcelist = 1  {% endif %}
+        {% if listtype == 'watchlist'  %} var sourcelist = 2  {% endif %}
+        {% if listtype == 'shortlist'  %} var sourcelist = 3  {% endif %} 
+        var selectElement = document.getElementById('dest-list-type');
+        var targetlist = selectElement.value; 
+        //alert('Selected value: ' + selectedValue);
+        //alert("simbol:"+simbol +  "\nsourcelist:" + sourcelist + "\ntargetlist:" + targetlist)
+        var simbol = CURRENT_SIMBOL
         if (simbol.length == 0)
         {
             alert("No selected simbols.")
@@ -291,9 +304,10 @@
                         listname = ""
                         switch(targetlist)
                         {
-                            case 0: listname = "unselected"; break;
-                            case 1: listname = "portfolio"; break;
-                            case 2: listname = "watchlist"; break;
+                            case '0': listname = "unselected"; break;
+                            case '1': listname = "portfolio"; break;
+                            case '2': listname = "watchlist"; break;
+                            case '3': listname = "shortlist"; break;
                         }
                         message = "Symbol " + simbol + " successfully moved to " + listname + "."
                         // Display message
@@ -322,9 +336,14 @@
         );
     }
 
-    function add_simbol_to_watchlist_button_click()
+    function set_destination_list_type()
     {
-        
+        alert("OO")
+        alert(event.target)
+    }
+    function add_simbol_to_watchlist_button_click(source_list_type, destination_list_type)
+    {
+        alert(source_list_type +"\n"+destination_list_type)
         move_simbols_between_lists(CURRENT_SIMBOL, 0, 2)
     }
 

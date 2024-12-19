@@ -52,7 +52,8 @@ def simbols():
          
          # Get list of simbols in portfolio
          if listtype == "portfolio": 
-            subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).subquery()
+            subquery = db.session.query(UserSimbol.simbol)\
+                     .filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).subquery()
             simbols = db.session.query(Simbol, SimbolData)\
                      .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
                      .filter(Simbol.simbol.in_(subquery))\
@@ -61,7 +62,13 @@ def simbols():
          # Get list of simbols in watchlist
          if listtype == "watchlist":
             subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 2).subquery()
-            #simbols = db.session.query(Simbol).filter(Simbol.simbol.in_(subquery)).order_by(Simbol.simbol).all()
+            simbols = db.session.query(Simbol, SimbolData)\
+                     .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
+                     .filter(Simbol.simbol.in_(subquery))\
+                     .order_by(Simbol.simbol).all()
+            # Get list of simbols in watchlist
+         if listtype == "shortlist":
+            subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 3).subquery()
             simbols = db.session.query(Simbol, SimbolData)\
                      .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
                      .filter(Simbol.simbol.in_(subquery))\
@@ -163,32 +170,39 @@ def add_simbol_to_watchlist():
       request_data = request.get_json()
       simbol = request_data[0]["simbol"]
       sourcelist = request_data[0]["sourcelist"]
-      targetlist = request_data[0]["targetlist"]
+      targetlist = int(request_data[0]["targetlist"])
       try:
          # Listtypes
          #   0 - unselected
          #   1 - portfolio
          #   2 - watchlist
 
-         # Moving simbol from unselected to watchlist or portfolio
-         if (sourcelist == 0) and (targetlist == 1 or targetlist == 2):
+         # Moving simbol from unselected to watchlist or portfolio or shortlist
+         if (sourcelist == 0) and (targetlist == 1 or targetlist == 2 or targetlist == 3):
             db.session.add(UserSimbol(userid = current_user.id,
-                                   simbol = simbol,
-                                   listtype = targetlist))
+                                      simbol = simbol,
+                                      listtype = targetlist))
          # Moving simbol between watchlist an portfolio in any direction   
-         if (sourcelist == 1 and targetlist == 2) or (sourcelist == 2 and targetlist == 1):   
-             record = db.session.query(UserSimbol).filter(UserSimbol.userid == current_user.id, 
-                                                          UserSimbol.simbol == simbol,
-                                                          UserSimbol.listtype == sourcelist
-                                                          ).first()
-             record.listtype = targetlist
+         if (sourcelist == 1 and targetlist == 2)\
+            or (sourcelist == 2 and targetlist == 1)\
+            or (sourcelist == 1 and targetlist == 3)\
+            or (sourcelist == 3 and targetlist == 1)\
+            or (sourcelist == 2 and targetlist == 3)\
+            or (sourcelist == 3 and targetlist == 2):
          
-          # Moving simbol from watchlist or portfolio to unselected   
-         if (sourcelist == 1 or sourcelist == 2) and (targetlist == 0):
+            record = db.session.query(UserSimbol)\
+                               .filter(UserSimbol.userid == current_user.id, 
+                                       UserSimbol.simbol == simbol,
+                                       UserSimbol.listtype == sourcelist)\
+                               .first()
+            record.listtype = targetlist
+         
+          # Moving simbol from watchlist or portfolio or shortlist to unselected   
+         if (sourcelist == 1 or sourcelist == 2 or sourcelist == 3) and (targetlist == 0):
             db.session.query(UserSimbol).filter(UserSimbol.userid == current_user.id,
-                                                          UserSimbol.simbol == simbol,
-                                                          UserSimbol.listtype == sourcelist
-                                                          ).delete()
+                                                UserSimbol.simbol == simbol,
+                                                UserSimbol.listtype == sourcelist
+                                                ).delete()
          db.session.commit()
          results = {"processed": "true", "error_descr":""}
       except Exception as ex:
@@ -255,37 +269,46 @@ def calculate_indicators():
 #  save data to the cache and return object with data
 #____________________________________________________________________________
 def load_historical_data( simbol:str):
+
+   def get_history_data(simbol:str, indicators_params:IndicatorsParams):
+      historydata = ChartsData(simbol, indicators_params)
+      historydata.load()
+      historydata.calculate_indicators()
+      return historydata
+   
    try:
       historydata = None
+      indicators_params = get_user_indicators_params(simbol, current_user.id)
       # Try to find simbol's history data in cache
       simboldata = db.session.query(SimbolData).filter(SimbolData.simbol == simbol).first()
-      historydata = pickle.loads(simboldata.historical_data)
-      indicators_params = get_user_indicators_params(simbol, current_user.id)
-       # If no data for simbol in the cache or data outdated or data loaded with outdated params
-       # load new history data  
-      if simboldata == None\
-         or simboldata.date_of_loading < date.today()\
-         or (not (historydata.get_indicators_params() == indicators_params)):
-        
-         historydata = ChartsData(simbol, indicators_params)
-         historydata.load()
-         historydata.calculate_indicators()
-         serialized_historycaldata = pickle.dumps(historydata)
-         # Save simbol's history data to the cache
-         if simboldata == None:
+      # If no data for simbol in the cache load history data and save it to the cache
+      if simboldata == None:
             # No simbol data in the cache so save history data in the cache
+            historydata = get_history_data(simbol, indicators_params)
+            serialized_history_data = pickle.dumps(historydata)
             simboldata = SimbolData(simbol = simbol,
                                     warning_level=historydata.warningLevel,
                                     date_of_loading=date.today(),
-                                    historical_data = serialized_historycaldata,
+                                    historical_data = serialized_history_data,
                                     last_price = historydata.lastPrice)
             db.session.add(simboldata)
-         else:
-            # Simbol data exist in the cache but outdated
-            simboldata.warning_level = historydata.warningLevel
-            simboldata.date_of_loading = date.today()
-            simboldata.historical_data = serialized_historycaldata
-            simboldata.last_price = historydata.lastPrice
+            db.session.commit()
+            return historydata
+         
+      historydata = pickle.loads(simboldata.historical_data)
+
+      # Simbol data exist in the cache
+      # If data in the cache outdated or data loaded with outdated params
+      # load new history data   
+      if simboldata.date_of_loading < date.today()\
+         or (not (historydata.get_indicators_params() == indicators_params)):
+        
+         historydata = get_history_data(simbol, indicators_params)
+         serialized_historycaldata = pickle.dumps(historydata) 
+         simboldata.warning_level = historydata.warningLevel
+         simboldata.date_of_loading = date.today()
+         simboldata.historical_data = serialized_historycaldata
+         simboldata.last_price = historydata.lastPrice
          db.session.commit()
       else:
          # There is valid simbol data in the cache 

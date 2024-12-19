@@ -138,6 +138,7 @@ class UserSimbol(db.Model):
     #   0 - unselected
     #   1 - portfolio
     #   2 - watchlist
+    #   3 - shortlist
     
     def __init__(self, simbol:str, userid:str, listtype:int,
                  warning_level:int = 0, calculation_date:date = date.today(), 
