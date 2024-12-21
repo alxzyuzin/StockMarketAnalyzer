@@ -2,112 +2,114 @@
 
 {% block main %}
 <div>
-    <div id = "main-row" class = "row">
-        <div class = "col-sm-2 left-column">
-            <!-- Simbol list header -->
-            <div class = "row simbols-list-header">
-                {% if listtype == "unselected" %}
-                 Unselected simbols   
-                {% endif %}
-                {% if listtype == "watchlist" %}
-                 Watchlist   
-                {% endif %}
-                {% if listtype == "portfolio" %}
-                 Portolio  
-                {% endif %}
-                {% if listtype == "shortlist" %}
-                 Shortlist  
-                {% endif %}
-            </div>
-            <!-- simbl search field -->
-            <div class = "row">
-                <input id = "simbol-search" type="text" class = "form-control search-simbol-input" 
-                    placeholder="Type simbol">
-            </div>
-            <!-- Simbols list itself -->
-            <div class = "row">
-                <div class = "col-sm simbols-list-border" >
-                <ul id = "list-of-simbols" class = "simbols-list">
-                    {% for simbol in simbols %}
-                    <li>
-                        <button type="button" 
-                                class="btn  btn-secondary shadow-none 
-                                simbol-button warning-level-{{simbol[1].warning_level}}"  
-                                {% if simbol[0].simbol == selected_simbol %}
-                                    autofocus style = "color: orange;"
-                                {% endif %}
-                                onclick="simbol_button_click(event)">   
-                                {{simbol[0].simbol}}                     
+    <div id = "main-row" class = "row gx-3">
+        <div id = "left-column" class = "col-sm-2 left-column">
+            <div class = "simbols-list-border">
+                <!-- Simbol list header -->
+                <div class = "row simbols-list-header">
+                    {% if listtype == "unselected" %}
+                    Unselected simbols   
+                    {% endif %}
+                    {% if listtype == "watchlist" %}
+                    Watchlist   
+                    {% endif %}
+                    {% if listtype == "portfolio" %}
+                    Portolio  
+                    {% endif %}
+                    {% if listtype == "shortlist" %}
+                    Shortlist  
+                    {% endif %}
+                </div>
+                <!-- simbl search field -->
+                <div id = "simbols-search-row" class = "row">
+                    <input id = "simbol-search" type="text" class = "form-control search-simbol-input" 
+                        placeholder="Type simbol">
+                </div>
+                <!-- Simbols list itself -->
+                <div id = "simbols-list-row" class = "row">
+                    <ul id = "list-of-simbols" class = "simbols-list">
+                        {% for simbol in simbols %}
+                        <li>
+                            <button type="button" 
+                                    class="btn  btn-secondary shadow-none 
+                                    simbol-button warning-level-{{simbol[1].warning_level}}"  
+                                    {% if simbol[0].simbol == selected_simbol %}
+                                        autofocus style = "color: orange;"
+                                    {% endif %}
+                                    onclick="simbol_button_click(event)">   
+                                    {{simbol[0].simbol}}                     
+                            </button>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    
+                </div>
+                <!-- button for calculating simbols warning levels-->
+                {% if listtype == "watchlist" or listtype == "portfolio" or listtype == "shortlist" %}
+                <div id = "set-warn-levels-row" class = "row">
+                    <div class = "col-sm">
+                        <button type="button" class="btn btn-secondary shadow-none" 
+                            style="width: 100%;"
+                            onclick="set_warning_levels_button_click()">
+                            Set warn. levels.
                         </button>
-                    </li>
-                    {% endfor %}
-                </ul>
+                    </div>
                 </div>
+                {% endif %}
             </div>
-            <!-- button for calculating simbols warning levels-->
-            {% if listtype == "watchlist" or listtype == "portfolio" %}
-            <div class = "row">
-                <div class = "col-sm">
-                    <button type="button" class="btn btn-secondary shadow-none" 
-                        style="width: 100%;"
-                        onclick="set_warning_levels_button_click()">
-                        Set warn. levels.
-                    </button>
-                </div>
-             </div>
-             {% endif %}
         </div>
         <!-- Right part of screen containing plots -->
-        <div class = "col-sm-10 right-column">
-            <!-- Plots header -->
-            <div id = "plots-header" class = "row">
-                <div class="col-sm text-center">
-                    <div id = "plots-header-content">
-                        {{selected_simbol_data.title}}&nbsp&nbsp One year return: {{ selected_simbol_data.oneyearreturn}} 
+        <div id = "right-column" class = "col-sm-10 right-column">
+            <div class = "plots-border">
+                <!-- Plots header -->
+                <div id = "plots-header" class = "row">
+                    <div class="col-sm text-center">
+                        <div id = "plots-header-content">
+                            {{selected_simbol_data.title}}&nbsp&nbsp One year return: {{ selected_simbol_data.oneyearreturn}} 
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- plots itself -->
-            <div id = "plots-body" class = "row" style="background-image: url('{{plots_image}}')">
-                <div id = "plots-body-message" class = "col-sm text-center"></div>
-            </div>
-            <!-- Section with buttons to manage simbols lists -->
-            <div id = "plots-footer" class = "row">
-                <div class = "col-sm-6">
-                    <div class = "float-start">
-                        {% if last_price > 0 %}
-                        Last price: {{last_price}}  |  Warning_level: {{warning_level}}
-                        {% endif %}
-                    </div>
+                <!-- plots itself -->
+                <div id = "plots-body" class = "row" style="background-image: url('{{plots_image}}')">
+                    <!--div id = "plots-body-message" class = "col-sm text-center"></div-->
                 </div>
-                <div class = "col-sm-6">
-                    <div class="float-end">
-                        <div id="simbol-control-buttons" class = "d-flex">
-                            <!--
-                            # Listtypes
-                            #   0 - unselected
-                            #   1 - portfolio
-                            #   2 - watchlist
-                            #   3 - shortlist
-                            -->
+                <!-- Section with buttons to manage simbols lists -->
+                <div id = "plots-footer" class = "row">
+                    <div class = "col-sm-12">
+                        <div class = "float-start" style="margin-left: 10px;">
+                            {% if last_price > 0 %}
+                            Last price: {{last_price}}
+                            {% endif %}
+                        </div>
+                        <div class="float-end">
+                            <div id="simbol-control-buttons" class = "d-flex">
+                                <!--
+                                # Listtypes
+                                #   0 - unselected
+                                #   1 - portfolio
+                                #   2 - watchlist
+                                #   3 - shortlist
+                                -->
+                                
+                                <label class="move-simbol-label" for="dest-list-type" value ="QWERTY">Move simbol to&nbsp</label>
+                                <select id  = "dest-list-type" class="form-select select-destination-list" 
+                                        name = "destListType"
+                                        onchange = "set_destination_list_type">
+                                        {% if listtype != "watchlist" %}<option value="2">watchlist</option>{% endif %}
+                                        {% if listtype != "shortlist" %}<option value="3">shortlist</option>{% endif %}
+                                        {% if listtype != "portfolio" %}<option value="1">portfolio</option>{% endif %}
+                                        {% if listtype != "unselected" %}<option value="0">all simbols</option>{% endif %}
+                                </select>
+                                <button type="button" 
+                                        class="btn btn-secondary shadow-none simbol-management-buton" 
+                                        onclick="move_simbols_between_lists()">
+                                    Move
+                                </button>
                             
-                            <label class="move-simbol-label" for="dest-list-type" value ="QWERTY">Move simbol to&nbsp</label>
-                            <select id  = "dest-list-type" class="form-select select-destination-list" 
-                                    name = "destListType"
-                                    onchange = "set_destination_list_type">
-                                    {% if listtype != "watchlist" %}<option value="2">watchlist</option>{% endif %}
-                                    {% if listtype != "shortlist" %}<option value="3">shortlist</option>{% endif %}
-                                    {% if listtype != "portfolio" %}<option value="1">portfolio</option>{% endif %}
-                                    {% if listtype != "unselected" %}<option value="0">all simbols</option>{% endif %}
-                            </select>
-                            <button type="button" 
-                                    class="btn btn-secondary shadow-none simbol-management-buton" 
-                                    onclick="move_simbols_between_lists()">
-                                Move
-                            </button>
-                           
-                       </div>
-                    </div>
+                        </div>
+                        </div>
+                </div>
+                </div>
             </div>
         </div>
     </div>
@@ -117,12 +119,11 @@
 -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    // Ajust size of images to inner browser window.
-    const MAIN_AREA_AJUSTMENT = 200
+    // Ajust size of images to inner browser window.   
     window.onload = function()
     {
 
-        set_main_row_heigh();
+        set_main_row_height();
         // If page loaded with no selected simbols
         if ("{{selected_simbol_data}}" == "None")
         {
@@ -154,26 +155,38 @@
         clearTimeout(timer_id);
         timer_id = setTimeout(function() 
         {
-            set_main_row_heigh();
+            set_main_row_height();
           }, 150);
     
     };
 
-    function set_main_row_heigh()
-    {
-        main_row_height = window.innerHeight - MAIN_AREA_AJUSTMENT
-        list_of_simbols_height = main_row_height - 100
-        if (window.innerWidth > 575)
-        {             
-            $("#list-of-simbols").css("max-height", main_row_height - 35)
-            $("#plots-body").css("min-height", main_row_height)
-        }
-        else
-        {
-            $("#list-of-simbols").css("max-height", main_row_height / 2)      
-            $("#plots-body").css("min-height", main_row_height / 2 - 80)   
-        }
+    function set_main_row_height(){
         
+        if (window.innerWidth < 575)
+        {
+            $("#main-row").css("height", window.innerHeight - 120) 
+            $("#main-row").css("margin", 5)
+         
+            $("#left-column").css("height", window.innerHeight / 2 - 100)
+            $("#left-column").css("padding-right", 0)
+            {% if listtype == "unselected"  %}                
+                $("#simbols-list-row").css("height", "calc(100% - 75px)")
+            {% endif %}
+            
+            $("#right-column").css("margin-top", 10)
+            $("#right-column").css("height", window.innerHeight /2 -15)
+          }
+        
+        
+        if (window.innerWidth >= 575  )
+        {
+            $("#main-row").css("height",window.innerHeight - 120)
+
+            $("#left-column").css("height", "inherit")
+
+            $("#right-column").css("height", "inherit")
+            $("#right-column").css("margin-top", 0)
+        }   
     }
 
     const search_smb = document.getElementById('simbol-search');
@@ -262,7 +275,6 @@
     |               3 - shortlist
     |   operation   - "add" - add or "del" - delete simbol, "mov" - move simbol from sorce list to target list
     |___________________________________________________________________________*/
-    
    
     function move_simbols_between_lists(simbol, sourcelist, targetlist)
     {
@@ -272,8 +284,6 @@
         {% if listtype == 'shortlist'  %} var sourcelist = 3  {% endif %} 
         var selectElement = document.getElementById('dest-list-type');
         var targetlist = selectElement.value; 
-        //alert('Selected value: ' + selectedValue);
-        //alert("simbol:"+simbol +  "\nsourcelist:" + sourcelist + "\ntargetlist:" + targetlist)
         var simbol = CURRENT_SIMBOL
         if (simbol.length == 0)
         {
@@ -304,20 +314,22 @@
                         listname = ""
                         switch(targetlist)
                         {
-                            case '0': listname = "unselected"; break;
+                            case '0': listname = "the list of all simbols"; break;
                             case '1': listname = "portfolio"; break;
                             case '2': listname = "watchlist"; break;
                             case '3': listname = "shortlist"; break;
                         }
                         message = "Symbol " + simbol + " successfully moved to " + listname + "."
                         // Display message
-                        $("#plots-body-message").html("<p style = 'font-size:xx-large'>" + message + "</p>")
+                        $("#plots-body").html("<p style = 'font-size:xx-large'>" + message + "</p>")
+                        $("#plots-body").css("text-align", "center") //
+                        
                         // Hide plots header
                         $("#plots-header-content").css("visibility", "hidden")
                         // Hide plots for moved simbols
                         $('#plots-body').css("background-image", "none")
-                        // Hide buttons for simbol management
-                        $("#simbol-control-buttons").css("visibility", "hidden")
+                        // Hide plots footer
+                        $("#plots-footer").css("visibility", "hidden")
                         delete_current_simbol_from_the_list(simbol)
                     }
                     else
@@ -329,47 +341,10 @@
                 {
                     message = "<p>" + "Something get wrong."+ "</p> <p>Result:" + result + "</p><p>Status:" + status + "</p>"
                     $("#plots-body").html(message)
-                    
                 }
 
-             }
+            }
         );
-    }
-
-    function set_destination_list_type()
-    {
-        alert("OO")
-        alert(event.target)
-    }
-    function add_simbol_to_watchlist_button_click(source_list_type, destination_list_type)
-    {
-        alert(source_list_type +"\n"+destination_list_type)
-        move_simbols_between_lists(CURRENT_SIMBOL, 0, 2)
-    }
-
-    function add_simbol_to_portfolio_button_click()
-    {
-        move_simbols_between_lists(CURRENT_SIMBOL, 0, 1)
-    }
-
-    function add_simbol_to_portfolio_from_watchlist_button_click()
-    {
-        move_simbols_between_lists(CURRENT_SIMBOL, 2, 1)
-    }
-
-    function remove_simbol_from_watchlist_button_click()
-    {
-        move_simbols_between_lists(CURRENT_SIMBOL, 2, 0)
-    }
-
-    function remove_simbol_from_portfolio_button_click()
-    {
-        move_simbols_between_lists(CURRENT_SIMBOL, 1, 0)
-    }
-
-    function move_simbol_from_portfolio_to_watchlist_button_click()
-    {
-        move_simbols_between_lists(CURRENT_SIMBOL, 1, 2)
     }
 
     /*___________________________________________________________________________

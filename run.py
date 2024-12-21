@@ -2,6 +2,7 @@
 #https://getcssscan.com/css-checkboxes-examples
 
 #Set-ExecutionPolicy Unrestricted -Scope Process
+#venv\Scripts\activate
 
 # App starts from this file
 
