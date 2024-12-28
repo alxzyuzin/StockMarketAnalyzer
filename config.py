@@ -4,6 +4,8 @@ class Config(object):
     USER_PASSWORD   = "PASSWORD"
     #Secret key used for session encryption and other security features.
     SECRET_KEY      = "IkqQWV907tMmatKFsPccU6kk5L_mDfWzPUaji_3vWRk"
+    #Secret key used for fetching data from https://financialmodelingprep.com/api.
+    API_KEY         = "VmvqJNpPV26D4SP554R2BkjnrCuJsJ2m"
     #The URI for the database to be used with SQLAlchemy.
     SQLALCHEMY_DATABASE_URI = "sqlite:///appdata.db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False

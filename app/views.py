@@ -88,7 +88,7 @@ def simbols():
             # Get history price data for simbol and calculate indicators
             historydata = load_historical_data(simbol = simbol)
             # Build plots 
-            if historydata != None:
+            if historydata != None and historydata.dataLoaded:
                plt = historydata.build_plots()
                # Save plots to a temporary buffer.
                buf = BytesIO()
@@ -97,7 +97,7 @@ def simbols():
                fig_data = base64.b64encode(buf.getbuffer()).decode("ascii")
                plots_img = f'data:image/png;base64,{fig_data}'
             else:
-                return render_template("error.html", pageName = "Simbols", user = current_user, error_descr = "There ia a problem with historical data")     
+                return render_template("error.html", pageName = "Simbols", user = current_user, error_descr = historydata.errorMessage)     
                
          # Refresh historical data for current list of simbols and calculate warning levels
          if rwl == 'true':    
@@ -165,7 +165,7 @@ def logout():
 #____________________________________________________________________________
 @app.route("//move_simbols_between_lists", methods = ['POST', 'GET'])
 @login_required
-def add_simbol_to_watchlist():
+def move_simbols_between_lists():
    if request.method == "POST":
       request_data = request.get_json()
       simbol = request_data[0]["simbol"]
@@ -273,7 +273,8 @@ def load_historical_data( simbol:str):
    def get_history_data(simbol:str, indicators_params:IndicatorsParams):
       historydata = ChartsData(simbol, indicators_params)
       historydata.load()
-      historydata.calculate_indicators()
+      if historydata.dataLoaded != False:
+         historydata.calculate_indicators()
       return historydata
    
    try:
@@ -283,17 +284,20 @@ def load_historical_data( simbol:str):
       simboldata = db.session.query(SimbolData).filter(SimbolData.simbol == simbol).first()
       # If no data for simbol in the cache load history data and save it to the cache
       if simboldata == None:
-            # No simbol data in the cache so save history data in the cache
+            # No simbol data in the cache so load history data and
+            # save history data in the cache
             historydata = get_history_data(simbol, indicators_params)
-            serialized_history_data = pickle.dumps(historydata)
-            simboldata = SimbolData(simbol = simbol,
-                                    warning_level=historydata.warningLevel,
-                                    date_of_loading=date.today(),
-                                    historical_data = serialized_history_data,
-                                    last_price = historydata.lastPrice)
-            db.session.add(simboldata)
-            db.session.commit()
-            return historydata
+            if historydata.dataLoaded:            
+               serialized_history_data = pickle.dumps(historydata)
+               simboldata = SimbolData(simbol = simbol,
+                                       warning_level=historydata.warningLevel,
+                                       date_of_loading=date.today(),
+                                       historical_data = serialized_history_data,
+                                       last_price = historydata.lastPrice)
+               db.session.add(simboldata)
+               db.session.commit()
+            else:
+               return historydata
          
       historydata = pickle.loads(simboldata.historical_data)
 
@@ -304,23 +308,78 @@ def load_historical_data( simbol:str):
          or (not (historydata.get_indicators_params() == indicators_params)):
         
          historydata = get_history_data(simbol, indicators_params)
-         serialized_historycaldata = pickle.dumps(historydata) 
-         simboldata.warning_level = historydata.warningLevel
-         simboldata.date_of_loading = date.today()
-         simboldata.historical_data = serialized_historycaldata
-         simboldata.last_price = historydata.lastPrice
-         db.session.commit()
+         if historydata.dataLoaded:
+            # Save new history data in the cache
+            serialized_historycaldata = pickle.dumps(historydata) 
+            simboldata.warning_level = historydata.warningLevel
+            simboldata.date_of_loading = date.today()
+            simboldata.historical_data = serialized_historycaldata
+            simboldata.last_price = historydata.lastPrice
+            db.session.commit()
       else:
          # There is valid simbol data in the cache 
          # Restore simbol's history data from cache
          historydata = pickle.loads(simboldata.historical_data)
 
    except Exception as ex:
-     return None
+     raise Exception(f"Error loading historical data for simbol {simbol} {ex.args}")
   
    return historydata
 
+@app.route("/editsimboldata", methods=["GET","POST"])
+@login_required
+def editsimboldata():
+   
+   def get_checkbox_value(form:object, name:str)->bool:
+      if form.get(name, "off") == "off":
+         return False
+      else:
+         return True
+      
+   EditResult = ""
+   if request.args:
+      req = request.args
+      if req["simbol"] != "":
+         simbol = db.session.query(Simbol).filter(Simbol.simbol == request[simbol]).first()
+  
+   if request.method == "POST":
+      try:
+         simbol = request.form["inputSimbol"]
+         simbol = db.session.query(Simbol).filter(Simbol.simbol == simbol).first()
+         if simbol == None:
+            simbol = Simbol()
+            db.session.add(simbol)
 
-            
+         simbol.simbol = request.form["inputSimbol"]
+         simbol.simbol = request.form["inputSimbol"]
+         simbol.title = request.form["inputTitle"]
+         simbol.sector = request.form["inputSector"]
+         simbol.industry = request.form["inputIndustry"]
+         simbol.country = request.form["inputCountry"]
+         simbol.isfund = get_checkbox_value(request.form, "isFund")
+         simbol.onemonthreturn = float(request.form["inputOneMonthReturn"])
+         simbol.twomonthreturn = float(request.form["inputTwoMonthReturn"])
+         simbol.threemonthreturn = float(request.form["inputThreeMonthReturn"])
+         simbol.sixmonthreturn = float(request.form["inputSixMonthReturn"])
+
+         #simbol.ytd = float(request.form["inputYTD"])
+         #simbol.oneyearreturn = float(request.form["inputOneYearReturn"])
+         #simbol.threeyearreturn = float(request.form["inputThreeYearReturn"])
+         #simbol.fiveyearreturn = float(request.form["inputFiveYearReturn"])
+         #simbol.tenyearreturn = float(request.form["inputTenYearReturn"])
+         #simbol.lifeoffundreturn = float(request.form["inputLifeOfFundReturn"])
+         #simbol.netto = float(request.form["inputNetto"])
+         #simbol.gross = float(request.form["inputGross"])
+         #simbol.overall = float(request.form["inputOverall"])
+      
+         #db.session.add(simbol)
+         db.session.commit()
+         EditResult = "Simbol data saved"
+      except Exception as ex:
+         EditResult = f"Error saving simbol data {ex.args}"
+   
+   return render_template("editsimbol.html", pageName = "Simbol", simbol = simbol, user = current_user, operationResult = EditResult)
+
+           
 
 

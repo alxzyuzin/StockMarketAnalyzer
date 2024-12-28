@@ -10,7 +10,7 @@ from config import InitialIndicatorsParams
  
 
 db = SQLAlchemy()
-
+# User's data
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
  
@@ -36,6 +36,7 @@ class User(UserMixin, db.Model):
     def check_password(self,password:str):
         return check_password_hash(self.password_hash,password)
 
+# List of simbols registered in the system
 class Simbol(db.Model):
     __tablename__ = 'simbol'
           
@@ -55,6 +56,14 @@ class Simbol(db.Model):
     simbol = db.Column(db.String(10), primary_key = True)                         
     title = db.Column(db.String(100))
     category = db.Column(db.String(20))
+    sector = db.Column(db.String(30))
+    industry = db.Column(db.String(30))
+    country = db.Column(db.String(4))
+    isfund = db.Column(db.Boolean)
+    onemonthreturn = db.Column(db.Float)
+    twomonthreturn = db.Column(db.Float)
+    threemonthreturn = db.Column(db.Float)
+    sixmonthreturn = db.Column(db.Float)
     ytd = db.Column(db.Float)
     oneyearreturn = db.Column(db.Float)
     threeyearreturn = db.Column(db.Float)
@@ -65,14 +74,23 @@ class Simbol(db.Model):
     gross = db.Column(db.Float)
     overall = db.Column(db.Float)
     
-    #gallery = db.relationship('GalleryModel', backref="artwork")
-    
-    def __init__(self, simbol:str, title:str, category:str, ytd:float,
-                 oneyearreturn:float, threeyearreturn:float, fiveyearreturn:float, tenyearreturn:float,
-                 lifeoffundreturn:float, netto:float, gross:float, overall:float):
+    def __init__(self, simbol:str = "", title:str = "", category:str = "",
+                 sector:str = "", industry:str = "", country:str = "", isfund:bool = False,
+                 onemonthreturn = 0.0, twomonthreturn = 0.0, threemonthreturn = 0.0, sixmonthreturn = 0.0,
+                 ytd:float = 0.0,  oneyearreturn:float = 0.0, threeyearreturn:float = 0.0,
+                 fiveyearreturn:float = 0.0, tenyearreturn:float = 0.0, lifeoffundreturn:float = 0.0,
+                 netto:float = 0.0, gross:float = 0.0, overall:float = 0.0):
         self.simbol = simbol
         self.title = title
         self.category = category
+        self.sector = sector
+        self.industry = industry
+        self.country = country
+        self.isfund = isfund
+        self.onemonthreturn = onemonthreturn
+        self.twomonthreturn = twomonthreturn
+        self.threemonthreturn = threemonthreturn
+        self.sixmonthreturn = sixmonthreturn
         self.ytd = ytd
         self.oneyearreturn = oneyearreturn
         self.threeyearreturn = threeyearreturn
@@ -85,25 +103,29 @@ class Simbol(db.Model):
  
     def __repr__(self):
         return f"{self.simbol}:{self.title}:{self.category}:\
-                 {self.oneyearreturn}:{self.threeyearreturn}:{self.fiveyearreturn}\
+                 {self.sector}:{self.industry}:{self.country}:{self.isfund}\
+                 {self.onemonthreturn}:{self.twomonthreturn}:\
+                 {self.threemonthreturn}:{self.sixmonthreturn}:{self.ytd}:\
+                 {self.oneyearreturn}:{self.threeyearreturn}:{self.fiveyearreturn}:\
                  {self.tenyearreturn}:{self.lifeoffundreturn}:\
                  {self.netto}:{self.gross}:{self.overall}"
      
-    def to_dic(self):
-        return {
-                "simbol":self.simbol,
-                "title":self.title,
-                "category":self.category,
-                "oneyearreturn":self.oneyearreturn,
-                "threeyearreturn":self.threeyearreturn,
-                "fiveyearreturn":self.fiveyearreturn,
-                "tenyearreturn":self.tenyearreturn,
-                "lifeoffundreturn":self.lifeoffundreturn,
-                "netto":self.netto,
-                "gross":self.gross,
-                "overall":self.overall
-                }
+   # def to_dic(self):
+   #     return {
+   #             "simbol":self.simbol,
+   #             "title":self.title,
+   #             "category":self.category,
+   #             "oneyearreturn":self.oneyearreturn,
+   #             "threeyearreturn":self.threeyearreturn,
+   #             "fiveyearreturn":self.fiveyearreturn,
+   #             "tenyearreturn":self.tenyearreturn,
+   #             "lifeoffundreturn":self.lifeoffundreturn,
+   #             "netto":self.netto,
+   #             "gross":self.gross,
+   #             "overall":self.overall
+   #             }
 
+# Simbol's history data cache
 class SimbolData(db.Model):
     __tablename__ = "simboldata"
 
@@ -124,6 +146,8 @@ class SimbolData(db.Model):
     def __repr__(self):
         return f"simbol: {self.simbol}; warning_level: {self.warning_level}; date_of_loading: {self.date_of_loading}; historical_data: BLOB"
 
+# List of simbols selected by user to include 
+# in portfolio, watchlist or shortlist 
 class UserSimbol(db.Model):  
     __tablename__ = 'usersimbol'
 
@@ -132,7 +156,7 @@ class UserSimbol(db.Model):
     listtype  = db.Column(db.Integer)
     warning_level = db.Column(db.Integer)
     calculation_date = db.Column(db.Date)
-    plots_image = db.Column(db.Text)
+    #plots_image = db.Column(db.Text)
 
     # Listtypes
     #   0 - unselected
@@ -141,19 +165,22 @@ class UserSimbol(db.Model):
     #   3 - shortlist
     
     def __init__(self, simbol:str, userid:str, listtype:int,
-                 warning_level:int = 0, calculation_date:date = date.today(), 
-                 plots_image:str = ""):
+                 warning_level:int = 0, calculation_date:date = date.today()):
+                 #, 
+                 #plots_image:str = ""):
         self.simbol = simbol
         self.userid = userid
         self.listtype = listtype
         self.warning_level = warning_level
         self.calculation_date = calculation_date
-        self.plots_image = plots_image
+        #self.plots_image = plots_image
 
     def __repr__(self):
         return f"simbol: {self.simbol}; userid: {self.userid}; list type: {self.listtype};\
               warning_level: {self.warning_level}; calculation date: {self.calculation_date}"
-    
+
+# Values of indicators parameters that user
+# defined for each simbol in order to calculate indicators    
 class IndicatorsParams(db.Model):
     __tablename__ = 'indicatorsparams'
 
@@ -424,14 +451,18 @@ class IndicatorsParams(db.Model):
         else:
             return False
 
-
+# List of users activities
+# 0 - Buy stock
+# 1 - Sell stock
+# 3 - Deposit money to account
+# 4 - Withdraw money from account   
 class Operation(db.Model):  
     __tablename__ = 'operation'
     rowid = db.Column(db.Integer, primary_key=True, nullable = False)
     userid = db.Column(db.String(100), nullable = False)
     simbol = db.Column(db.String(10), nullable = False)
     operation_date = db.Column(db.Date, nullable = False)
-    operation_type = db.Column(db.String(4), nullable = False)
+    operation_type = db.Column(db.Integer, nullable = False)
     price  = db.Column(db.Float, nullable = False)
     amount = db.Column(db.Float, nullable = False)
     

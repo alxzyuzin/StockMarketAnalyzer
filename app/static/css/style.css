@@ -362,7 +362,7 @@ footer
 |_______________________________________________________________________*/
 /* Base form styles */
 .base-form {
-	background-color: gray;
+	background-color: #3a3a3a;
 	margin-left: auto;
 	margin-right: auto;
 	border-radius: 4px;
@@ -432,7 +432,7 @@ footer
 	resize: vertical;
 	border-radius: 4px;
 }
-#btnSubmit, #btnCancel, #btnReset
+#btnSubmit, #btnCancel, #btnReset, #btnGetCompanyData
 {
     
     background-color: #404040;
@@ -447,7 +447,7 @@ footer
 }
 .base-footer{
     margin-top: 20px;
-	max-width: 80px;
+	/*max-width: 80px;*/
 }
 
 #login-form{
@@ -504,6 +504,22 @@ footer
 #settings-form .form-control-label{
     text-wrap: wrap;
 }
+
+#editsimbol-form{
+    margin-top: 80px;
+    max-width: 600px;
+}
+#editsimbol-form h3.form-header{
+    padding-top: 20px;
+    margin-left: 20px
+}
+
+#editsimbol-form label{
+    padding-left: 10px;
+}
+#editsimbol-form .col-sm-3,.col-sm-9{
+    padding-right: 15px;
+}
 /*
 input[type="checkbox"]:checked::after {
      content: '';
@@ -520,8 +536,8 @@ input[type="checkbox"]:checked::after {
 	color: orange;
 	font-size: large;
     width:100%;
-    text-wrap-mode: nowrap;
-    margin-left: -50px;
+    white-space: nowrap;
+    /*margin-left: -50px;*/
  
 }
 .parameters-group{

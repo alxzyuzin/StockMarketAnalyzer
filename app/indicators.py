@@ -33,6 +33,9 @@ class ChartsData:
         self.__serietype = "line"
         self.__apikey = "VmvqJNpPV26D4SP554R2BkjnrCuJsJ2m"
 
+        self.dataLoaded = False
+        self.errorMessage = ""
+
         self.__simbol = simbol
         self.__history_length = indicators_params.history_length
         self.__from = (datetime.now() - timedelta(days = self.__history_length)).strftime("%Y-%m-%d")
@@ -96,8 +99,16 @@ class ChartsData:
             response = urlopen(url, cafile=certifi.where())
             data = response.read().decode("utf-8")
             sourceData = json.loads(data)
+            self.dataLoaded = True
         except  Exception as msg:
+            self.dataLoaded = False
+            self.errorMessage = "Error: " + str(msg)
             print(msg)
+        
+        if len(sourceData) == 0:
+            self.dataLoaded = False
+            self.errorMessage = f"No historical data for simbol {self.__simbol} loaded."
+            return
         
         for datastr in reversed(sourceData["historical"]):
             self.__date.append(datetime.strptime(datastr["date"], '%Y-%m-%d').date())

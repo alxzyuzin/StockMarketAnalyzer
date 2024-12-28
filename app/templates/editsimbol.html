@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+
+{% block main %}
+<!--
+    simbol = db.Column(db.String(10), primary_key = True)                         
+    title = db.Column(db.String(100))
+    category = db.Column(db.String(20))
+    ytd = db.Column(db.Float)
+    oneyearreturn = db.Column(db.Float)
+    threeyearreturn = db.Column(db.Float)
+    fiveyearreturn = db.Column(db.Float)
+    tenyearreturn = db.Column(db.Float)
+    lifeoffundreturn = db.Column(db.Float)
+    netto = db.Column(db.Float)
+    gross = db.Column(db.Float)
+    overall = db.Column(db.Float)
+-->
+<div id="EditSimbolDialog" class = "container dialog">
+    
+    <form id = "editsimbol-form" class = "base-form" action="/editsimboldata?simbol=" method="POST">
+        <h3 class = "form-header">Simbol description</h3>   
+        <div class = "container">
+            <div class = "row" >  <!-- Simbol -->
+                <div class = "col-sm-3">
+                    <label for="inputSimbol" class="form-label>">Simbol</label>
+                </div>
+                <div class = "col-sm-3">         
+                    <input  type="text" class="form-control col-sm" id="inputSimbol" 
+                            name="inputSimbol" placeholder="Simbol" required
+                            value="{{simbol.simbol}}">  
+                </div>
+                <div class = "col-sm-6">
+                    &nbsp
+                </div>
+            </div>
+            <div class = "row" > <!-- Title -->
+                <div class = "col-sm-3">
+                    <label for="inputTitle" class="form-label>">Title</label>
+                </div>    
+                <div class = "col-sm-9">
+                    <input  type="text" class="form-control col-sm" id="inputTitle" 
+                            name="inputTitle" placeholder="Title" 
+                            value="{{simbol.title}}">         
+                </div>
+            </div>
+            <div class = "row"> <!--   Sector  Industry -->
+               
+                <div class = "col-sm-3">
+                        <label for="inputSector" class="form-label>">Sector</label>
+                </div>
+                <div class = "col-sm-3">
+                    <input  type="text" class="form-control col-sm" id="inputSector" 
+                            name="inputSector" placeholder="Sector" 
+                            value="{{simbol.sector}}">
+                </div>
+                <div class = "col-sm-3">
+                    <label for="inputIndustry" class="form-control-label">Industry</label>
+                </div>
+                <div class = "col-sm-3">
+                    <input  type="text" class="form-control col-sm" id="inputIndustry" 
+                            name="inputIndustry" placeholder="Industry" 
+                            value="{{simbol.industry}}">
+                </div>
+            </div>    
+            <div class = "row" > <!--  Country Category -->
+                  <div class = "col-sm-3">
+                    <label for="inputCountry" class="form-label>">Country</label>
+                </div>
+                <div class = "col-sm-3">
+                    <input  type="text" class="form-control col-sm" id="inputCountry" 
+                            name="inputCountry" placeholder="Country" 
+                            value="{{simbol.country}}">
+                </div>
+                <div class = "col-sm-3">
+                    <label for="inputIsFund" class="form-label>">Is fund</label>
+                </div>    
+                <div class = "col-sm-3">
+                    <input  type="checkbox" class="form-check-input" id="inputIsFund"
+                            name="inputIsFund"
+                            {% if simbol.isfund %} checked {% endif %}>         
+                </div>
+            </div>
+            <div class = "row empty-row"> <!-- Empty row -->
+                <div class = "col-sm-12">
+                    &nbsp;
+                </div>
+            </div>
+            <div class = "row"> <!-- One month return , two month return -->
+                <div class = "col-sm-3">
+                    <label for="inputOneMonthReturn" class="form-label>">One Month Return</label>
+                </div>
+                <div class = "col-sm-3">
+                    <input  type="text" class="form-control col-sm" id="inputOneMonthReturn" 
+                            name="inputOneMonthReturn" placeholder="One Month Return" required
+                            value="{{simbol.onemonthreturn}}">
+                </div>
+                <div class = "col-sm-3">
+                    <label for="inputTwoMonthReturn" class="form-label>">Two Month Return</label>
+                </div>
+                <div class = "col-sm-3">
+                    <input  type="text" class="form-control col-sm" id="inputTwoMonthReturn" 
+                            name="inputTwoMonthReturn" placeholder="Two Month Return" required
+                            value="{{simbol.twomonthreturn}}">
+                </div>
+            </div>
+            <div class = "row"> <!-- Three Month Return 6 Month Return -->
+                <div class = "col-sm-3">
+                    <label for="inputThreeMonthReturn" class="form-label>">Three Month Return</label>
+                </div>
+                <div class = "col-sm-3">
+                    <input  type="text" class="form-control col-sm" id="inputThreeMonthReturn" 
+                            name="inputThreeMonthReturn" placeholder="Three Month Return" required
+                            value="{{simbol.threemonthreturn}}">
+                </div>
+                <div class = "col-sm-3">
+                    <label for="inputSixMonthReturn" class="form-label>">Six Month Return</label>
+                </div>
+                <div class = "col-sm-3">
+                    <input  type="text" class="form-control col-sm" id="inputSixMonthReturn" 
+                            name="inputSixMonthReturn" placeholder="Six Month Return" required
+                            value="{{simbol.sixmonthreturn}}">
+                </div>
+            </div>
+            <div class = "row empty-row"> <!-- Empty row -->
+                <div class = "col-sm-12">
+                    &nbsp;
+                </div>
+            </div>
+<!--
+            <div class = "row"> <YTD 1 Year Return >        
+                <div class = "col-sm-3">
+                    <label for="inputYTD" class="form-label>">YTD</label>
+                </div>    
+                <div class = "col-sm-3">
+                    <input  type="text" class="form-control col-sm" id="inputYTD" 
+                            name="inputYTD" placeholder="YTD" required
+                            value="{{simbol.ytd}}">         
+                </div>
+                <div class = "col-sm-3">
+                    <label for="inputOneYearReturn" class="form-label>">1 Year Return</label>
+                </div>
+                <div class = "col-sm-3">
+                    <input  type="text" class="form-control col-sm" id="inputOneYearReturn" 
+                            name="inputOneYearReturn" placeholder="1 Year Return" required
+                            value="{{simbol.oneyearreturn}}">
+                </div>
+            </div>
+            <div class="row"> < 3 Year Return 5 Year Return >
+                <div class = "col-sm-3">
+                    <label for="inputThreeYearReturn" class="form-label>">3 Year Return</label>
+                </div>
+                <div class = "col-sm-3">
+                    <input  type="text" class="form-control col-sm" id="inputThreeYearReturn" 
+                            name="inputThreeYearReturn" placeholder="3 Year Return" required
+                            value="{{simbol.threeyearreturn}}">
+                </div>
+                <div class = "col-sm-3">
+                    <label for="inputFiveYearReturn" class="form-label>">5 Year Return</label>
+                </div>
+                <div class = "col-sm-3">
+                    <input  type="text" class="form-control col-sm" id="inputFiveYearReturn" 
+                            name="inputFiveYearReturn" placeholder="5 Year Return" required
+                            value="{{simbol.fiveyearreturn}}">
+                </div>
+            </div>
+            <div class = "row"><10 Year Return Life of Fund Return >
+                <div class = "col-sm-3">
+                    <label for="inputTenYearReturn" class="form-label>">10 Year Return</label>
+                </div>
+                <div class = "col-sm-3">
+                <input  type="text" class="form-control col-sm" id="inputTenYearReturn" 
+                        name="inputTenYearReturn" placeholder="10 Year Return" required
+                        value="{{simbol.tenyearreturn}}">
+                </div>
+                <div class = "col-sm-3">
+                    <label for="inputLifeOfFundReturn" class="form-label>">Life of Fund Return</label>
+                </div>
+                <div class = "col-sm-3">
+                    <input  type="text" class="form-control col-sm" id="inputLifeOfFundReturn" 
+                            name="inputLifeOfFundReturn" placeholder="Life of Fund Return" required
+                            value="{{simbol.lifeoffundreturn}}">
+                </div>
+            </div>
+            <div class = "row"> <Netto Gross Overall >
+                <div class = "col-sm-3">
+                    <label for="inputNetto" class="form-label>">Netto</label>
+                </div>
+                <div class = "col-sm-3">
+                    <input  type="text" class="form-control col-sm" id="inputNetto" 
+                            name="inputNetto" placeholder="Netto" required
+                            value="{{simbol.netto}}">
+                </div>
+                <div class = "col-sm-3">
+                    <label for="inputGross" class="form-label>">Gross</label>
+                </div>
+                <div class = "col-sm-3">
+                    <input  type="text" class="form-control col-sm" id="inputGross" 
+                            name="inputGross" placeholder="Gross" required
+                            value="{{simbol.gross}}">
+                </div>
+                <div class = "col-sm-3">
+                    <label for="inputOverall" class="form-label>">Overall</label>
+                </div>
+                <div class = "col-sm-3">
+                    <input  type="text" class="form-control col-sm" id="inputOverall" 
+                            name="inputOverall" placeholder="Overall" required
+                            value="{{simbol.overall}}">
+                </div>
+                <div class = "col-sm-3">
+                    &nbsp;
+                </div>
+            </div>
+        -->
+        </div>
+    
+        <div class="base-footer  container-fluid">
+            <div class = "row"> 
+                <div class="col text-end"> 
+                        <button id="btnCancel" 
+                                class="btn btn-submit btn-outline-secondary" 
+                                type="reset"
+                                onclick="hide_editsimbol_form()">Cancel</button>
+                        <button id="btnGetCompanyData" 
+                                class="btn btn-submit btn-outline-secondary" 
+                                type ="button"
+                                onclick="get_simbol_data()">Get simbol data</button>
+                        <button id="btnSubmit" 
+                                class="btn btn-submit btn-outline-secondary"
+                                type="submit">Save</button>
+                </div>      
+            </div>
+            <div class = "row  row-cols-auto">
+                <div class = "col text-end">
+                    <p class = "feedback" id = "operationResult">{{operationResult}}</p>
+                </div>
+            </div> 
+        </div>
+    </form>
+
+</div>
+<script src = "/static/js/jquery_dev.js"></script>  
+<!-- script src = "/static/js/jquery-3.7.1.min.js"></script -->  
+<!-- script src="https://code.jquery.com/jquery-3.6.0.min.js"></script -->
+<script>
+    function hide_editsimbol_form()
+    {
+        document.getElementById("EditSimbolDialog").style.display = "none";
+    }
+
+    function get_simbol_data()
+    {
+        var inputValue = $('#inputSimbol').val();
+        if (inputValue == "")
+        {
+            alert("Simbol value is empty");
+            return;
+        }
+     
+        var server_request_data = 
+        [
+            {
+                "simbol":inputValue
+            }
+        ]
+        $.ajax(
+            {
+                type: "POST",
+                url: "/get_company_info",
+                data: JSON.stringify(server_request_data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(result)
+                {  
+                    if (result.processed)
+                    {
+                        $("#inputSimbol").val(result.company_info.symbol);
+                        $('#inputTitle').val(result.company_info.companyName);
+                        $('#inputSector').val(result.company_info.sector);
+                        $('#inputIndustry').val(result.company_info.industry);
+                        $('#inputCountry').val(result.company_info.country);
+                        $("#inputIsFund").prop("checked", result.company_info.isFund);
+                    }
+                    $('#operationResult').text(result.description);
+                },
+                error: function(result,status)
+                {
+                    message = "<p>" + "Something get wrong."+ "</p> <p>Result:" + result + "</p><p>Status:" + status + "</p>"
+                    $("#plots-body").html(message)
+                }
+            }
+        );
+    }
+
+    function get_simbol_data_1()
+    {
+        console.log("get_simbol_data_1() started.");
+    }
+</script>
+{% endblock %}
