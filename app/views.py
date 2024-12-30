@@ -337,6 +337,7 @@ def editsimboldata():
          return True
       
    EditResult = ""
+   simbol = Simbol()
    if request.args:
       req = request.args
       if req["simbol"] != "":
@@ -374,10 +375,10 @@ def editsimboldata():
       
          #db.session.add(simbol)
          db.session.commit()
-         EditResult = "Simbol data saved"
+         EditResult = "Simbol data saved."
       except Exception as ex:
          EditResult = f"Error saving simbol data {ex.args}"
-   
+           
    return render_template("editsimbol.html", pageName = "Simbol", simbol = simbol, user = current_user, operationResult = EditResult)
 
            
