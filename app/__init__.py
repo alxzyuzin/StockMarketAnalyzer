@@ -5,9 +5,6 @@ from flask import Flask
 app = Flask(__name__)
 
 from app import views, settings_views, ajaxqueries, admin_views
-#rom app import admin_views
-
-#from utils import currentusername
 
 app.config.from_object("config.Config")
 

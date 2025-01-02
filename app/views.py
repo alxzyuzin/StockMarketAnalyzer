@@ -13,7 +13,8 @@ import base64
 import pickle
 
 from app.models import ( db, 
-                        Simbol, User, UserSimbol, IndicatorsParams, SimbolData,
+                        Simbol, User, UserSimbol, 
+                        IndicatorsParams, SimbolData,Operation,
                         get_user_indicators_params )
 from app.userlogin  import currentusername
 from app.indicators import ChartsData
@@ -381,6 +382,35 @@ def editsimboldata():
            
    return render_template("editsimbol.html", pageName = "Simbol", simbol = simbol, user = current_user, operationResult = EditResult)
 
-           
+
+#____________________________________________________________________________
+# Register operation against portolio 
+#  0 - buy shares
+#  1 - sell shares
+#  2 - deposit cash to investment account
+#  3 - withdraw cash from investment account
+#____________________________________________________________________________
+@app.route("/activity", methods=["GET","POST"])
+@login_required
+def activity():
+   operationResult = ""
+   operations = db.session.query(Operation).filter(Operation.userid == current_user.id).all()
+ 
+   return render_template("activity.html", pageName = "Portfolio", 
+                          operations = operations, user = current_user, 
+                          operationResult = operationResult)
+
+
+#____________________________________________________________________________
+#  Calculate and display portfolio perfomance
+#____________________________________________________________________________     
+@app.route("/perfomance", methods=["GET","POST"])
+@login_required
+def perfomance():
+   operationResult = ""
+   return render_template("perfomance.html", pageName = "Portfolio", user = current_user, operationResult = operationResult)
+
+     
+
 
 

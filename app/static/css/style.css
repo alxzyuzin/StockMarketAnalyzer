@@ -21,7 +21,7 @@ body
 	font-family: "HvDTrial_Brandon_Grotesque_regular";
     font-size: large;
     text-size-adjust: 100%;
-    min-width: 490px;
+    min-width: 375px;
 }
 
 .cinzel-400
@@ -238,6 +238,7 @@ footer
     overflow-x: hidden;
     margin-left: 5px;
     margin-right: 15px;
+    padding-right: 3px;
     border: 1px solid white;
     border-radius: 4px;
 }
@@ -343,6 +344,8 @@ footer
     vertical-align:middle;
     margin-left: 10px;
     margin-right: 10px;
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 
 .move-simbol-label{
@@ -350,8 +353,10 @@ footer
 }
 
 .select-destination-list{
-    height:40px;
+    height:30px;
     font-size: large;
+    padding-top: 0px;
+    padding-bottom: 0px;
     margin-left: 10px;
     margin-right: 10px;
     box-shadow: none;

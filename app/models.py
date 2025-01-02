@@ -460,16 +460,18 @@ class Operation(db.Model):
     __tablename__ = 'operation'
     rowid = db.Column(db.Integer, primary_key=True, nullable = False)
     userid = db.Column(db.String(100), nullable = False)
+    account = db.Column(db.String(15), nullable = False)
     simbol = db.Column(db.String(10), nullable = False)
     operation_date = db.Column(db.Date, nullable = False)
     operation_type = db.Column(db.Integer, nullable = False)
     price  = db.Column(db.Float, nullable = False)
     amount = db.Column(db.Float, nullable = False)
     
-    def __init__(self,  userid:str, simbol:str, 
+    def __init__(self,  userid:str, account:str, simbol:str, 
                  operation_date:date,  operation_type:str,
                  price:float, amount:float):
         self.userid = userid
+        self.account = account
         self.simbol = simbol
         self.operation_date = operation_date
         self.operation_type = operation_type # buy or sell
@@ -478,7 +480,7 @@ class Operation(db.Model):
         
 
     def __repr__(self):
-        return f"simbol: {self.simbol}; userid: {self.userid};\
+        return f"simbol: {self.simbol}; userid: {self.userid}; account: {self.account};\
                 operation date: {self.operation_date}\
                 operationtype: {self.operation_type}\
                 price: {self.price}; amount: {self.amount} "

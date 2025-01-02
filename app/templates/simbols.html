@@ -3,7 +3,7 @@
 {% block main %}
 <div>
     <div id = "main-row" class = "row gx-3">
-        <div id = "left-column" class = "col-sm-2 left-column">
+        <div id = "left-column" class = "col-md-2 left-column">
             <div class = "simbols-list-border">
                 <!-- Simbol list header -->
                 <div class = "row simbols-list-header">
@@ -51,7 +51,7 @@
                         <button type="button" class="btn btn-secondary shadow-none" 
                             style="width: 100%;"
                             onclick="set_warning_levels_button_click()">
-                            Set warn. levels.
+                            Set signals
                         </button>
                     </div>
                 </div>
@@ -59,13 +59,13 @@
             </div>
         </div>
         <!-- Right part of screen containing plots -->
-        <div id = "right-column" class = "col-sm-10 right-column">
+        <div id = "right-column" class = "col-md-10 right-column">
             <div class = "plots-border">
                 <!-- Plots header -->
                 <div id = "plots-header" class = "row">
                     <div class="col-sm text-center">
                         <div id = "plots-header-content">
-                            {{selected_simbol_data.title}}&nbsp&nbsp One year return: {{ selected_simbol_data.oneyearreturn}} 
+                            {{selected_simbol_data.title}} <!-- &nbsp&nbsp One year return: {{ selected_simbol_data.oneyearreturn}} --> 
                         </div>
                     </div>
                 </div>
@@ -162,9 +162,18 @@
 
     function set_main_row_height(){
         
+        $("#main-row").css("height",window.innerHeight - 120)
+        $("#left-column").css("height", "inherit")
+        $("#right-column").css("height", "inherit")
+
+        $("#right-column").css("margin-top", 0)
+
+        var plots_width = $("#plots-body").width();
+        var k = window.innerHeight / window.innerWidth
+        $("#plots-body").css("height", plots_width * k - 100)
+        /*
         if (window.innerWidth < 575)
         {
-            $("#main-row").css("height", window.innerHeight - 120) 
             $("#main-row").css("margin", 5)
          
             $("#left-column").css("height", window.innerHeight / 2 - 100)
@@ -173,20 +182,28 @@
                 $("#simbols-list-row").css("height", "calc(100% - 75px)")
             {% endif %}
             
-            $("#right-column").css("margin-top", 10)
             $("#right-column").css("height", window.innerHeight /2 -15)
+            $("#right-column").css("margin-top", 10)
           }
-        
-        
-        if (window.innerWidth >= 575  )
+*/
+          // 490 410
+        if (window.innerWidth < 768)
         {
-            $("#main-row").css("height",window.innerHeight - 120)
+           
+            $("#left-column").css("height", window.innerHeight / 2 - 100)
+            $("#right-column").css("height", window.innerHeight /2 - 15)
+            $("#right-column").css("margin-top", 10)
+            $("#plots-body").css("height", plots_width * k / 2 - 85)
+        }  
 
-            $("#left-column").css("height", "inherit")
+        if (window.innerWidth < 376)
+        { 
+            $("#plots-body").css("height", plots_width * 0.57)
+            $("#left-column").css("height", window.innerHeight / 2 - 100) 
+            $("#right-column").css("height", window.innerHeight / 2 -15) 
+        }
+   
 
-            $("#right-column").css("height", "inherit")
-            $("#right-column").css("margin-top", 0)
-        }   
     }
 
     const search_smb = document.getElementById('simbol-search');

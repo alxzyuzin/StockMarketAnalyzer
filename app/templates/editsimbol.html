@@ -238,9 +238,10 @@
     </form>
 
 </div>
-<script src = "/static/js/jquery_dev.js"></script>  
-<!-- script src = "/static/js/jquery-3.7.1.min.js"></script -->  
-<!-- script src="https://code.jquery.com/jquery-3.6.0.min.js"></script -->
+
+{% endblock %}
+
+{% block script %}
 <script>
     function hide_editsimbol_form()
     {
@@ -291,9 +292,5 @@
         );
     }
 
-    function get_simbol_data_1()
-    {
-        console.log("get_simbol_data_1() started.");
-    }
 </script>
 {% endblock %}
