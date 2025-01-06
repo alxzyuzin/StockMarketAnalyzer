@@ -3,62 +3,16 @@
 {% block main %}
 <div class="container">
     <div class="row">
-        <div class="col-md-12 text-right">
-            <button class="btn btn-primary" id="add-activity">Add operation</button>
+        <div class="col-md-12  text-end">
+            <button  id="btnAddOperation" class="btn btn-submit btn-outline-secondary" 
+                    onclick="show_edit_operation_dialog(-1)">Add operation</button>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <form id="add-operation-form" class = "base-form" method="post">
-                
-                    <div class = "container">
-                        <div class = "row">
-                            <div class = "col-sm-6">
-                                <div class = "row">
-                                    <div class = "col-md-4">
-                                        <label for="date">Date</label>
-                                        <input type="date" class="form-control" id="date" name="date">
-                                    </div>
-                                    <div class = "col-md-4">
-                                        <label for="account">Account</label>
-                                        <input type="text" class="form-control" id="amount" name="amount">
-                                    </div>
-                                    <div class = "col-md-4">
-                                        <label for="simbol">Simbol</label>
-                                        <input type="text" class="form-control" id="simbol" name="simbol">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class = "col-sm-6">
-                                <div class = "row">
-                                    <div class = "col-md-4">
-                                        <label for="type">Type</label>
-                                        <select class="form-control" id="type" name="type">
-                                            <option value="0">Buy</option>
-                                            <option value="1">Sell</option>
-                                            <option value="2">Deposit</option>
-                                            <option value="3">Withdraw</option>
-                                        </select>
-                                    </div>
-                                    <div class = "col-md-4">
-                                        <label for="price">Price</label>
-                                        <input type="text" class="form-control" id="price" name="price">
-                                    </div>
-                                    <div class = "col-md-4">
-                                        <label for="amount">Amount</label>
-                                        <input type="text" class="form-control" id="amount" name="amount">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-            </form>
-        </div>
-    </div>
+        
     <div class="row empty-row"></div>
     <div class="row">
         <div class="col-md-12">
-            <table class="table table-striped">
+            <table class="table table-of-operations">
                 <thead>
                     <tr>
                         <th>Date</th>
@@ -70,17 +24,31 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for operation in oprations %}
+                    {% for operation in operations %}
                     <tr>
                         <td>{{ operation.date }}</td>
                         <td>{{ operation.account }}</td>
                         <td>{{ operation.simbol }}</td>
-                        <td>{{ operation.type }}</td>
-                        <td>{{ operation.price }}</td>
-                        <td>{{ operation.amount }}</td>
                         <td>
-                            <button class="btn btn-primary edit-operation"  data-id="{{ operation.id }}">Edit</button>
-                            <button class="btn btn-danger delete-operation" data-id="{{ operation.id }}">Delete</button>
+                            {% if operation.type == 0 %}
+                                Buy
+                            {% elif operation.type == 1 %}
+                                Sell
+                            {% elif operation.type == 2 %}
+                                Deposit
+                            {% else %}
+                                Withdraw
+                            {% endif %}
+                        </td>
+                        <td>{{ operation.price }}</td>
+                        <td>{{ operation.quantity }}</td>
+                        <td>
+                            <button type = "button" 
+                                    class="btn btn-secondary edit-operation"  
+                                    data-id="{{ operation.id }}">Edit</button>
+                            <button type = "button" 
+                                    class="btn btn-secondary delete-operation" 
+                                    data-id="{{ operation.id }}">Delete</button>
                         </td>
                     </tr>
                     {% endfor %}
@@ -88,15 +56,160 @@
             </table>
         </div>
 </div>
-    
+
+<!-- The Modal "Add operation" --> 
+<div class="modal fade" id="addOperationModal" tabindex="-1" 
+     aria-labelledby="addOperationModalTitle" aria-hidden="true"> 
+    <div class="modal-dialog"> 
+        <div class="modal-content"> 
+            <div class="modal-header"> 
+                <h5 class="modal-title" id="addOperationModalTitle">New operation</h5>
+                    <button type="button" class="btn-close" 
+                            data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class = "container">
+                    <div class = "row">
+                        <div class = "col-lg-6"> <!-- Date Account Symbol -->
+                            <div class = "row">
+                                <div class = "col-md-4">
+                                    <label for="inputDate">Date</label>
+                                    <input type="date" class="form-control" id="inputDate" name="inputDate" value="{{ today }}">
+                                </div>
+                                <div class = "col-md-4">
+                                    <label for="inputAccount">Account</label>
+                                    <select id  = "inputAccount" class="form-select form-control" name = "inputAccount">                                       
+                                       {% for account in accounts %}
+                                            <option value="{{ account.name}}">{{ account.name }}</option>
+                                       {% endfor %} 
+                                    </select>
+                                </div>
+                                <div class = "col-md-4">
+                                    <label for="inputSymbol">Symbol</label>
+                                    <select id  = "inputSymbol" class="form-select form-control" name = "inputSymbol"> 
+                                        {% for symbol in portfolioSymbols %}
+                                            <option value="{{ symbol.simbol}}">{{ symbol.simbol }}</option>
+                                        {% endfor %}                                      
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class = "col-lg-6"> <!-- Type Price Amount -->
+                            <div class = "row">
+                                <div class = "col-md-4">
+                                    <label for="inputOperationType">Type</label>
+                                    <select class="form-control" id="inputOperationType" name="inputOperationType">
+                                        <option value="0">Buy</option>
+                                        <option value="1">Sell</option>
+                                        <option value="2">Deposit</option>
+                                        <option value="3">Withdraw</option>
+                                    </select>
+                                </div>
+                                <div class = "col-md-4">
+                                    <label for="inputPrice">Price</label>
+                                    <input type="text" class="form-control" id="inputPrice" name="inputPrice">
+                                </div>
+                                <div class = "col-md-4">
+                                    <label for="inputQuantity">Quantity</label>
+                                    <input type="text" class="form-control" id="inputQuantity" name="inputQuantity">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" 
+                        data-bs-dismiss="modal">Close
+                </button> 
+                <button type="button" class="btn btn-secondary"
+                        onclick = "save_operation(0)">Save</button>
+            </div>
+            <div class = "modal-message text-center">
+                <p id = "modal-message"></p>    
+            </div>
+        </div>
+    </div> 
+</div>
+
+<!-- The Modal --> 
+<div class="modal fade" id="myModal" tabindex="-1" 
+     aria-labelledby="exampleModalLabel" aria-hidden="true"> 
+    <div class="modal-dialog"> 
+        <div class="modal-content"> 
+            <div class="modal-header"> 
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" 
+                            data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+            </div>
+            <div class="modal-body">
+                This is the modal content. 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" 
+                        data-bs-dismiss="modal">Close
+                </button> 
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div> 
+</div>
     
 {% endblock %} 
 
 
 {% block script %}
     <script>
-       
+        function show_edit_operation_dialog(rowid){
+            var myModal = new bootstrap.Modal(document.getElementById('addOperationModal'),
+                                             { keyboard: false });
+            myModal.show();
+       }
 
+       function save_operation(operationId){
+            var date = document.getElementById("inputDate").value;
+            var account = document.getElementById("inputAccount").value;
+            var symbol = document.getElementById("inputSymbol").value;
+            var operationType = document.getElementById("inputOperationType").value;
+            var price = document.getElementById("inputPrice").value;
+            var quantity = document.getElementById("inputQuantity").value;
+
+            var data = {
+                date: date,
+                account: account,
+                symbol: symbol,
+                operationType: operationType,
+                price: price,
+                quantity: quantity
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/add_operation",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                success: function(response,result,status){
+                    console.log(response);
+                    if (response.processed)
+                    {
+                        setTimeout(closeaddOperationModal, 2000);
+                    }
+                    $("#modal-message").text(response.description)
+                },
+                error: function(result,status)
+                {
+                    console.log(response,result,status);
+                    message = "<p>" + "Something get wrong."+ "</p> <p>Result:" + result.responseText + "</p><p>Status:" + status + "</p>"
+                    $("#feedback").html(message)
+                }
+            });
+            
+       }
+       function closeaddOperationModal(){
+            $("#addOperationModal").modal('hide');
+       }
     </script>
 
 {% endblock %}

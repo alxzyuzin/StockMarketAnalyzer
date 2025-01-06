@@ -14,7 +14,7 @@ db = SQLAlchemy()
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
  
-    id = db.Column(db.String(100), primary_key=True)
+    id = db.Column(db.String(40), primary_key=True)
     email = db.Column(db.String(80), unique=True)
     username = db.Column(db.String(100), unique=True)
     password_hash = db.Column(db.String())
@@ -152,11 +152,10 @@ class UserSimbol(db.Model):
     __tablename__ = 'usersimbol'
 
     simbol = db.Column(db.String(10), primary_key=True)
-    userid = db.Column(db.String(100), primary_key=True)
+    userid = db.Column(db.String(40), primary_key=True)
     listtype  = db.Column(db.Integer)
     warning_level = db.Column(db.Integer)
     calculation_date = db.Column(db.Date)
-    #plots_image = db.Column(db.Text)
 
     # Listtypes
     #   0 - unselected
@@ -166,15 +165,13 @@ class UserSimbol(db.Model):
     
     def __init__(self, simbol:str, userid:str, listtype:int,
                  warning_level:int = 0, calculation_date:date = date.today()):
-                 #, 
-                 #plots_image:str = ""):
+             
         self.simbol = simbol
         self.userid = userid
         self.listtype = listtype
         self.warning_level = warning_level
         self.calculation_date = calculation_date
-        #self.plots_image = plots_image
-
+    
     def __repr__(self):
         return f"simbol: {self.simbol}; userid: {self.userid}; list type: {self.listtype};\
               warning_level: {self.warning_level}; calculation date: {self.calculation_date}"
@@ -184,7 +181,7 @@ class UserSimbol(db.Model):
 class IndicatorsParams(db.Model):
     __tablename__ = 'indicatorsparams'
 
-    userid = db.Column(db.String(100), primary_key=True)
+    userid = db.Column(db.String(40), primary_key=True)
     simbol = db.Column(db.String(10), primary_key=True)
     
     width  = db.Column(db.Integer)
@@ -458,34 +455,47 @@ class IndicatorsParams(db.Model):
 # 4 - Withdraw money from account   
 class Operation(db.Model):  
     __tablename__ = 'operation'
-    rowid = db.Column(db.Integer, primary_key=True, nullable = False)
-    userid = db.Column(db.String(100), nullable = False)
+    rowid = db.Column(db.Integer, primary_key=True, nullable = False, autoincrement=True)
+    userid = db.Column(db.String(40), nullable = False)
     account = db.Column(db.String(15), nullable = False)
     simbol = db.Column(db.String(10), nullable = False)
-    operation_date = db.Column(db.Date, nullable = False)
-    operation_type = db.Column(db.Integer, nullable = False)
+    date = db.Column(db.Date, nullable = False)
+    type = db.Column(db.Integer, nullable = False)
     price  = db.Column(db.Float, nullable = False)
-    amount = db.Column(db.Float, nullable = False)
+    quantity = db.Column(db.Float, nullable = False)
     
     def __init__(self,  userid:str, account:str, simbol:str, 
-                 operation_date:date,  operation_type:str,
-                 price:float, amount:float):
+                 date,  type:int = 0,
+                 price:float = 0.0, quantity:float = 0.0):
         self.userid = userid
         self.account = account
         self.simbol = simbol
-        self.operation_date = operation_date
-        self.operation_type = operation_type # buy or sell
+        self.date = date
+        self.type = type # buy or sell
         self.price = price
-        self.amount = amount
+        self.quantity = quantity
         
-
     def __repr__(self):
         return f"simbol: {self.simbol}; userid: {self.userid}; account: {self.account};\
-                operation date: {self.operation_date}\
-                operationtype: {self.operation_type}\
-                price: {self.price}; amount: {self.amount} "
+                date: {self.date}; type: {self.type};\
+                price: {self.price}; amount: {self.quantity};"
     
-
+class Account(db.Model):
+    __tablename__ = 'account'
+    userid = db.Column(db.String(40), primary_key=True)
+    name = db.Column(db.String(15), primary_key=True)
+    balance = db.Column(db.Float)
+    currency = db.Column(db.String(3))
+    
+    def __init__(self, userid:str, name:str, balance:float, currency:str):
+        self.userid = userid
+        self.name = name
+        self.balance = balance
+        self.currency = currency
+        
+    def __repr__(self):
+        return f"userid: {self.userid}; account: {self.name}; balance: {self.balance}; currency: {self.currency}"
+    
 def get_default_indicators_params()->IndicatorsParams:
 
    params = IndicatorsParams(

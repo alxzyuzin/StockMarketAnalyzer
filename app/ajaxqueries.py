@@ -3,12 +3,15 @@ from app import app
 from urllib.request import urlopen
 import certifi
 import json
+import datetime
+from datetime import date
 
 from flask import render_template, redirect, request, session, url_for, jsonify
 from flask_login import current_user, user_logged_out, login_user, logout_user, login_required
 
 from app.models import ( db, 
-                        Simbol, User, UserSimbol, IndicatorsParams, SimbolData,
+                        Simbol, User, UserSimbol, IndicatorsParams,
+                        SimbolData, Operation,
                         get_user_indicators_params )
 
 @app.route("/clear_simbols_historical_data", methods = ['POST', 'GET'])
@@ -78,4 +81,41 @@ def get_company_info():
                 "description":description,
                 "company_info":company_info,
                     } 
+     return jsonify(results)
+
+
+
+@app.route("/add_operation", methods = ['POST', 'GET'])
+@login_required
+def add_operation():
+     description = ""
+     # Define the format of the date string 
+     date_format = "%Y-%m-%d"
+     try:
+          if request.method == "POST":
+               request_data = request.get_json()
+                # Convert string to datetime object 
+               date_object = datetime.datetime.strptime(request_data["date"], date_format)
+               newOperation = Operation(current_user.id, request_data["account"],
+                                        request_data["symbol"], date_object,
+                                        request_data["operationType"],
+                                        request_data["price"],
+                                        request_data["quantity"] )
+               db.session.add(newOperation)
+               db.session.commit()
+               processed = True
+               description = f"Operation saved."
+     except Exception as ex:
+          db.session.rollback()
+          
+          if hasattr(ex, 'msg'):
+               description = f"Operation not saved - {ex.msg}"
+          if hasattr(ex, 'args'):
+               description = f"Operation not saved - {ex.args}"
+          processed = False
+     
+     results = {
+               "processed": processed,
+               "description": description,
+               }
      return jsonify(results)

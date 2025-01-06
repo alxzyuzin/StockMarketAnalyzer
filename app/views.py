@@ -7,6 +7,7 @@ from flask_login import current_user, user_logged_out, login_user, logout_user, 
 #import smtplib
 
 from smtplib import SMTPException, SMTPConnectError, SMTPSenderRefused
+import datetime
 from datetime import date
 from io import BytesIO
 import base64
@@ -15,6 +16,7 @@ import pickle
 from app.models import ( db, 
                         Simbol, User, UserSimbol, 
                         IndicatorsParams, SimbolData,Operation,
+                        Account,
                         get_user_indicators_params )
 from app.userlogin  import currentusername
 from app.indicators import ChartsData
@@ -50,38 +52,40 @@ def simbols():
          #   0 - unselected
          #   1 - portfolio
          #   2 - watchlist
+         #   3 - shortlist
          
          # Get list of simbols in portfolio
          if listtype == "portfolio": 
             subquery = db.session.query(UserSimbol.simbol)\
                      .filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).subquery()
             simbols = db.session.query(Simbol, SimbolData)\
-                     .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
-                     .filter(Simbol.simbol.in_(subquery))\
-                     .order_by(Simbol.simbol).all()
-   
+                                 .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
+                                 .filter(Simbol.simbol.in_(subquery))\
+                                 .order_by(Simbol.simbol).all()            
          # Get list of simbols in watchlist
          if listtype == "watchlist":
-            subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 2).subquery()
+            subquery = db.session.query(UserSimbol.simbol)\
+                                 .filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 2).subquery()
             simbols = db.session.query(Simbol, SimbolData)\
-                     .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
-                     .filter(Simbol.simbol.in_(subquery))\
-                     .order_by(Simbol.simbol).all()
+                                 .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
+                                 .filter(Simbol.simbol.in_(subquery))\
+                                 .order_by(Simbol.simbol).all()
             # Get list of simbols in watchlist
          if listtype == "shortlist":
-            subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 3).subquery()
+            subquery = db.session.query(UserSimbol.simbol)\
+                                 .filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 3).subquery()
             simbols = db.session.query(Simbol, SimbolData)\
-                     .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
-                     .filter(Simbol.simbol.in_(subquery))\
-                     .order_by(Simbol.simbol).all()
+                                 .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
+                                 .filter(Simbol.simbol.in_(subquery))\
+                                 .order_by(Simbol.simbol).all()
             
          # Get list of all simbols that are in application databace 
          if listtype == "unselected":
             subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id).subquery()
             simbols = db.session.query(Simbol, SimbolData)\
-                     .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
-                     .filter(Simbol.simbol.notin_(subquery))\
-                     .order_by(Simbol.simbol).all()
+                                 .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
+                                 .filter(Simbol.simbol.notin_(subquery))\
+                                 .order_by(Simbol.simbol).all()
          # Create mosck history data object to provide all nessesery values for html template
          # if no one simbol selected
          historydata = ChartsData("-----", get_user_indicators_params("-----", current_user.id))
@@ -390,14 +394,30 @@ def editsimboldata():
 #  2 - deposit cash to investment account
 #  3 - withdraw cash from investment account
 #____________________________________________________________________________
-@app.route("/activity", methods=["GET","POST"])
+@app.route("/activity")
 @login_required
 def activity():
    operationResult = ""
-   operations = db.session.query(Operation).filter(Operation.userid == current_user.id).all()
- 
-   return render_template("activity.html", pageName = "Portfolio", 
-                          operations = operations, user = current_user, 
+   accounts = []
+   operations = []
+   portfolioSymbols = []
+
+   try:
+      accounts = db.session.query(Account).filter(User.id == current_user.id).all()
+      accounts.append(Account( "9140b38c-8d65-4e54-bf8f-205337e0634d", "Z32117095", 0.0, "USD") )  
+      operations = db.session.query(Operation).filter(Operation.userid == current_user.id).all()
+      portfolioSymbols = db.session.query(UserSimbol)\
+                                 .filter(UserSimbol.userid == current_user.id and 
+                                         UserSimbol.listtype == 1)\
+                                 .all()
+   except Exception as ex:
+      operationResult = f"Error loading data {ex.args}"
+   return render_template("activity.html", pageName = "Portfolio",
+                          today = date.today(),
+                          accounts = accounts, 
+                          portfolioSymbols = portfolioSymbols,
+                          operations = operations,
+                          user = current_user, 
                           operationResult = operationResult)
 
 
@@ -408,7 +428,9 @@ def activity():
 @login_required
 def perfomance():
    operationResult = ""
-   return render_template("perfomance.html", pageName = "Portfolio", user = current_user, operationResult = operationResult)
+   return render_template("perfomance.html", pageName = "Portfolio", 
+                          user = current_user,
+                          operationResult = operationResult)
 
      
 

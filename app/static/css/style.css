@@ -10,9 +10,23 @@
     font-style: normal;
 }
 
+@media (min-width: 576px)
+{
+    .modal-dialog {
+        max-width: 1000px;
+        margin: 1.75rem auto;
+    }    
+}
+/*
+@media (min-width: 768px) {
+   
+    
+}
+*/
 html { 
 	visibility:hidden; 
 }
+
 
 body
 {
@@ -304,7 +318,6 @@ footer
 
 #set-warn-levels-row
 {
-    /*margin-left: 5px;*/
     margin-right: 10px;
 }
 .warning-level-{
@@ -400,8 +413,6 @@ footer
 	font-size: 17px;	
 }
 
-
-
 .base-form .form-control:focus {
     border-color: #656565;
 	border-width: 2px;
@@ -437,9 +448,8 @@ footer
 	resize: vertical;
 	border-radius: 4px;
 }
-#btnSubmit, #btnCancel, #btnReset, #btnGetCompanyData
-{
-    
+#btnSubmit, #btnCancel, #btnReset, #btnGetCompanyData, #btnAddOperation
+{ 
     background-color: #404040;
     color:#A0A0A0;
     font-size: 17px;
@@ -452,7 +462,6 @@ footer
 }
 .base-footer{
     margin-top: 20px;
-	/*max-width: 80px;*/
 }
 
 #login-form{
@@ -542,9 +551,8 @@ input[type="checkbox"]:checked::after {
 	font-size: large;
     width:100%;
     white-space: nowrap;
-    /*margin-left: -50px;*/
- 
 }
+
 .parameters-group{
     border:solid white 1px;
     border-radius: 4px;
@@ -569,10 +577,6 @@ input[type="checkbox"]:checked::after {
     margin-right: 0px;
 }
 .line-parameters-row{
-    /*
-    padding-right: calc(var(--bs-gutter-x)* .1);
-    padding-left: calc(var(--bs-gutter-x)* .1);
-    */
     padding-left: 4px;
     padding-right: 4px;
     margin: 2px 0px 2px 0px;
@@ -597,9 +601,10 @@ input[type="checkbox"]:checked::after {
     padding-right: 0px;
 }
 
-.row{
+#settings-form .row{
     --bs-gutter-x:0rem
 }
+
 .row-parameters-group{
     border:solid white 1px;
     border-radius: 4px;
@@ -616,8 +621,6 @@ input[type="checkbox"]:checked::after {
 .col-sm-4{
     margin-left: 2px;
     margin-right: 2px;
-   
-   /* width: 32.65%;*/
    width:33.333333%
 }
 
@@ -657,4 +660,42 @@ input[type="checkbox"]:checked::after {
 
 .empty-row{
     height: 10px;
+}
+
+#add-operation-form .row {
+    --bs-gutter-x: 0.3rem;;
+}
+
+.table-of-operations{
+    color: white;
+    
+}
+
+.table-of-operations thead{
+    border-bottom-style: solid;
+    border-bottom-color: lightyellow;
+    border-bottom-width: 2px;
+}
+
+.edit-operation, .delete-operation{
+    height: 25px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+#addOperationModal .modal-content{
+    margin-top: 70px;
+    background-color: #7F7F7F;
+    color:white;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#addOperationModal .modal-header{
+    border-bottom: none;
+}
+
+#addOperationModal .modal-footer{
+    border-top: none;
 }
