@@ -403,7 +403,7 @@ def activity():
    portfolioSymbols = []
 
    try:
-      accounts = db.session.query(Account).filter(User.id == current_user.id).all()
+      accounts = db.session.query(Account).filter(Account.userid == current_user.id).all()
       accounts.append(Account( "9140b38c-8d65-4e54-bf8f-205337e0634d", "Z32117095", 0.0, "USD") )  
       operations = db.session.query(Operation).filter(Operation.userid == current_user.id).all()
       portfolioSymbols = db.session.query(UserSimbol)\

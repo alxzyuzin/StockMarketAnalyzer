@@ -455,7 +455,7 @@ class IndicatorsParams(db.Model):
 # 4 - Withdraw money from account   
 class Operation(db.Model):  
     __tablename__ = 'operation'
-    rowid = db.Column(db.Integer, primary_key=True, nullable = False, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, nullable = False, autoincrement=True)
     userid = db.Column(db.String(40), nullable = False)
     account = db.Column(db.String(15), nullable = False)
     simbol = db.Column(db.String(10), nullable = False)
@@ -467,6 +467,7 @@ class Operation(db.Model):
     def __init__(self,  userid:str, account:str, simbol:str, 
                  date,  type:int = 0,
                  price:float = 0.0, quantity:float = 0.0):
+        
         self.userid = userid
         self.account = account
         self.simbol = simbol
@@ -476,7 +477,7 @@ class Operation(db.Model):
         self.quantity = quantity
         
     def __repr__(self):
-        return f"simbol: {self.simbol}; userid: {self.userid}; account: {self.account};\
+        return f"id: {self.id}; simbol: {self.simbol}; userid: {self.userid}; account: {self.account};\
                 date: {self.date}; type: {self.type};\
                 price: {self.price}; amount: {self.quantity};"
     

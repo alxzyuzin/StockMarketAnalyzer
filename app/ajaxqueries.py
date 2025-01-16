@@ -119,3 +119,29 @@ def add_operation():
                "description": description,
                }
      return jsonify(results)
+
+@app.route("/delete_operation", methods = ['POST', 'GET'])
+@login_required
+def delete_operation():
+     description = ""
+     try:
+          if request.method == "POST":
+               request_data = request.get_json()
+               Operation.query.filter_by(id = request_data["rowid"]).delete()
+               db.session.commit()
+               processed = True
+               description = f"Operation deleted."
+     except Exception as ex:
+          db.session.rollback()
+          
+          if hasattr(ex, 'msg'):
+               description = f"Operation not deleted - {ex.msg}"
+          if hasattr(ex, 'args'):
+               description = f"Operation not deleted - {ex.args}"
+          processed = False
+     
+     results = {
+               "processed": processed,
+               "description": description,
+               }
+     return jsonify(results)

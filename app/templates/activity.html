@@ -44,10 +44,10 @@
                         <td>{{ operation.quantity }}</td>
                         <td>
                             <button type = "button" 
-                                    class="btn btn-secondary edit-operation"  
+                                    class="btn btn-secondary btn-edit-operation"  
                                     data-id="{{ operation.id }}">Edit</button>
                             <button type = "button" 
-                                    class="btn btn-secondary delete-operation" 
+                                    class="btn btn-secondary btn-delete-operation"
                                     data-id="{{ operation.id }}">Delete</button>
                         </td>
                     </tr>
@@ -71,13 +71,25 @@
             <div class="modal-body">
                 <div class = "container">
                     <div class = "row">
-                        <div class = "col-lg-6"> <!-- Date Account Symbol -->
+                        <div class = "col-lg-3"> <!-- Operation Type -->
+                            <label for="inputOperationType">Operation</label>
+                            <select id  = "inputOperationType" class="form-select form-control" 
+                                    name = "inputOperationType" onchange="inputOperationTypeSelectionChanged()">                                       
+                                <option value="0" >Buy shares</option>
+                                <option value="1">Sell shares</option>
+                                <option value="2" selected>Deposit</option>
+                                <option value="3">Withdraw</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class = "row">
+                        <div class = "col-lg-6"> <!-- Date Account  -->
                             <div class = "row">
-                                <div class = "col-md-4">
+                                <div class = "col-md-6">
                                     <label for="inputDate">Date</label>
                                     <input type="date" class="form-control" id="inputDate" name="inputDate" value="{{ today }}">
                                 </div>
-                                <div class = "col-md-4">
+                                <div class = "col-md-6">
                                     <label for="inputAccount">Account</label>
                                     <select id  = "inputAccount" class="form-select form-control" name = "inputAccount">                                       
                                        {% for account in accounts %}
@@ -85,6 +97,11 @@
                                        {% endfor %} 
                                     </select>
                                 </div>
+                                
+                            </div>
+                        </div>
+                        <div class = "col-lg-6"> <!-- Symbol Price Amount -->
+                            <div class = "row">
                                 <div class = "col-md-4">
                                     <label for="inputSymbol">Symbol</label>
                                     <select id  = "inputSymbol" class="form-select form-control" name = "inputSymbol"> 
@@ -93,27 +110,14 @@
                                         {% endfor %}                                      
                                     </select>
                                 </div>
-                            </div>
-                        </div>
-                        <div class = "col-lg-6"> <!-- Type Price Amount -->
-                            <div class = "row">
                                 <div class = "col-md-4">
-                                    <label for="inputOperationType">Type</label>
-                                    <select class="form-control" id="inputOperationType" name="inputOperationType">
-                                        <option value="0">Buy</option>
-                                        <option value="1">Sell</option>
-                                        <option value="2">Deposit</option>
-                                        <option value="3">Withdraw</option>
-                                    </select>
+                                    <label for="inputQuantity" id="inputQuantityLabel">Quantity</label>
+                                    <input type="text"  id="inputQuantity" class="form-control" name="inputQuantity">
                                 </div>
-                                <div class = "col-md-4">
-                                    <label for="inputPrice">Price</label>
+                                <div id = "price-per-share" class = "col-md-4">
+                                    <label for="inputPrice">Price per share</label>
                                     <input type="text" class="form-control" id="inputPrice" name="inputPrice">
-                                </div>
-                                <div class = "col-md-4">
-                                    <label for="inputQuantity">Quantity</label>
-                                    <input type="text" class="form-control" id="inputQuantity" name="inputQuantity">
-                                </div>
+                                </div>              
                             </div>
                         </div>
                     </div>
@@ -131,6 +135,25 @@
             </div>
         </div>
     </div> 
+</div>
+
+<!-- The Modal "Delete operation" -->
+<div class="modal fade" id="deleteOperationModal" tabindex="-1" 
+aria-labelledby="deleteOperationModalTitle" aria-hidden="true"> 
+<div class="modal-dialog"> 
+   <div class="modal-content"> 
+       <div class="modal-header"> 
+           <h5 class="modal-title" id="deleteOperationModalTitle">Delete operation</h5>
+               <button type="button" class="btn-close" 
+                       data-bs-dismiss="modal" aria-label="Close">
+               </button>
+       </div>
+       
+       <div class = "modal-message text-center">
+           <p id = "modal-delete-message"></p>    
+       </div>
+   </div>
+</div> 
 </div>
 
 <!-- The Modal --> 
@@ -162,19 +185,86 @@
 
 {% block script %}
     <script>
-        function show_edit_operation_dialog(rowid){
+        $(".btn-delete-operation").click(function() 
+                            {
+                                var rowid = $(this).data("id");
+                               
+                                var data = { rowid: rowid };
+                                $.ajax({
+                                        type: "POST",
+                                        url: "/delete_operation",
+                                        data: JSON.stringify(data),
+                                        contentType: "application/json",
+                                        success: function(response,result,status)
+                                                {
+                                                    console.log(response);
+                                                    if (response.processed)
+                                                    {
+                                                        setTimeout(closedeleteOperationModal, 3000);
+                                                        var myModal = new bootstrap.Modal(document.getElementById('deleteOperationModal'),{ keyboard: false });
+                                                        myModal.show();
+                                                    }
+                                                    $("#modal-delete-message").text(response.description)
+                                                },
+                                        error: function(result,status)
+                                                {   
+                                                    console.log(response,result,status);
+                                                    message = "<p>" + "Something get wrong."+ "</p> <p>Result:" + result.responseText + "</p><p>Status:" + status + "</p>"
+                                                    $("#modal-delete-message").html(message)
+                                                }
+                                        });
+                            }
+                        );
+
+       function show_edit_operation_dialog(rowid){
+            //alert("|"+rowid+"|")
+            //#price-per-share
+            operation_type =$("#inputOperationType").val();
+            //alert(operation_type)
+            switch (operation_type)
+            {
+                case "0":
+                case "1": $("#price-per-share").show(); 
+                          $("#inputQuantityLabel").text("Quantity")
+                          break;
+                case "2":
+                case "3": $("#price-per-share").hide(); 
+                          $("#inputQuantityLabel").text("Amount"); 
+                          $("#inputPrice").val("1")
+                          break;
+            }
             var myModal = new bootstrap.Modal(document.getElementById('addOperationModal'),
                                              { keyboard: false });
             myModal.show();
        }
 
+       function inputOperationTypeSelectionChanged()
+       {
+            operation_type =$("#inputOperationType").val();
+            alert(operation_type)
+            switch (operation_type)
+            {
+                case "0":
+                case "1": $("#price-per-share").show(); 
+                          $("#inputQuantityLabel").text("Quantity")
+                          break;
+                case "2":
+                case "3": $("#price-per-share").hide(); 
+                          $("#inputQuantityLabel").text("Amount"); 
+                          $("#inputPrice").val("1")
+                          break;
+            }
+
+       }
+       
        function save_operation(operationId){
-            var date = document.getElementById("inputDate").value;
-            var account = document.getElementById("inputAccount").value;
-            var symbol = document.getElementById("inputSymbol").value;
-            var operationType = document.getElementById("inputOperationType").value;
-            var price = document.getElementById("inputPrice").value;
-            var quantity = document.getElementById("inputQuantity").value;
+        
+            var date = $("#inputDate").val();
+            var account = $("#inputAccount").val();
+            var symbol = $("#inputSymbol").val();
+            var operationType = $("#inputOperationType").val();
+            var price = $("#inputPrice").val();
+            var quantity = $("#inputQuantity").val();
 
             var data = {
                 date: date,
@@ -207,8 +297,20 @@
             });
             
        }
+
+       function delete_operation()
+       {
+            var rowid = $(this).data("id")
+            alert("rowid = "+rowid)
+       }
+
        function closeaddOperationModal(){
             $("#addOperationModal").modal('hide');
+       }
+
+       function closedeleteOperationModal(){
+            $("#deleteOperationModal").modal('hide');
+            location.reload();
        }
     </script>
 
