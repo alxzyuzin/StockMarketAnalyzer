@@ -463,10 +463,11 @@ class Operation(db.Model):
     type = db.Column(db.Integer, nullable = False)
     price  = db.Column(db.Float, nullable = False)
     quantity = db.Column(db.Float, nullable = False)
+    todayprice  = db.Column(db.Float, nullable = False)
     
     def __init__(self,  userid:str, account:str, simbol:str, 
                  date,  type:int = 0,
-                 price:float = 0.0, quantity:float = 0.0):
+                 price:float = 0.0, quantity:float = 0.0, todayprice:float = 0.0):
         
         self.userid = userid
         self.account = account
@@ -475,11 +476,13 @@ class Operation(db.Model):
         self.type = type # buy or sell
         self.price = price
         self.quantity = quantity
+        self.todayprice = todayprice
         
     def __repr__(self):
         return f"id: {self.id}; simbol: {self.simbol}; userid: {self.userid}; account: {self.account};\
                 date: {self.date}; type: {self.type};\
-                price: {self.price}; amount: {self.quantity};"
+                price: {self.price}; quantity: {self.quantity};\
+                todayprice: {self.todayprice};"
     
 class Account(db.Model):
     __tablename__ = 'account'

@@ -4,8 +4,10 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12  text-end">
-            <button  id="btnAddOperation" class="btn btn-submit btn-outline-secondary" 
-                    onclick="show_edit_operation_dialog(-1)">Add operation</button>
+            <button id="btnAddOperation" 
+                    class="btn btn-submit btn-outline-secondary btn-manage-operation">
+                Add operation
+            </button>
         </div>
     </div>
         
@@ -28,7 +30,10 @@
                     <tr>
                         <td>{{ operation.date }}</td>
                         <td>{{ operation.account }}</td>
-                        <td>{{ operation.simbol }}</td>
+                        <td>{% if operation.type == 0 or operation.type == 1 %}
+                                {{ operation.simbol }}
+                            {% endif %}
+                        </td>
                         <td>
                             {% if operation.type == 0 %}
                                 Buy
@@ -40,15 +45,22 @@
                                 Withdraw
                             {% endif %}
                         </td>
-                        <td>{{ operation.price }}</td>
-                        <td>{{ operation.quantity }}</td>
                         <td>
+                            {% if operation.type == 0 or operation.type == 1 %}
+                                {{ operation.price }}
+                            {% endif %}
+                        </td>
+                        <td>{{ operation.quantity }}</td>
+                        <td>{{ operation.todayprice }}</td>
+                        <td style = "width: 140px;">
+                            <div class = "btn-manage-operation-container">
                             <button type = "button" 
-                                    class="btn btn-secondary btn-edit-operation"  
+                                    class="btn btn-secondary  btn-edit-operation"  
                                     data-id="{{ operation.id }}">Edit</button>
                             <button type = "button" 
                                     class="btn btn-secondary btn-delete-operation"
                                     data-id="{{ operation.id }}">Delete</button>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
@@ -57,16 +69,17 @@
         </div>
 </div>
 
-<!-- The Modal "Add operation" --> 
-<div class="modal fade" id="addOperationModal" tabindex="-1" 
-     aria-labelledby="addOperationModalTitle" aria-hidden="true"> 
+<!-- The Modal "Edit operation" --> 
+<div class="modal fade" id="editOperationModal" tabindex="-1" 
+     aria-labelledby="editOperationModalTitle" aria-hidden="true"> 
     <div class="modal-dialog"> 
         <div class="modal-content"> 
             <div class="modal-header"> 
-                <h5 class="modal-title" id="addOperationModalTitle">New operation</h5>
+                <h5 class="modal-title" id="editOperationModalTitle">New operation</h5>
                     <button type="button" class="btn-close" 
                             data-bs-dismiss="modal" aria-label="Close">
                     </button>
+                    <input type = "text" id = "inputOperationId" hidden>
             </div>
             <div class="modal-body">
                 <div class = "container">
@@ -102,20 +115,16 @@
                         </div>
                         <div class = "col-lg-6"> <!-- Symbol Price Amount -->
                             <div class = "row">
-                                <div class = "col-md-4">
+                                <div class = "col-md-4" id = "containerSymbol" >
                                     <label for="inputSymbol">Symbol</label>
-                                    <select id  = "inputSymbol" class="form-select form-control" name = "inputSymbol"> 
-                                        {% for symbol in portfolioSymbols %}
-                                            <option value="{{ symbol.simbol}}">{{ symbol.simbol }}</option>
-                                        {% endfor %}                                      
-                                    </select>
+                                    <input type = "text" id  = "inputSymbol" class="form-control" name = "inputSymbol"> 
                                 </div>
                                 <div class = "col-md-4">
                                     <label for="inputQuantity" id="inputQuantityLabel">Quantity</label>
                                     <input type="text"  id="inputQuantity" class="form-control" name="inputQuantity">
                                 </div>
-                                <div id = "price-per-share" class = "col-md-4">
-                                    <label for="inputPrice">Price per share</label>
+                                <div  class = "col-md-4" id = "containerPrice">
+                                    <label for="inputPrice" id = "inputPriceLabel">Price per share</label>
                                     <input type="text" class="form-control" id="inputPrice" name="inputPrice">
                                 </div>              
                             </div>
@@ -128,7 +137,7 @@
                         data-bs-dismiss="modal">Close
                 </button> 
                 <button type="button" class="btn btn-secondary"
-                        onclick = "save_operation(0)">Save</button>
+                        onclick = "save_operation()">Save</button>
             </div>
             <div class = "modal-message text-center">
                 <p id = "modal-message"></p>    
@@ -185,80 +194,123 @@ aria-labelledby="deleteOperationModalTitle" aria-hidden="true">
 
 {% block script %}
     <script>
-        $(".btn-delete-operation").click(function() 
-                            {
-                                var rowid = $(this).data("id");
-                               
-                                var data = { rowid: rowid };
-                                $.ajax({
-                                        type: "POST",
-                                        url: "/delete_operation",
-                                        data: JSON.stringify(data),
-                                        contentType: "application/json",
-                                        success: function(response,result,status)
-                                                {
-                                                    console.log(response);
-                                                    if (response.processed)
-                                                    {
-                                                        setTimeout(closedeleteOperationModal, 3000);
-                                                        var myModal = new bootstrap.Modal(document.getElementById('deleteOperationModal'),{ keyboard: false });
-                                                        myModal.show();
-                                                    }
-                                                    $("#modal-delete-message").text(response.description)
-                                                },
-                                        error: function(result,status)
-                                                {   
-                                                    console.log(response,result,status);
-                                                    message = "<p>" + "Something get wrong."+ "</p> <p>Result:" + result.responseText + "</p><p>Status:" + status + "</p>"
-                                                    $("#modal-delete-message").html(message)
-                                                }
-                                        });
-                            }
-                        );
 
-       function show_edit_operation_dialog(rowid){
-            //alert("|"+rowid+"|")
-            //#price-per-share
-            operation_type =$("#inputOperationType").val();
-            //alert(operation_type)
-            switch (operation_type)
+        $("#btnAddOperation").click(function() 
+        {
+            show_edit_operation_dialog(-1)                   
+        });
+
+        $(".btn-delete-operation").click(function() 
+        {
+            var rowid = $(this).data("id");
+                               
+            var data = { rowid: rowid };
+            $.ajax({
+                    type: "POST",
+                    url: "/delete_operation",
+                    data: JSON.stringify(data),
+                    contentType: "application/json",
+                    success: function(response,result,status)
+                    {
+                        if (response.processed)
+                        {
+                            setTimeout(closeDeleteOperationModal, 3000);
+                            var myModal = new bootstrap.Modal(document.getElementById('deleteOperationModal'),{ keyboard: false });
+                            myModal.show();
+                        }
+                        $("#modal-delete-message").text(response.description)
+                    },
+                    error: function(result,status)
+                    {   
+                        message = "<p>" + "Something get wrong."+ "</p> <p>Result:" + result.responseText + "</p><p>Status:" + status + "</p>"
+                        $("#modal-delete-message").html(message)
+                    }
+                    });
+        });
+
+       
+        $(".btn-edit-operation").click(function() 
+        {
+            show_edit_operation_dialog($(this).data("id"))                    
+        });
+            
+
+        function adoptEditOperationDialod(operationType)
+        {
+            $("#inputOperationType").val(operationType)
+            switch (operationType)
+                {
+                    case "0":
+                    case "1": $("#containerSymbol").show();
+                              $("#containerPrice").show(); 
+                              $("#inputQuantityLabel").text("Quantity")
+                              break;
+                    case "2":
+                    case "3": $("#containerSymbol").hide();
+                              $("#containerPrice").hide(); 
+                              $("#inputQuantityLabel").text("Amount"); 
+                              $("#inputPrice").val("1")
+                              break;
+                }
+        }
+
+        function show_edit_operation_dialog(rowid){
+            $("#inputOperationId").val(rowid)
+           
+            if (rowid == -1)
             {
-                case "0":
-                case "1": $("#price-per-share").show(); 
-                          $("#inputQuantityLabel").text("Quantity")
-                          break;
-                case "2":
-                case "3": $("#price-per-share").hide(); 
-                          $("#inputQuantityLabel").text("Amount"); 
-                          $("#inputPrice").val("1")
-                          break;
+                $('#inputOperationType').prop('disabled', false);
+                $("#editOperationModalTitle").text("New operation")
+                adoptEditOperationDialod(0)
             }
-            var myModal = new bootstrap.Modal(document.getElementById('addOperationModal'),
+            else
+            {
+                $("#editOperationModalTitle").text("Edit operation")
+                $('#inputOperationType').prop('disabled', true);
+                // Request operaton data  
+                var data = { rowid: rowid };
+                $.ajax({
+                        type: "POST",
+                        url: "/get_operation_data",
+                        data: JSON.stringify(data),
+                        contentType: "application/json",
+                        success: function(response,result,status)
+                        {
+                            if (response.processed)
+                            {
+                                // Fill up dialog fields with operation data
+                                $("#inputDate").val(response.operationdata.date);
+                                $("#inputAccount").val(response.operationdata.account);
+                                $("#inputSymbol").val(response.operationdata.simbol);
+                                $("#inputOperationType").val(response.operationdata.type);
+                                $("#inputQuantity").val(response.operationdata.quantity)
+                                $("#inputPrice").val(response.operationdata.price);
+
+                                adoptEditOperationDialod(response.operationdata.type)
+                            }
+                        },
+                        error:  function(result,status)
+                        {   
+                            message = "<p>" + "Something get wrong."+ "</p> <p>Result:" + result.responseText + "</p><p>Status:" + status + "</p>"
+                            $("#modal-delete-message").html(message)
+                        }
+                    });
+            }
+            
+            var myModal = new bootstrap.Modal(document.getElementById('editOperationModal'),
                                              { keyboard: false });
             myModal.show();
        }
 
        function inputOperationTypeSelectionChanged()
        {
-            operation_type =$("#inputOperationType").val();
-            alert(operation_type)
-            switch (operation_type)
-            {
-                case "0":
-                case "1": $("#price-per-share").show(); 
-                          $("#inputQuantityLabel").text("Quantity")
-                          break;
-                case "2":
-                case "3": $("#price-per-share").hide(); 
-                          $("#inputQuantityLabel").text("Amount"); 
-                          $("#inputPrice").val("1")
-                          break;
-            }
-
+            adoptEditOperationDialod($("#inputOperationType").val())
        }
        
-       function save_operation(operationId){
+       function save_operation()
+       {
         
+            var rowid =  $("#inputOperationId").val()
             var date = $("#inputDate").val();
             var account = $("#inputAccount").val();
             var symbol = $("#inputSymbol").val();
@@ -267,6 +319,7 @@ aria-labelledby="deleteOperationModalTitle" aria-hidden="true">
             var quantity = $("#inputQuantity").val();
 
             var data = {
+                rowid: rowid,
                 date: date,
                 account: account,
                 symbol: symbol,
@@ -277,14 +330,14 @@ aria-labelledby="deleteOperationModalTitle" aria-hidden="true">
 
             $.ajax({
                 type: "POST",
-                url: "/add_operation",
+                url: "/save_operation",
                 data: JSON.stringify(data),
                 contentType: "application/json",
                 success: function(response,result,status){
                     console.log(response);
                     if (response.processed)
                     {
-                        setTimeout(closeaddOperationModal, 2000);
+                        setTimeout(closeEditOperationModal, 2000);
                     }
                     $("#modal-message").text(response.description)
                 },
@@ -297,18 +350,13 @@ aria-labelledby="deleteOperationModalTitle" aria-hidden="true">
             });
             
        }
-
-       function delete_operation()
-       {
-            var rowid = $(this).data("id")
-            alert("rowid = "+rowid)
+       
+       function closeEditOperationModal(){
+            $("#editOperationModal").modal('hide');
+            location.reload();
        }
 
-       function closeaddOperationModal(){
-            $("#addOperationModal").modal('hide');
-       }
-
-       function closedeleteOperationModal(){
+       function closeDeleteOperationModal(){
             $("#deleteOperationModal").modal('hide');
             location.reload();
        }

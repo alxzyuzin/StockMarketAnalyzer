@@ -677,13 +677,17 @@ input[type="checkbox"]:checked::after {
     border-bottom-width: 2px;
 }
 
+
+.btn-manage-operation-container{
+    width:auto;
+}
 .btn-edit-operation, .btn-delete-operation{
     height: 25px;
-    padding-top: 0px;
-    padding-bottom: 0px;
+    width: 60px;
+    padding: 0px;
 }
 
-#addOperationModal .modal-content{
+#editOperationModal .modal-content{
     margin-top: 70px;
     background-color: #7F7F7F;
     color:white;

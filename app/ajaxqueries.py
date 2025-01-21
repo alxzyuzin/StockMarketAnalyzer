@@ -85,23 +85,32 @@ def get_company_info():
 
 
 
-@app.route("/add_operation", methods = ['POST', 'GET'])
+@app.route("/save_operation", methods = ['POST', 'GET'])
 @login_required
 def add_operation():
      description = ""
-     # Define the format of the date string 
-     date_format = "%Y-%m-%d"
      try:
           if request.method == "POST":
                request_data = request.get_json()
-                # Convert string to datetime object 
-               date_object = datetime.datetime.strptime(request_data["date"], date_format)
-               newOperation = Operation(current_user.id, request_data["account"],
-                                        request_data["symbol"], date_object,
-                                        request_data["operationType"],
-                                        request_data["price"],
-                                        request_data["quantity"] )
-               db.session.add(newOperation)
+               # Define the format of the date string 
+               date_format = "%Y-%m-%d"
+               # Convert string date to datetime object 
+               operation_date = datetime.datetime.strptime(request_data["date"], date_format)
+               rowid = int(request_data["rowid"])      
+               if int(request_data["rowid"]) == -1:
+                    newOperation = Operation(current_user.id, request_data["account"],
+                                        request_data["symbol"], operation_date,
+                                        int(request_data["operationType"]),
+                                        float(request_data["price"]),
+                                        float(request_data["quantity"]) )
+                    db.session.add(newOperation)
+               else:
+                    operation = Operation.query.filter_by(id = request_data["rowid"]).first()
+                    operation.account = request_data["account"]
+                    operation.simbol = request_data["symbol"]
+                    operation.date = operation_date
+                    operation.price = float(request_data["price"])
+                    operation.quantity = float(request_data["quantity"])
                db.session.commit()
                processed = True
                description = f"Operation saved."
@@ -133,15 +142,52 @@ def delete_operation():
                description = f"Operation deleted."
      except Exception as ex:
           db.session.rollback()
-          
+          msghdr = "Operation not deleted -"
           if hasattr(ex, 'msg'):
-               description = f"Operation not deleted - {ex.msg}"
+               description = f"{msghdr} {ex.msg}"
           if hasattr(ex, 'args'):
-               description = f"Operation not deleted - {ex.args}"
+               description = f"{msghdr} {ex.args}"
           processed = False
      
      results = {
                "processed": processed,
                "description": description,
+               }
+     return jsonify(results)
+
+
+@app.route("/get_operation_data", methods = ['POST', 'GET'])
+@login_required
+def get_operation_data():
+     description = ""
+     try:
+          if request.method == "POST":
+               request_data = request.get_json()
+               operation = Operation.query.filter_by(id = request_data["rowid"]).first()
+               operationdata = {
+                              "id":operation.id, 
+                              "type":operation.type,
+                              "userid":operation.userid,
+                              "account":operation.account,
+                              "simbol":operation.simbol,
+                              "date":operation.date.strftime("%Y-%m-%d"),
+                              "price":operation.price,
+                              "quantity":operation.quantity, 
+                              "todayprice":operation.todayprice
+                              }
+               processed = True
+               description = f"Data obtained."
+     except Exception as ex:
+          msghdr = "Request for data failed - "
+          if hasattr(ex, 'msg'):
+               description = f"{msghdr} {ex.msg}"
+          if hasattr(ex, 'args'):
+               description = f"{msghdr} {ex.args}"
+          processed = False
+     
+     results = {
+               "processed":processed,
+               "operationdata": operationdata,
+               "description": description
                }
      return jsonify(results)
