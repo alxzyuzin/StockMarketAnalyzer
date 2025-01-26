@@ -63,10 +63,6 @@ class ChartsData:
         self.__first_ma    = []
         self.__second_ma     = []
         self.__third_ma     = []
-
-        #self.__longSMALength = 0
-        #self.__shortEMA   = []
-        #self.__shortMALength = 0
         
         self.__RSI = []
         self.__upperBBRangeValue = []
@@ -78,16 +74,84 @@ class ChartsData:
 
         self.lastPrice = 0
         self.warningLevel = 0
+        self.chartsOffset = self.__params.get_offset()
     
     def set_indicators_params(self, indicators_params:IndicatorsParams):
         self.__params = indicators_params
 
     def get_indicators_params(self)->IndicatorsParams:
         return self.__params
+    
+    def Dates(self):
+        return self.__date
+    
+    def OpenPrices(self):    
+        return self.__openPrice
+    
+    def HighPrices(self):
+        return self.__highPrice
+    
+    def LowPrices(self):
+        return self.__lowPrice
+    
+    def ClosePrices(self):
+        return self.__closePrice
+    
+    def AdjClose(self):
+        return self.__adjClose
+    
+    def Volumes(self):
+        return self.__volume
 
-    def load(self):
+    def UnadjustedVolumes(self): 
+        return self.__unadjustedVolume
 
-        self.__history_length = self.__params.history_length
+    def Changes(self): 
+        return self.__change
+    
+    def ChangePercents(self):
+        return self.__changePercent
+    
+    def Vaps(self):
+        return self.__vwap
+    
+    def Labels(self):
+        return self.__label
+    
+    def ChangesOverTime(self):
+        return self.__changeOverTime
+        
+        # Calculated indicators
+    def FirstMA(self):
+        return self.__first_ma
+    
+    def SecondMA(self):
+        return self.__second_ma
+    
+    def ThirdMA(self):
+        return  self.__third_ma
+
+    def RSI(self):    
+        return self.__RSI
+    
+    def UpperBBRange(self):
+        return self.__upperBBRangeValue
+    
+    def LoverBBRange(self):
+        return self.__lowerBBRangeValue
+
+    def MACD(self):
+        return     self.__MACD
+    
+    def MACDSignal(self):
+        return self.__MACDSinalLine
+
+    def load(self, history_length = 0):
+
+        if history_length == 0:
+            self.__history_length = self.__params.history_length
+        else:
+            self.__history_length = history_length
         self.__from = (datetime.now() - timedelta(days = self.__history_length)).strftime("%Y-%m-%d")
         self.__to   = datetime.now().strftime("%Y-%m-%d")
 
@@ -549,3 +613,5 @@ class ChartsData:
         self.warningLevel = 0
         return 0
         
+    def maChartsData():
+        pass

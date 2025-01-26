@@ -5,6 +5,7 @@ import certifi
 import json
 import datetime
 from datetime import date
+import math
 
 from flask import render_template, redirect, request, session, url_for, jsonify
 from flask_login import current_user, user_logged_out, login_user, logout_user, login_required
@@ -13,6 +14,7 @@ from app.models import ( db,
                         Simbol, User, UserSimbol, IndicatorsParams,
                         SimbolData, Operation,
                         get_user_indicators_params )
+from app.indicators import ChartsData
 
 @app.route("/clear_simbols_historical_data", methods = ['POST', 'GET'])
 @login_required
@@ -82,7 +84,6 @@ def get_company_info():
                 "company_info":company_info,
                     } 
      return jsonify(results)
-
 
 
 @app.route("/save_operation", methods = ['POST', 'GET'])
@@ -191,3 +192,131 @@ def get_operation_data():
                "description": description
                }
      return jsonify(results)
+
+@app.route("/get_charts_data", methods = ['POST', 'GET'])
+@login_required
+def get_gharts_data():
+   if request.method == "POST":
+      request_data = request.get_json()
+      simbol = request_data[0]["symbol"]
+      period = request_data[0]["period"]
+   try:
+          indicators_params = get_user_indicators_params(simbol, current_user.id)
+          chartsdata = ChartsData(simbol,indicators_params)
+          chartsdata.load(period)
+          chartsdata.calculate_indicators()
+
+          results = {"processed": "true",
+                    "error_descr":"",
+                    "charts_ma_data": config_MA(chartsdata, indicators_params )
+
+                    }
+   except Exception as ex:
+         results = {"processed": 'false', "error_descr": ex.args}
+      
+   return jsonify(results)
+
+def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams):
+     
+     offset = indicatorsParams.get_offset()           
+    
+     labels = chartsData.Labels()
+     closePrices = chartsData.ClosePrices()
+     firstMA = chartsData.FirstMA()
+     secondMA = chartsData.SecondMA()
+     thirdMA = chartsData.ThirdMA()
+     data = {
+               'labels':labels[offset:],
+          
+               'datasets': [
+                         {
+                         'label':'Daily prices',
+                         'data':closePrices[offset:],
+                         'borderWidth':1,
+                         'pointRadius':0,
+                         'borderColor':indicatorsParams.default_color,
+                         'yAxisID':'y',
+                         },
+                         {
+                         'label':f'{indicatorsParams.ma_first_period} days {indicatorsParams.ma_first_type.upper()}',
+                         'data':firstMA[offset:],
+                         'borderWidth':1,
+                         'pointRadius':0,
+                         'borderColor':indicatorsParams.ma_first_color,
+                         'yAxisID': 'y',
+                         },
+                          {
+                         'label':f'{indicatorsParams.ma_second_period} days {indicatorsParams.ma_second_type.upper()}',
+                         'data':secondMA[offset:],
+                         'borderWidth':1,
+                         'pointRadius':0,
+                         'borderColor':indicatorsParams.ma_second_color,
+                         'yAxisID': 'y',
+                         },
+                         {
+                         'label':f'{indicatorsParams.ma_third_period} days {indicatorsParams.ma_third_type.upper()}',
+                         'data':thirdMA[offset:],
+                         'borderWidth':1,
+                         'pointRadius':0,
+                         'borderColor':indicatorsParams.ma_third_color,
+                         'yAxisID': 'y',
+                         }
+                         ]
+        }
+
+     y_min = min(closePrices[offset:]) #- min(closePrices[offset:])/50
+     y_max = max(closePrices[offset:]) #+ max(closePrices[offset:])/50
+     chartConfig = {
+            'type': 'line',
+            'data': data,
+            'options': {
+                         'scales': {
+                              'x':{               
+                                   'ticks':{
+                                             'color': indicatorsParams.default_color
+                                             },
+                                   'grid':{
+                                             'color':indicatorsParams.default_color,
+                                             'lineWidth': 0.3,
+                                             'tickColor':indicatorsParams.default_color,
+                                             'borderColor':indicatorsParams.default_color,
+                                             }
+                                   }, 
+                              'y': {
+                              
+                                   'min': y_min,
+                                   'max': y_max,
+                                   'ticks': { 
+                                             'color': indicatorsParams.default_color
+                                             },
+                                   'grid': {
+                                             'color':indicatorsParams.default_color,
+                                             'lineWidth': 0.3,
+                                             'tickColor':indicatorsParams.default_color,
+                                             'borderColor':indicatorsParams.default_color,
+                                             }
+                              },
+                              'y1': {
+                              'position':'right',
+                              'min': y_min,
+                              'max': y_max,
+                              'ticks': { 
+                                             'color': indicatorsParams.default_color
+                                             },
+                              'grid': {
+                                             'display':False,
+                                        }
+                              }
+
+                         },
+                         'plugins': {
+                                   'legend': {
+                                             'labels': {
+                                                        'color': indicatorsParams.default_color # Set the color for legend labels
+                                                       }
+                                             }
+                                   }
+            }
+        }
+     return chartConfig
+   
