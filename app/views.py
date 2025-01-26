@@ -251,7 +251,7 @@ def logout():
 #____________________________________________________________________________
 #   Handle request on moving simbols between lists of simbols
 #____________________________________________________________________________
-@app.route("//move_simbols_between_lists", methods = ['POST', 'GET'])
+@app.route("/move_simbols_between_lists", methods = ['POST', 'GET'])
 @login_required
 def move_simbols_between_lists():
    if request.method == "POST":

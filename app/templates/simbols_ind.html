@@ -61,30 +61,25 @@
         <div id = "right-column" class = "col-md-10 right-column">
             <div class = "plots-border">
                 <!-- Plots header -->
-                <div id = "plots-header" class = "row">
+                <div id = "plots-header" class = "row" style = "visibility: hidden;">
                     <div class="col-sm text-center">
-                        <div id = "plots-header-content">
-                            {{selected_simbol_data.title}} <!-- &nbsp&nbsp One year return: {{ selected_simbol_data.oneyearreturn}} --> 
-                        </div>
+                        <div id = "plots-header-content"></div>
                     </div>
                 </div>
                 <!-- plots itself -->
-                <div id = "plots-body" class = "row" style="background-image: url('{{plots_image}}')">
+                <div id = "plots-body" class = "row">
                     <canvas id="myChart"></canvas>
                 </div>
                 <!-- Section with buttons to manage simbols lists -->
-                <div id = "plots-footer" class = "row">
+                <div id = "plots-footer" class = "row" style = "visibility: hidden;">
                     <div class = "col-sm-12">
+                        <div id = "last-price" class = "float-start" style="margin-left: 10px;"></div>
                         <div class = "float-start" style="margin-left: 10px;">
-                            {% if last_price > 0 %}
-                            Last price: {{last_price}}
-                            {% endif %}
-                        </div>
-                        <div class = "float-start" style="margin-left: 10px;">
-                            <button class="btn btn-secondary shadow-none simbol-management-buton" >3 M</button>
-                            <button class="btn btn-secondary shadow-none simbol-management-buton" >6 M</button>
-                            <button class="btn btn-secondary shadow-none simbol-management-buton" >1 Y</button>
-                            <button class="btn btn-secondary shadow-none simbol-management-buton" >2 Y</button>
+                            <button class="btn btn-secondary shadow-none btn-symbol-management btn-set-period" data-period="90" >3 M</button>
+                            <button class="btn btn-secondary shadow-none btn-symbol-management btn-set-period" data-period="180">6 M</button>
+                            <button class="btn btn-secondary shadow-none btn-symbol-management btn-set-period" data-period="270">9 M</button>
+                            <button class="btn btn-secondary shadow-none btn-symbol-management btn-set-period" data-period="360">1 Y</button>
+                            <button class="btn btn-secondary shadow-none btn-symbol-management btn-set-period" data-period="720">2 Y</button>
                         </div>
                         <div class="float-end">
                             <div id="simbol-control-buttons" class = "d-flex">
@@ -94,8 +89,7 @@
                                 #   1 - portfolio
                                 #   2 - watchlist
                                 #   3 - shortlist
-                                -->
-                                
+                                -->                 
                                 <label class="move-simbol-label" for="dest-list-type" value ="QWERTY">Move simbol to&nbsp</label>
                                 <select id  = "dest-list-type" class="form-select select-destination-list" 
                                         name = "destListType"
@@ -128,18 +122,9 @@
     // Ajust size of images to inner browser window.   
     window.onload = function()
     {
-
         set_main_row_height();
-        // If page loaded with no selected simbols
-        if ("{{selected_simbol_data}}" == "None")
-        {
-            // Hide plots header
-            $("#plots-header-content").css("visibility", "hidden")
-            // Hide plots area
-            $('#plots-body').css("background-image", "none")
-            // Hide simbol control battons
-            $("#simbol-control-buttons").css("visibility","hidden")
-        }
+        
+        /*
         simbols_list = document.getElementById('list-of-simbols');
         items = simbols_list.getElementsByTagName("button")
         // Convert the HTMLCollection to an array and log each item
@@ -153,8 +138,55 @@
                 return
             }
         });
+        */
     }
-       
+    
+    function mark_symbol_button(smb)
+    {
+        simbols_list = document.getElementById('list-of-simbols');
+        items = simbols_list.getElementsByTagName("button")
+        // Convert the HTMLCollection to an array and log each item
+        Array.from(items).forEach(
+            item => {
+            button_text = item.textContent.trim()
+            if (button_text == smb)
+            {
+                item.scrollIntoView({ block: 'center', behavior: 'instant' });
+                item.style.backgroundColor = "#505050";
+                item.style.color = "#FFA500"; // orange
+                return
+            }
+            else
+            {
+                item.style.backgroundColor = "#505050";
+                item.style.color = "#FFFFFF"; // white
+            }
+        });
+    }
+
+    function mark_period_button(period)
+    {
+        simbols_list = document.getElementById('plots-footer');
+        items = simbols_list.getElementsByTagName("button")
+        // Convert the HTMLCollection to an array and log each item
+        Array.from(items).forEach(
+            item => {
+            button_period = item.dataset.period
+            
+            if (button_period == period)
+            {
+                item.style.backgroundColor = "#707070";
+                item.style.color = "#FFA500"; // orange
+                
+            }
+            else
+            {
+                item.style.backgroundColor = "#505050";
+                item.style.color = "#FFFFFF";
+            }
+        });
+    }
+
     var timer_id;
     window.onresize = function()
     {
@@ -171,30 +203,21 @@
         $("#main-row").css("height",window.innerHeight - 120)
         $("#left-column").css("height", "inherit")
         $("#right-column").css("height", "inherit")
-
         $("#right-column").css("margin-top", 0)
-
-        var plots_width = $("#plots-body").width();
-        var k = window.innerHeight / window.innerWidth
-        $("#plots-body").css("height", plots_width * k - 100)
-       
+           
         if (window.innerWidth < 768)
         {
-           
             $("#left-column").css("height", window.innerHeight / 2 - 100)
             $("#right-column").css("height", window.innerHeight /2 - 15)
             $("#right-column").css("margin-top", 10)
-            $("#plots-body").css("height", plots_width * k / 2 - 85)
         }  
 
         if (window.innerWidth < 376)
         { 
-            $("#plots-body").css("height", plots_width * 0.57)
             $("#left-column").css("height", window.innerHeight / 2 - 100) 
-            $("#right-column").css("height", window.innerHeight / 2 -15) 
+            $("#right-column").css("height", window.innerHeight / 2 -15)
+            $("#plots-footer").css("margin-top", -40)  
         }
-   
-
     }
 
     const search_smb = document.getElementById('simbol-search');
@@ -219,7 +242,16 @@
         });
     })
     
-    CURRENT_SIMBOL="{{selected_simbol}}"
+    $(".btn-set-period").click(function() 
+        {
+            
+            var period = $(this).data("period");
+            mark_symbol_button(CURRENT_SIMBOL)
+            mark_period_button(period)
+            update_charts(CURRENT_SIMBOL, period)
+        })
+
+    CURRENT_SIMBOL=""
     SOURCE_LIST = 0
 
      /*_______________________________________________________________________
@@ -227,10 +259,14 @@
     | Parameters:
     |   simbol - simbol for calcutation indicatoer for
     |___________________________________________________________________________*/
+   
+    ChartMA = 1
     function simbol_button_click(event)
-    {
-        //draw_chart()
-        
+    {   
+        CURRENT_SIMBOL = event.target.innerText
+        update_charts(event.target.innerText, 180)
+        mark_period_button(180)
+        /*
         server_request_data = 
         [
             {
@@ -249,10 +285,19 @@
                 success: function(result)
                 {                  
                     if (result.processed == "true")
-                    {            
+                    {   
+                        if (ChartMA instanceof Chart) 
+                            ChartMA.destroy()         
                         const ctx = document.getElementById('myChart').getContext('2d');
-                        new Chart(ctx,result.charts_ma_data)
-                      }
+                        ChartMA = new Chart(ctx,result.charts_ma_data)
+                        // Show plots header
+                        $("#plots-header-content").css("visibility", "visible")
+                        $("#plots-header-content").text(result.symbol_header)
+                        // Show plots footer
+                        $("#plots-footer").css("visibility","visible")
+                        $("#last-price").text("Last price: "+result.last_price)
+                        mark_symbol_button(CURRENT_SIMBOL)  
+                    }
                     else
                     {
                         $("#plots-body").html("<p style = 'font-size:xx-large'>" + result.error_descr + "</p>")
@@ -266,8 +311,57 @@
 
              }
         );
-        
+        */
     }
+
+    function update_charts(symbol, period)
+    {
+        server_request_data = 
+        [
+            {
+                "symbol":symbol,
+                "period":period
+            }
+         ]
+
+         $.ajax(
+            {
+                type: "POST",
+                url: "/get_charts_data",
+                data: JSON.stringify(server_request_data),
+                contentType: "application/json",
+                dataType: "json",
+                success: function(result)
+                {                  
+                    if (result.processed == "true")
+                    {   
+                        if (ChartMA instanceof Chart) 
+                            ChartMA.destroy()         
+                        const ctx = document.getElementById('myChart').getContext('2d');
+                        ChartMA = new Chart(ctx,result.charts_ma_data)
+                        // Show plots header
+                        $("#plots-header-content").css("visibility", "visible")
+                        $("#plots-header-content").text(result.symbol_header)
+                        // Show plots footer
+                        $("#plots-footer").css("visibility","visible")
+                        $("#last-price").text("Last price: "+result.last_price)
+                        mark_symbol_button(CURRENT_SIMBOL)  
+                    }
+                    else
+                    {
+                        $("#plots-body").html("<p style = 'font-size:xx-large'>" + result.error_descr + "</p>")
+                    }       
+                },
+                error: function(result,status)
+                {
+                    message = "<p>" + "Something get wrong."+ "</p> <p>Result:" + result + "</p><p>Status:" + status + "</p>"
+                    $("#plots-body").html(message)
+                }
+
+             }
+        );
+    }
+
 
     /*_______________________________________________________________________
     | Request server for adding or delete simbol to or from specified list

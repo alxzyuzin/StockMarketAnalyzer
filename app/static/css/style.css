@@ -234,13 +234,15 @@ footer
 
 #plots-footer
 {
-    margin-top: 10px;
+    margin-top: -20px;
     
 }
 #simbols-list-row
 {
     padding-right: 10px;
     height: calc(100% - 115px);
+    margin-right: calc(var(--bs-gutter-x)* -.15);
+    margin-left: calc(var(--bs-gutter-x)* -.15);
 }
 .simbols-list
 {
@@ -255,6 +257,8 @@ footer
     padding-right: 3px;
     border: 1px solid white;
     border-radius: 4px;
+    padding-left: 2px;
+
 }
 
 .simbols-list-border
@@ -350,8 +354,23 @@ footer
     color: orange;
 }
 
+#simbol-control-buttons{
+    margin-top: 2px;
+}
+
 .simbol-management-buton
 {
+    font-size:medium;
+    text-wrap: nowrap ;
+    vertical-align:middle;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+
+.btn-symbol-management{
     font-size:medium;
     text-wrap: nowrap ;
     vertical-align:middle;

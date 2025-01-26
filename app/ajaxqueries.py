@@ -199,16 +199,19 @@ def get_gharts_data():
    if request.method == "POST":
       request_data = request.get_json()
       simbol = request_data[0]["symbol"]
-      period = request_data[0]["period"]
+      period = int(request_data[0]["period"])
    try:
           indicators_params = get_user_indicators_params(simbol, current_user.id)
           chartsdata = ChartsData(simbol,indicators_params)
-          chartsdata.load(period)
+          chartsdata.load()
           chartsdata.calculate_indicators()
+          simbol_data = db.session.query(Simbol).filter(Simbol.simbol == simbol).first()  
 
           results = {"processed": "true",
                     "error_descr":"",
-                    "charts_ma_data": config_MA(chartsdata, indicators_params )
+                    "charts_ma_data": config_MA(chartsdata, indicators_params, period ),
+                    "symbol_header":simbol_data.title,
+                    "last_price":chartsdata.lastPrice
 
                     }
    except Exception as ex:
@@ -216,9 +219,9 @@ def get_gharts_data():
       
    return jsonify(results)
 
-def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams):
+def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams, period:int):
      
-     offset = indicatorsParams.get_offset()           
+     offset = max(indicatorsParams.get_offset(), len(chartsData.Labels()) - period)          
     
      labels = chartsData.Labels()
      closePrices = chartsData.ClosePrices()
@@ -235,7 +238,7 @@ def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams):
                          'borderWidth':1,
                          'pointRadius':0,
                          'borderColor':indicatorsParams.default_color,
-                         'yAxisID':'y',
+                         #'yAxisID':'y',
                          },
                          {
                          'label':f'{indicatorsParams.ma_first_period} days {indicatorsParams.ma_first_type.upper()}',
@@ -243,7 +246,7 @@ def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams):
                          'borderWidth':1,
                          'pointRadius':0,
                          'borderColor':indicatorsParams.ma_first_color,
-                         'yAxisID': 'y',
+                         #'yAxisID': 'y',
                          },
                           {
                          'label':f'{indicatorsParams.ma_second_period} days {indicatorsParams.ma_second_type.upper()}',
@@ -251,7 +254,7 @@ def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams):
                          'borderWidth':1,
                          'pointRadius':0,
                          'borderColor':indicatorsParams.ma_second_color,
-                         'yAxisID': 'y',
+                         #'yAxisID': 'y',
                          },
                          {
                          'label':f'{indicatorsParams.ma_third_period} days {indicatorsParams.ma_third_type.upper()}',
@@ -259,7 +262,7 @@ def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams):
                          'borderWidth':1,
                          'pointRadius':0,
                          'borderColor':indicatorsParams.ma_third_color,
-                         'yAxisID': 'y',
+                         #'yAxisID': 'y',
                          }
                          ]
         }
