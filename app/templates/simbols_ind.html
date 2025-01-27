@@ -314,6 +314,11 @@
         */
     }
 
+    function legendfilter(item, chart) {
+                    // Logic to remove a particular legend item goes here
+                    return !item.text.includes('none');
+                }
+
     function update_charts(symbol, period)
     {
         server_request_data = 
@@ -338,6 +343,9 @@
                         if (ChartMA instanceof Chart) 
                             ChartMA.destroy()         
                         const ctx = document.getElementById('myChart').getContext('2d');
+                        
+                        result.charts_ma_data.options.plugins.legend.labels.filter = legendfilter
+
                         ChartMA = new Chart(ctx,result.charts_ma_data)
                         // Show plots header
                         $("#plots-header-content").css("visibility", "visible")

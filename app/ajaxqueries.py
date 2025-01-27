@@ -222,17 +222,25 @@ def get_gharts_data():
 def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams, period:int):
      
      offset = max(indicatorsParams.get_offset(), len(chartsData.Labels()) - period)          
-    
-     labels = chartsData.Labels()
+     labels = []
+     for label in chartsData.Labels():
+          labelparts = label.split()
+          labels.append(f"{labelparts[0][:3]} {labelparts[1]} {labelparts[2]}")
+     
      closePrices = chartsData.ClosePrices()
      firstMA = chartsData.FirstMA()
      secondMA = chartsData.SecondMA()
      thirdMA = chartsData.ThirdMA()
+     upperBoligerBand  = chartsData.UpperBBRange()
+     lowerBoligerBand  = chartsData.LoverBBRange()
+     
+     opacity = str(hex(int(255 * indicatorsParams.bollingerband_opacity)))[2:]
+     bollingerBandColor = indicatorsParams.bollingerband_color + opacity
      data = {
                'labels':labels[offset:],
           
                'datasets': [
-                         {
+                         { # Daily prices
                          'label':'Daily prices',
                          'data':closePrices[offset:],
                          'borderWidth':1,
@@ -240,7 +248,7 @@ def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams, period:i
                          'borderColor':indicatorsParams.default_color,
                          #'yAxisID':'y',
                          },
-                         {
+                         { # First MA
                          'label':f'{indicatorsParams.ma_first_period} days {indicatorsParams.ma_first_type.upper()}',
                          'data':firstMA[offset:],
                          'borderWidth':1,
@@ -248,7 +256,7 @@ def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams, period:i
                          'borderColor':indicatorsParams.ma_first_color,
                          #'yAxisID': 'y',
                          },
-                          {
+                         { # Second MA
                          'label':f'{indicatorsParams.ma_second_period} days {indicatorsParams.ma_second_type.upper()}',
                          'data':secondMA[offset:],
                          'borderWidth':1,
@@ -256,19 +264,36 @@ def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams, period:i
                          'borderColor':indicatorsParams.ma_second_color,
                          #'yAxisID': 'y',
                          },
-                         {
+                         { # Third MA
                          'label':f'{indicatorsParams.ma_third_period} days {indicatorsParams.ma_third_type.upper()}',
                          'data':thirdMA[offset:],
                          'borderWidth':1,
                          'pointRadius':0,
                          'borderColor':indicatorsParams.ma_third_color,
                          #'yAxisID': 'y',
+                         },
+                         { # Upper Bolinger band
+                         'label':'none',
+                         'data':upperBoligerBand[offset:],
+                         'borderWidth':1,
+                         'pointRadius':0,
+                         'borderColor':bollingerBandColor,               
+                         },
+                         { # Lover Bolinger band
+                         'label':f'Bollinger band {indicatorsParams.bollingerband_period} days.',
+                         'data':lowerBoligerBand[offset:],
+                         'borderWidth':1,
+                         'pointRadius':0,
+                         'borderColor':bollingerBandColor,
+                         'backgroundColor':  bollingerBandColor,
+                         'fill':'-1'
                          }
                          ]
         }
 
-     y_min = min(closePrices[offset:]) #- min(closePrices[offset:])/50
-     y_max = max(closePrices[offset:]) #+ max(closePrices[offset:])/50
+     y_min = min(min(closePrices[offset:]), min(lowerBoligerBand[offset:])) 
+     y_max = max(max(closePrices[offset:]), max(upperBoligerBand[offset:]))
+
      chartConfig = {
             'type': 'line',
             'data': data,
@@ -303,19 +328,16 @@ def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams, period:i
                               'position':'right',
                               'min': y_min,
                               'max': y_max,
-                              'ticks': { 
-                                             'color': indicatorsParams.default_color
-                                             },
-                              'grid': {
-                                             'display':False,
-                                        }
+                              'ticks': { 'color': indicatorsParams.default_color },
+                              'grid': { 'display':False  }
                               }
 
                          },
                          'plugins': {
                                    'legend': {
                                              'labels': {
-                                                        'color': indicatorsParams.default_color # Set the color for legend labels
+                                                        'color': indicatorsParams.default_color, # Set the color for legend labels
+                                                        'filter': ''
                                                        }
                                              }
                                    }
