@@ -1,7 +1,8 @@
 from logging import exception
 from app import app
 from flask import render_template, redirect, request, session, url_for, jsonify
-from flask_login import current_user, user_logged_out, login_user, logout_user, login_required
+from flask_login import (current_user, user_logged_out, 
+                         login_user, logout_user, login_required)
 
 #import secrets
 #import smtplib
@@ -20,6 +21,7 @@ from app.models import ( db,
                         get_user_indicators_params )
 from app.userlogin  import currentusername
 from app.indicators import ChartsData
+from sqlalchemy import and_
 
 #____________________________________________________________________________
 #   Display homepage
@@ -516,6 +518,50 @@ def perfomance():
                           operationResult = operationResult)
 
      
+#____________________________________________________________________________
+# Delete symbols from database and edit symbol info
+#____________________________________________________________________________
+@app.route("/managesymbols")
+@login_required
+def managesymbols():
+   # simbol
+   # title
+   # sector
+   # industry
+   # country
+   # isfund
+   operationResult = ""
+   try:
+     
+      symbols = db.session.query(
+                                 Simbol.simbol, 
+                                 Simbol.title,
+                                 Simbol.sector,
+                                 Simbol.industry,
+                                 Simbol.country,
+                                 Simbol.isfund,
+                                 UserSimbol.listtype,
+                                 UserSimbol.userid
+                              ).outerjoin(
+                                 UserSimbol, and_(Simbol.simbol == UserSimbol.simbol, UserSimbol.userid == current_user.id)
+                              #).filter(
+                                 
+                              ).order_by(
+                                 Simbol.simbol
+                              ).all()
+
+      i = 0
+      #symbols = db.session.query(Simbol).order_by(Simbol.simbol).all()
+   except Exception as ex:
+      operationResult = f"Error loading data {ex.args}"
+   return render_template("managesymbols.html", pageName = "symbols",
+                          today = date.today(),
+                          symbols = symbols,
+                          user = current_user, 
+                          operationResult = operationResult)
 
 
 
+@app.route("/copilotexample")
+def copilotexample():
+   return render_template("copilotexample.html", pageName = "Copilot Example", user = current_user)

@@ -10,13 +10,52 @@
     font-style: normal;
 }
 
-@media (min-width: 576px)
+@media (min-width: 440px)
 {
     .modal-dialog {
         max-width: 1000px;
         margin: 1.75rem auto;
     }    
+    .container, .container-sm, .container-md, .container-lg, .container-xl {
+        max-width: 800px;
+    }
 }
+
+@media (min-width: 360px)
+{
+    .modal-dialog {
+        max-width: 1000px;
+        margin: 1.75rem auto;
+    }    
+    .container, .container-sm, .container-md, .container-lg, .container-xl {
+        max-width: 540px;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+}
+
+@media (min-width: 768px)
+{
+    .modal-dialog {
+        max-width: 700px;
+        margin: 1.75rem auto;
+    }    
+    .container, .container-sm, .container-md, .container-lg, .container-xl {
+        max-width: 750px;
+    }
+}
+
+@media (min-width: 992px)
+{
+    .modal-dialog {
+        max-width: 800px;
+        margin: 1.75rem auto;
+    }    
+    .container, .container-sm, .container-md, .container-lg, .container-xl {
+        max-width: 980px;
+    }
+}
+
 /*
 @media (min-width: 768px) {
    
@@ -30,12 +69,13 @@ html {
 
 body
 {
-    color: #566787;background-color:rgb(68, 68, 68);
+    color: #566787;
+    background-color:rgb(68, 68, 68);
     /*font-family: "Varela Round", sans-serif;*/    
 	font-family: "HvDTrial_Brandon_Grotesque_regular";
-    font-size: large;
+/*    font-size: large;*/
     text-size-adjust: 100%;
-    min-width: 375px;
+    min-width: 360px;
 }
 
 .cinzel-400
@@ -289,7 +329,7 @@ footer
     margin-left: 2px;
     
     text-transform: uppercase;
-    height: 30px;
+    height: 28px;
     font-size: small;
    
     border-radius: 4px;
@@ -732,4 +772,88 @@ input[type="checkbox"]:checked::after {
     width: 50%;
     margin-left: auto;
     margin-right: auto;
+}
+
+/*_______________________________________________________________________
+|                                                                        |
+|              List of symbols table styles                              |
+|_______________________________________________________________________*/
+
+
+#manage-symbols-page-header{
+
+    top:45px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    position:fixed;
+    width: 100%; 
+    color:#8F8F8F;
+    background-color:rgb(68, 68, 68);
+   
+}
+.table>:not(caption)>*>* {
+    padding: .5rem .5rem;
+    border-bottom-width: 0px;
+}
+.fixed-header-table{
+    top: 140px;
+    margin-top: 140px;
+    padding-top: 140px;
+    padding: 0px;
+    border-bottom-width: 0px;
+}
+
+.fixed-header-table tr{
+    top: 140px;
+
+    color: white;
+    
+}
+
+.fixed-header-table tbody{
+    top:140px;
+    margin-top: 140px;
+    color: white;
+    
+}
+
+.fixed-header-table .hiddenRow{
+    padding: 0;
+}
+
+.accordion-content{
+    border-bottom: 1px solid #8F8F8F;
+    
+}
+.fixed-header-table thead th {
+   color: #1f1f1f;
+    position:sticky;
+    top: 140px;
+    background: white;
+    z-index: 100;
+}
+
+.symbol-manage-page-button{
+    height: 30px; 
+    padding-left:6px; 
+    padding-right:6px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    text-wrap: nowrap;
+}
+
+#select-dest-list{
+    height: 30px;
+    width: 120px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-left: 10px;
+    margin-right: 10px;
+    box-shadow: none;
+}
+
+#message-placeholder{
+    color: orange;
+    font-size:medium;
+    text-align: left;
 }

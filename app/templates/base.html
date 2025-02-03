@@ -43,16 +43,17 @@
                     class="nav-link dropdown-toggle {% if pageName == 'Simbols' %} active {% endif %}" 
                     href="#"
                     role="button" data-bs-toggle="dropdown" 
-                    aria-expanded="false">Simbols</a>
+                    aria-expanded="false">Symbols</a>
                <ul class="dropdown-menu" aria-labelledby="navbarDropdownSimbols">
                   <li><a class="dropdown-item" href="/simbols?listtype=portfolio&rwl=false&simbol=">Portfolio</a></li>
                   <li><a class="dropdown-item" href="/simbols?listtype=shortlist&rwl=false&simbol=">Shortlist</a></li>
                   <li><a class="dropdown-item" href="/simbols?listtype=watchlist&rwl=false&simbol=">Wachlist</a></li>
                   <li><a class="dropdown-item" href="/simbols?listtype=unselected&rwl=false&simbol=">All</a></li>
-                  <li><a class="dropdown-item" href="/editsimboldata?simbol=">Add simbol</a></li>
-                  <li><a class="dropdown-item" onclick="reset_simbol_data_click(event)" href="">Reset simbol data</a></li>
+                  <li><a class="dropdown-item" href="/editsimboldata?simbol=">Add symbol</a></li>
+                  <li><a class="dropdown-item" onclick="reset_simbol_data_click(event)" href="">Reset symbols data</a></li>
                   <li><hr class="dropdown-divider"></hr></li>
-                  <li><a class="dropdown-item" href="/simbols_ind?listtype=portfolio&rwl=false&simbol=">Portfolio</a></li>
+                  
+                  <li><a class="dropdown-item" href="/managesymbols">Manage symbols</a></li>
 
                 </ul>
               </li>
@@ -64,8 +65,10 @@
                    role="button" data-bs-toggle="dropdown" 
                   aria-expanded="false">Portfolio</a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownPortfolio">
-                    <li><a class="dropdown-item" href="/activity">Activity</a></li>
-                    <li><a class="dropdown-item" href="/perfomance">Perfomance</a></li>
+                  <li><a class="dropdown-item" href="/simbols_ind?listtype=portfolio&rwl=false&simbol=">Symbols</a></li>
+                  <li><a class="dropdown-item" href="/activity">Activity</a></li>
+                  <li><a class="dropdown-item" href="/perfomance">Perfomance</a></li>
+                  <li><a class="dropdown-item" href="/copilotexample">Copilot example</a></li>
                 </ul>
               </li>
               <li class = "nav-item dropdown">

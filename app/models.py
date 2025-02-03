@@ -146,7 +146,7 @@ class SimbolData(db.Model):
     def __repr__(self):
         return f"simbol: {self.simbol}; warning_level: {self.warning_level}; date_of_loading: {self.date_of_loading}; historical_data: BLOB"
 
-# List of simbols selected by user to include 
+# List of simbols includer by user to include 
 # in portfolio, watchlist or shortlist 
 class UserSimbol(db.Model):  
     __tablename__ = 'usersimbol'
@@ -448,7 +448,8 @@ class IndicatorsParams(db.Model):
         else:
             return False
 
-# List of users activities
+# List of users activities on buyng or selling stoks or
+#  transfer money to or fro investment account
 # 0 - Buy stock
 # 1 - Sell stock
 # 3 - Deposit money to account

@@ -5,10 +5,10 @@ from flask_login import current_user, user_logged_out, login_user, logout_user, 
 #____________________________________________________________________________
 #   Display page for managing symbols list
 #____________________________________________________________________________
-@app.route("/managesymbols")
-@login_required
-def managesymbols():
-   return render_template("managesymbols.html", pageName = "Admin", user = current_user)
+#@app.route("/managesymbols")
+#@login_required
+#def managesymbols():
+#   return render_template("managesymbols.html", pageName = "Admin", user = current_user)
 
 #____________________________________________________________________________
 #   Display page for managing users
