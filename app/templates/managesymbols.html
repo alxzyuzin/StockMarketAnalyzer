@@ -44,27 +44,20 @@
                 <td colspan="6" class="hiddenRow">
                     <div class="accordion-body collapse" id="{{symbol.simbol}}">
                         <div class = "d-flex justify-content-end">
-                        <div id = "source-list">Move symbol from
+                        <div id = "{{symbol.simbol}}-source-list">Move symbol from
                             {% if symbol.listtype == None %}unselected{% endif %}
                             {% if symbol.listtype == 1 %}portfolio{% endif %}
                             {% if symbol.listtype == 2 %}watchlist{% endif %}
                             {% if symbol.listtype == 3 %}shortlist{% endif %}
                             to</div>
-                        <select id  = "select-dest-list" class="form-select form-control">                         
-                            {% if symbol.listtype != None %}
-                                <option value="0" selected>Unselected</option>                                       
-                            {% endif %}
-                            {% if symbol.listtype != 1 %}
-                                <option value="1" selected>Portfolio</option>                                       
-                            {% endif %}
-                            {% if symbol.listtype != 2 %}
-                                <option value="2" selected>Watchlist</option>                                       
-                            {% endif %}
-                            {% if symbol.listtype != 3 %}
-                                <option value="3" selected>Shortlist</option>                                       
-                            {% endif %}
+                        <select id  = "{{symbol.simbol}}-select-dest-list" 
+                                class="form-select form-control select-dest-list">                         
+                            <option value="0" selected>Unselected</option>                                       
+                            <option value="1" selected>Portfolio</option>                                       
+                            <option value="2" selected>Watchlist</option>                                       
+                            <option value="3" selected>Shortlist</option>                                           
                         </select>
-                        <button type="button" 
+                        <button id  = "{{symbol.simbol}}-move-button" type="button" 
                                 class="btn btn-secondary symbol-manage-page-button move-simbol-button" 
                                 data-symbol="{{symbol.simbol}}"
                                 {% if symbol.listtype == None %}
@@ -79,7 +72,7 @@
                                 onclick = "delete_symbol()">Delete symbol</button>
                         </div>
                     </div>
-                    <div id = "message-placeholder"></div>
+                    <div id = "{{symbol.simbol}}-message-placeholder" class = "message-placeholder"></div>
                 </td>
             </tr>
             {% endfor %}
@@ -247,7 +240,7 @@ $(".move-simbol-button").click(function()
         {
             var symbol = $(this).data("symbol");
             var sourcelist = $(this).data("sourcelist");
-            var selectElement = document.getElementById('select-dest-list');
+            var selectElement = document.getElementById(symbol+'-select-dest-list');
             var targetlist = parseInt(selectElement.value, 10);
             move_simbols_between_lists(symbol, sourcelist, targetlist)
         });
@@ -265,18 +258,23 @@ $(".move-simbol-button").click(function()
     |   operation   - "add" - add or "del" - delete simbol, "mov" - move simbol from sorce list to target list
     |___________________________________________________________________________*/
    
-    function move_simbols_between_lists(simbol, sourcelist, targetlist)
+    function move_simbols_between_lists(symbol, sourcelist, targetlist)
     {
-        if (simbol.length == 0)
+        if (symbol.length == 0)
         {
-            alert("No selected simbols.")
+            alert("No selected symbols.")
             return
         }
         
+        if (sourcelist == targetlist)
+        {
+            $("#"+symbol+"-message-placeholder").text("Source and target lists can't be the same.")
+            return
+        }
         server_request_data = 
         [
             {
-                "simbol":simbol,
+                "symbol":symbol,
                 "sourcelist":sourcelist,
                 "targetlist":targetlist,
             }
@@ -295,22 +293,20 @@ $(".move-simbol-button").click(function()
                     {
                         sourcelistname = list_type_to_list_name(sourcelist)
                         targetlistname = list_type_to_list_name(targetlist)
-                        $("#source-list").html("Move symbol from " + targetlistname + " to")
-                        $('#select-dest-list[value='+targetlist+']').remove();                      
-                        $('select-dest-list').append('<option value="'+sourcelist+'">'+targetlistname +'</option>');
-                        message = "Symbol " + simbol + " successfully moved to " + targetlistname + "."
-                        // Display message
-                        $("#message-placeholder").text(message)
+                        $("#" + symbol + "-source-list").html("Move symbol from " + targetlistname + " to")
+                        $("#" + symbol + "-move-button").data("sourcelist", targetlist)
+                        message = "Symbol " + symbol + " successfully moved to " + targetlistname + "."
+                        $("#" + symbol + "-message-placeholder").text(message)
                     }
                     else
                     {
-                        $("#message-placeholder").html("<p style = 'font-size:xx-large'>" + result.error_descr + "</p>")
+                        $("#" + symbol + "-message-placeholder").text("Error: " + result.error_descr)
                     }
                 },
                 error: function(result,status)
                 {
-                    message = "<p>" + "Something get wrong."+ "</p> <p>Result:" + result + "</p><p>Status:" + status + "</p>"
-                    $("#message-placeholder").html(message)
+                    message = "Something get wrong. " + "Result:" + result + " Status:" + status + "</p>"
+                    $("#" + symbol + "-message-placeholder").text(message)
                 }
 
             }

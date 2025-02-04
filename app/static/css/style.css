@@ -842,7 +842,7 @@ input[type="checkbox"]:checked::after {
     text-wrap: nowrap;
 }
 
-#select-dest-list{
+.select-dest-list{
     height: 30px;
     width: 120px;
     padding-top: 0px;
@@ -852,7 +852,7 @@ input[type="checkbox"]:checked::after {
     box-shadow: none;
 }
 
-#message-placeholder{
+.message-placeholder{
     color: orange;
     font-size:medium;
     text-align: left;

@@ -258,7 +258,7 @@ def logout():
 def move_simbols_between_lists():
    if request.method == "POST":
       request_data = request.get_json()
-      simbol = request_data[0]["simbol"]
+      symbol = request_data[0]["symbol"]
       sourcelist = request_data[0]["sourcelist"]
       targetlist = int(request_data[0]["targetlist"])
       try:
@@ -268,29 +268,23 @@ def move_simbols_between_lists():
          #   2 - watchlist
 
          # Moving simbol from unselected to watchlist or portfolio or shortlist
-         if (sourcelist == 0) and (targetlist == 1 or targetlist == 2 or targetlist == 3):
+         if sourcelist == 0:
             db.session.add(UserSimbol(userid = current_user.id,
-                                      simbol = simbol,
+                                      simbol = symbol,
                                       listtype = targetlist))
          # Moving simbol between watchlist an portfolio in any direction   
-         if (sourcelist == 1 and targetlist == 2)\
-            or (sourcelist == 2 and targetlist == 1)\
-            or (sourcelist == 1 and targetlist == 3)\
-            or (sourcelist == 3 and targetlist == 1)\
-            or (sourcelist == 2 and targetlist == 3)\
-            or (sourcelist == 3 and targetlist == 2):
-         
-            record = db.session.query(UserSimbol)\
-                               .filter(UserSimbol.userid == current_user.id, 
-                                       UserSimbol.simbol == simbol,
-                                       UserSimbol.listtype == sourcelist)\
-                               .first()
+         if not(sourcelist == 0 or targetlist == 0):
+            record = db.session.query(UserSimbol
+                              ).filter(UserSimbol.userid == current_user.id, 
+                                       UserSimbol.simbol == symbol,
+                                       UserSimbol.listtype == sourcelist
+                              ).first()
             record.listtype = targetlist
          
           # Moving simbol from watchlist or portfolio or shortlist to unselected   
-         if (sourcelist == 1 or sourcelist == 2 or sourcelist == 3) and (targetlist == 0):
+         if targetlist == 0:
             db.session.query(UserSimbol).filter(UserSimbol.userid == current_user.id,
-                                                UserSimbol.simbol == simbol,
+                                                UserSimbol.simbol == symbol,
                                                 UserSimbol.listtype == sourcelist
                                                 ).delete()
          db.session.commit()
