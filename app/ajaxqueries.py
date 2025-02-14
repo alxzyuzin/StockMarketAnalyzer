@@ -206,10 +206,11 @@ def get_gharts_data():
           chartsdata.load()
           chartsdata.calculate_indicators()
           simbol_data = db.session.query(Simbol).filter(Simbol.simbol == simbol).first()  
-
+          offset = max(indicators_params.get_offset(), len(chartsdata.Labels()) - period)      
           results = {"processed": "true",
                     "error_descr":"",
-                    "charts_ma_data": config_MA(chartsdata, indicators_params, period ),
+                    "charts_ma_data": config_MA(chartsdata, indicators_params, offset),
+                    "charts_rsi_data": config_RSI(chartsdata, indicators_params, offset),
                     "symbol_header":simbol_data.title,
                     "last_price":chartsdata.lastPrice
 
@@ -218,14 +219,38 @@ def get_gharts_data():
          results = {"processed": 'false', "error_descr": ex.args}
       
    return jsonify(results)
-
-def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams, period:int):
-     
-     offset = max(indicatorsParams.get_offset(), len(chartsData.Labels()) - period)          
+#__________________________________________________________________________________
+#
+#  Convert one sline date label (MM-DD-YY) to double line date label [DD,MM]
+#__________________________________________________________________________________
+def format_labels(sourcelabels)->list[str]:
      labels = []
-     for label in chartsData.Labels():
+     month = ""
+     day = ""
+     year = ""
+
+     for label in sourcelabels:
           labelparts = label.split()
-          labels.append(f"{labelparts[0][:3]} {labelparts[1]} {labelparts[2]}")
+          if labelparts[2] == year:
+               if labelparts[0][:3] == month:
+                    labels.append([labelparts[1][:2],labelparts[0][:3],""])
+               else:
+                    labels.append([labelparts[1][:2],labelparts[0][:3],""])
+                    month = labelparts[0][:3]
+          else:
+               labels.append([labelparts[1][:2],labelparts[0][:3],labelparts[2]])
+               year = labelparts[2]       
+               month = labelparts[0][:3]
+     return labels
+
+
+#__________________________________________________________________________________
+#
+#  Configuration for Moving Average chart
+#__________________________________________________________________________________
+def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams, offset:int):
+     
+     labels = format_labels(chartsData.Labels())
      
      closePrices = chartsData.ClosePrices()
      firstMA = chartsData.FirstMA()
@@ -234,6 +259,14 @@ def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams, period:i
      upperBoligerBand  = chartsData.UpperBBRange()
      lowerBoligerBand  = chartsData.LoverBBRange()
      
+     # Calculate trend lines
+     #chartsData.calcUpperTrendLine(period)
+     #upperTrendLine = chartsData.UpperTrendLine()
+     #trendlineoffset = len(upperTrendLine) - period
+
+     #chartsData.calcLowerTrendLine(period)
+     #lowerTrendLine = chartsData.LowerTrendLine()
+
      opacity = str(hex(int(255 * indicatorsParams.bollingerband_opacity)))[2:]
      bollingerBandColor = indicatorsParams.bollingerband_color + opacity
      data = {
@@ -288,6 +321,7 @@ def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams, period:i
                          'backgroundColor':  bollingerBandColor,
                          'fill':'-1'
                          }
+   
                          ]
         }
 
@@ -301,7 +335,9 @@ def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams, period:i
                          'scales': {
                               'x':{               
                                    'ticks':{
-                                             'color': indicatorsParams.default_color
+                                             'color': indicatorsParams.default_color,
+                                             'maxRotation': 0, #Prevents rotation
+                                             'minRotation': 0  # Prevents rotation
                                              },
                                    'grid':{
                                              'color':indicatorsParams.default_color,
@@ -344,4 +380,158 @@ def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams, period:i
             }
         }
      return chartConfig
-   
+
+#__________________________________________________________________________________
+#
+#  Configuration for RSI chart
+#__________________________________________________________________________________  
+def config_RSI(chartsData:ChartsData, indicatorsParams:IndicatorsParams,offset:int):
+     
+     labels = format_labels(chartsData.Labels())    
+     rsiData = chartsData.RSI()
+     data = {
+               'labels':labels[offset:],
+          
+               'datasets': [
+                         { # RSI
+                         'label':'RSI',
+                         'data':chartsData.RSI()[offset:],
+                         'borderWidth':1,
+                         'pointRadius':0,
+                         'borderColor':indicatorsParams.rsi_color,
+                         },
+                        
+                         ]
+        }
+
+     threshold_x_min = min(labels[offset:])
+     threshold_x_max = max(labels[offset:])
+     threshold_y_min = -30
+     threshold_y_max = 30
+
+     chart_y_max = 50
+     chart_y_min = -50
+
+     chartConfig = {
+            'type': 'line',
+            'data': data,
+            'options': {
+                         'scales': {
+                              'x':{               
+                                   'ticks':{
+                                             'color': indicatorsParams.default_color,
+                                             'maxRotation': 0, #Prevents rotation
+                                             'minRotation': 0  # Prevents rotation
+                                             },
+                                   'grid':{
+                                             'color':indicatorsParams.default_color,
+                                             'lineWidth': 0.3,
+                                             'tickColor':indicatorsParams.default_color,
+                                             'borderColor':indicatorsParams.default_color,
+                                             }
+                                   }, 
+                              'y': {                        
+                                   'min': chart_y_min,
+                                   'max': chart_y_max,
+                                   'ticks': { 
+                                             'color': indicatorsParams.default_color
+                                             },
+                                   'grid': {
+                                             'color':indicatorsParams.default_color,
+                                             'lineWidth': 0.3,
+                                             'tickColor':indicatorsParams.default_color,
+                                             'borderColor':indicatorsParams.default_color,
+                                             }
+                              },
+                              'y1': {
+                              'position':'right',
+                              'min': chart_y_min,
+                              'max': chart_y_max,
+                              'ticks': { 'color': indicatorsParams.default_color },
+                              'grid': { 'display':False  }
+                              }
+
+                         },
+                         'plugins': {
+                                   'legend': {
+                                             'labels': {
+                                                        'color': indicatorsParams.default_color, # Set the color for legend labels
+                                                        'filter': ''
+                                                       }
+                                             },
+                                   
+                                   'annotation': {
+                                                  'annotations': {
+                                                                 'box': {
+                                                                           'type': 'box',
+                                                                           'xMin': threshold_x_min,
+                                                                           'xMax': threshold_x_max,
+                                                                           'yMin': threshold_y_min, # y-axis value where the line starts
+                                                                           'yMax': threshold_y_max,  # y-axis value where the line ends
+                                                                           'backgroundColor': '#80808020',
+                                                                           'borderWidth': 1,
+                                                                           'z': -1,
+                                                                           },
+                                                                 'zero_line': {
+                                                                           'type': 'line',
+                                                                           'xMin': threshold_x_min,
+                                                                           'xMax': threshold_x_max,
+                                                                           'yMin': 0, # y-axis value where the line starts
+                                                                           'yMax': 0,  # y-axis value where the line ends
+                                                                           'borderColor': '#B0B0B0',
+                                                                           'borderWidth': 1,
+                                                                           'z': 1,
+                                                                           },
+                                                                 'upper_threhold': {
+                                                                           'type': 'line',
+                                                                           'xMin': threshold_x_min,
+                                                                           'xMax': threshold_x_max,
+                                                                           'yMin': threshold_y_max, # y-axis value where the line starts
+                                                                           'yMax': threshold_y_max,  # y-axis value where the line ends
+                                                                           'borderColor': '#B0B0B0',
+                                                                           'borderWidth': 1,
+                                                                           'z': 1,
+                                                                           'label': {
+                                                                                     'content': 'Overbought threhold',
+                                                                                     'enabled': True,
+                                                                                     'position': 'center'
+                                                                                     }
+                                                                           },
+                                                                 'lover_threhold': {
+                                                                           'type': 'line',
+                                                                           'xMin': threshold_x_min,
+                                                                           'xMax': threshold_x_max,
+                                                                           'yMin': threshold_y_min,  # y-axis value where the line starts
+                                                                           'yMax': threshold_y_min,  # y-axis value where the line ends
+                                                                           'borderColor': '#B0B0B0',
+                                                                           'borderWidth': 1,
+                                                                           'z': 1,
+                                                                           'label': {
+                                                                                     'content': 'Oversold threshold',
+                                                                                     'enabled': True,
+                                                                                     'position': 'center',
+                                                                                     'font': {
+                                                                                               'size': 14,
+                                                                                               'weight': 'bold',
+                                                                                               'family': 'Arial',
+                                                                                               'style': 'italic'
+                                                                                          },
+                                                                                          'color': 'rgb(0, 0, 0)',
+                                                                                          'backgroundColor': 'rgba(255, 255, 255, 0.8)',
+                                                                                          'borderRadius': 5,
+                                                                                          'padding': 5,
+                                                                                          'rotation': 90
+                                                                                     }
+                                                                           }
+                                                                 }
+                                             }
+            }
+        }
+     }
+
+
+     return chartConfig
+
+
+def config_MACD(chartsData:ChartsData, indicatorsParams:IndicatorsParams,period:int):
+     pass

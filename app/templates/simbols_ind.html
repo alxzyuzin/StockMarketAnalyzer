@@ -67,8 +67,11 @@
                     </div>
                 </div>
                 <!-- plots itself -->
-                <div id = "plots-body" class = "row">
-                    <canvas id="myChart"></canvas>
+                <div id = "plots-body-ma" class = "row" >
+                    <canvas id="myChartMA"></canvas>
+                </div>
+                <div id = "plots-body-rsi" class = "row">
+                    <canvas id="myChartRSI"></canvas>
                 </div>
                 <!-- Section with buttons to manage simbols lists -->
                 <div id = "plots-footer" class = "row" style = "visibility: hidden;">
@@ -116,8 +119,14 @@
  <!--
 
 -->
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.0.0"></script>
+<!-- script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/2.0.0/chartjs-plugin-annotation.min.js"></script -->
+
 <script>
     // Ajust size of images to inner browser window.   
     window.onload = function()
@@ -260,7 +269,7 @@
     |   simbol - simbol for calcutation indicatoer for
     |___________________________________________________________________________*/
    
-    ChartMA = 1
+    
     function simbol_button_click(event)
     {   
         CURRENT_SIMBOL = event.target.innerText
@@ -317,7 +326,15 @@
     function legendfilter(item, chart) {
                     // Logic to remove a particular legend item goes here
                     return !item.text.includes('none');
-                }
+    }
+    function displayalllabels(value, index) {
+                    label = this.getLabelForValue(value);
+                    return label;
+    }
+
+    ChartMA = 1
+    ChartRSI = 1
+    ChartMACD = 1
 
     function update_charts(symbol, period)
     {
@@ -340,13 +357,20 @@
                 {                  
                     if (result.processed == "true")
                     {   
+                        //alert(Chart.version)
+                        // MA chart
                         if (ChartMA instanceof Chart) 
                             ChartMA.destroy()         
-                        const ctx = document.getElementById('myChart').getContext('2d');
+                        const ctx = document.getElementById('myChartMA').getContext('2d');
                         
                         result.charts_ma_data.options.plugins.legend.labels.filter = legendfilter
-
+                        result.charts_ma_data.options.scales.x.ticks.callback = displayalllabels
                         ChartMA = new Chart(ctx,result.charts_ma_data)
+                        // RSI chart
+                        if (ChartRSI instanceof Chart) 
+                            ChartRSI.destroy()
+                        ChartRSI = new Chart(document.getElementById('myChartRSI').getContext('2d'),result.charts_rsi_data)
+
                         // Show plots header
                         $("#plots-header-content").css("visibility", "visible")
                         $("#plots-header-content").text(result.symbol_header)

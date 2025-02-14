@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from urllib.request import urlopen
 import certifi
 import json
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import statistics
@@ -71,6 +72,9 @@ class ChartsData:
 
         self.__MACD = []
         self.__MACDSinalLine = []
+
+        self.__upperTtrendLine = []
+        self.__lowerTrendLine = []
 
         self.lastPrice = 0
         self.warningLevel = 0
@@ -145,6 +149,12 @@ class ChartsData:
     
     def MACDSignal(self):
         return self.__MACDSinalLine
+    
+    def UpperTrendLine(self):
+        return self.__upperTtrendLine
+    
+    def LowerTrendLine(self):
+        return self.__lowerTrendLine
 
     def load(self, history_length = 0):
 
@@ -320,6 +330,31 @@ class ChartsData:
         signalLineData = self.calcEMA(self.__MACD[longPeriodLength - 1:], signalPeriodLength)
         self.__MACDSinalLine += signalLineData
 
+    def calcUpperTrendLine(self, periodLength:int):
+        # Identify highs for the period
+        highs = [max(self.__closePrice[i:i+periodLength]) for i in range(0, len(self.__closePrice) - periodLength + 1)]
+        # Fit a line to the highs using linar regression
+        x = range(0, len(highs)) # Time axis
+        upper_slope, upper_intercept = np.polyfit(x, highs, 1) # Fit a line to the highs
+        # Calculate the upper trend line values
+        trendLine = [upper_slope * x + upper_intercept for x in range(0, len(highs))]
+        self.__upperTtrendLine = [float(trendLine[i]) for i in range(0, len(trendLine))]        
+        return
+        
+
+    def calcLowerTrendLine(self, periodLength:int):
+        lows = [min(self.__closePrice[i:i+periodLength]) for i in range(0, len(self.__closePrice) - periodLength + 1)]
+        # Fit a line to the highs using linar regression
+        x = range(0, len(lows)) # Time axis
+        lower_slope, lower_intercept = np.polyfit(x, lows, 1) # Fit a line to the lows
+        # Calculate the lower trend line values
+        trendLine = [lower_slope * x + lower_intercept for x in range(0, len(lows))]
+        #  trendLine = [lower_slope * x + lower_intercept]
+        self.__lowerTrendLine = [float(trendLine[i]) for i in range(0, len(trendLine))]
+        return
+
+    
+    
     def calculate_indicators(self):
         self.calcFirstMA(self.__params.ma_first_period, self.__params.ma_first_type)
         self.calcSecondMA(self.__params.ma_second_period, self.__params.ma_second_type)
