@@ -66,12 +66,15 @@
                         <div id = "plots-header-content"></div>
                     </div>
                 </div>
-                <!-- plots itself -->
+                <!-- Plots itself -->
                 <div id = "plots-body-ma" class = "row" >
                     <canvas id="myChartMA"></canvas>
                 </div>
                 <div id = "plots-body-rsi" class = "row">
                     <canvas id="myChartRSI"></canvas>
+                </div>
+                <div id = "plots-body-macd" class = "row">
+                    <canvas id="myChartMACD"></canvas>
                 </div>
                 <!-- Section with buttons to manage simbols lists -->
                 <div id = "plots-footer" class = "row" style = "visibility: hidden;">
@@ -217,16 +220,28 @@
         if (window.innerWidth < 768)
         {
             $("#left-column").css("height", window.innerHeight / 2 - 100)
-            $("#right-column").css("height", window.innerHeight /2 - 15)
+            $("#right-column").css("height", window.innerHeight)
             $("#right-column").css("margin-top", 10)
         }  
 
         if (window.innerWidth < 376)
         { 
             $("#left-column").css("height", window.innerHeight / 2 - 100) 
-            $("#right-column").css("height", window.innerHeight / 2 -15)
+            $("#right-column").css("height", window.innerHeight )
             $("#plots-footer").css("margin-top", -40)  
         }
+
+        set_charts_size()
+ 
+    }
+ 
+    // Set charts size
+    function set_charts_size()
+    {
+        avalable_height = $("#right-column").height() 
+         $("#myChartMA").css("height", avalable_height / 3)
+         $("#myChartRSI").css("height", avalable_height / 4)
+         $("#myChartMACD").css("height", avalable_height / 4)
     }
 
     const search_smb = document.getElementById('simbol-search');
@@ -357,20 +372,35 @@
                 {                  
                     if (result.processed == "true")
                     {   
+                        // Set charts size
+                        avalable_height = $("#right-column").height() 
+                        
                         //alert(Chart.version)
                         // MA chart
                         if (ChartMA instanceof Chart) 
                             ChartMA.destroy()         
-                        const ctx = document.getElementById('myChartMA').getContext('2d');
+                        const elementChartMA = document.getElementById('myChartMA');
                         
                         result.charts_ma_data.options.plugins.legend.labels.filter = legendfilter
                         result.charts_ma_data.options.scales.x.ticks.callback = displayalllabels
-                        ChartMA = new Chart(ctx,result.charts_ma_data)
+                        ChartMA = new Chart(elementChartMA.getContext('2d'),result.charts_ma_data)
+                        //$("#myChartMA").css("height", avalable_height / 3)
+                        
                         // RSI chart
                         if (ChartRSI instanceof Chart) 
                             ChartRSI.destroy()
-                        ChartRSI = new Chart(document.getElementById('myChartRSI').getContext('2d'),result.charts_rsi_data)
+                        const elementChartRSI = document.getElementById('myChartRSI');
+                        ChartRSI = new Chart(elementChartRSI.getContext('2d'),result.charts_rsi_data)
+                        //$("#myChartRSI").css("height", avalable_height / 4)
+                       
+                        // MACD chart
+                        if (ChartMACD instanceof Chart) 
+                            ChartMACD.destroy()
+                        const elementChartMACD = document.getElementById('myChartMACD');
+                        ChartMACD = new Chart(elementChartMACD.getContext('2d'),result.charts_macd_data)
+                        //$("#myChartMACD").css("height", avalable_height / 4)
 
+                        set_charts_size()
                         // Show plots header
                         $("#plots-header-content").css("visibility", "visible")
                         $("#plots-header-content").text(result.symbol_header)

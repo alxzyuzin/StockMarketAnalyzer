@@ -211,9 +211,9 @@ def get_gharts_data():
                     "error_descr":"",
                     "charts_ma_data": config_MA(chartsdata, indicators_params, offset),
                     "charts_rsi_data": config_RSI(chartsdata, indicators_params, offset),
+                    "charts_macd_data": config_MACD(chartsdata, indicators_params, offset),
                     "symbol_header":simbol_data.title,
                     "last_price":chartsdata.lastPrice
-
                     }
    except Exception as ex:
          results = {"processed": 'false', "error_descr": ex.args}
@@ -325,16 +325,23 @@ def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams, offset:i
                          ]
         }
 
-     y_min = min(min(closePrices[offset:]), min(lowerBoligerBand[offset:])) 
-     y_max = max(max(closePrices[offset:]), max(upperBoligerBand[offset:]))
+     y_min = math.ceil(min(min(closePrices[offset:]), min(lowerBoligerBand[offset:]))) 
+     y_max = math.floor(max(max(closePrices[offset:]), max(upperBoligerBand[offset:])))
 
      chartConfig = {
             'type': 'line',
             'data': data,
             'options': {
+                         'responsive': True,
+                         'maintainAspectRatio': False, #// Disable the aspect ratio to control height
                          'scales': {
                               'x':{               
                                    'ticks':{
+                                             'type': 'time',
+                                             'time': {
+                                                       'unit': 'day', # Unit for the ticks (e.g., 'day', 'month', 'year')
+                                                       'stepSize': 5  # Interval for the ticks (e.g., every 2 days)
+                                              },
                                              'color': indicatorsParams.default_color,
                                              'maxRotation': 0, #Prevents rotation
                                              'minRotation': 0  # Prevents rotation
@@ -413,12 +420,21 @@ def config_RSI(chartsData:ChartsData, indicatorsParams:IndicatorsParams,offset:i
      chart_y_min = -50
 
      chartConfig = {
-            'type': 'line',
-            'data': data,
-            'options': {
+                    'type': 'line',
+                    'data': data,
+                    'options': {
+                                   'responsive': True,
+                                   'maintainAspectRatio': False,
                          'scales': {
                               'x':{               
                                    'ticks':{
+                                        'type': 'time',
+                                             'time': {
+                                                       'unit': 'day', # Unit for the ticks (e.g., 'day', 'month', 'year')
+                                                       'stepSize': 5  # Interval for the ticks (e.g., every 2 days)
+                                              },
+                                             'display': True, # Show x-axis labels
+                                             'stepSize': 20,  # Set ticks interval 
                                              'color': indicatorsParams.default_color,
                                              'maxRotation': 0, #Prevents rotation
                                              'minRotation': 0  # Prevents rotation
@@ -454,6 +470,7 @@ def config_RSI(chartsData:ChartsData, indicatorsParams:IndicatorsParams,offset:i
                          },
                          'plugins': {
                                    'legend': {
+                                             'display': False, # Hide the legend
                                              'labels': {
                                                         'color': indicatorsParams.default_color, # Set the color for legend labels
                                                         'filter': ''
@@ -533,5 +550,93 @@ def config_RSI(chartsData:ChartsData, indicatorsParams:IndicatorsParams,offset:i
      return chartConfig
 
 
-def config_MACD(chartsData:ChartsData, indicatorsParams:IndicatorsParams,period:int):
-     pass
+#__________________________________________________________________________________
+#
+#  Configuration for MACD chart
+#__________________________________________________________________________________  
+def config_MACD(chartsData:ChartsData, indicatorsParams:IndicatorsParams,offset:int):
+     
+     labels = format_labels(chartsData.Labels())    
+     data = {
+               'labels':labels[offset:],
+          
+               'datasets': [
+                         { # MACD line
+                         'label':f'MACD short period {indicatorsParams.macd_short_period} days, long period {indicatorsParams.macd_long_period} days',
+                         'data':chartsData.MACD()[offset:],
+                         'borderWidth':1,
+                         'pointRadius':0,
+                         'borderColor':indicatorsParams.macd_main_color,
+                         },
+                         { # MACD signal line
+                         'label':f'MASD signal line {indicatorsParams.macd_signal_period} days',
+                         'data':chartsData.MACDSignal()[offset:],
+                         'borderWidth':1,
+                         'pointRadius':0,
+                         'borderColor':indicatorsParams.macd_signal_color,
+                         }
+                        
+                         ]
+        }
+     
+     chart_y_max = max(max(chartsData.MACD()[offset:]), max(chartsData.MACDSignal()[offset:]))
+     chart_y_min = min(min(chartsData.MACD()[offset:]), min(chartsData.MACDSignal()[offset:]))
+     grid_config = {
+                    'color':indicatorsParams.default_color,
+                    'lineWidth': 0.3,
+                    'tickColor':indicatorsParams.default_color,
+                    'borderColor':indicatorsParams.default_color,
+                    }
+     
+     chartConfig = {
+                    'type': 'line',
+                    'data': data,
+                    'options': {
+                                   'responsive': True,
+                                   'maintainAspectRatio': False,
+                         'scales': {
+                              'x':{               
+                                   'ticks':{
+                                        'type': 'time',
+                                             'time': {
+                                                       'unit': 'day', # Unit for the ticks (e.g., 'day', 'month', 'year')
+                                                       'stepSize': 5  # Interval for the ticks (e.g., every 2 days)
+                                              },
+                                             'display': True, # Show x-axis labels
+                                             'stepSize': 20,  # Set ticks interval 
+                                             'color': indicatorsParams.default_color,
+                                             'maxRotation': 0, #Prevents rotation
+                                             'minRotation': 0  # Prevents rotation
+                                             },
+                                   'grid':grid_config
+                                   }, 
+                              'y': {                        
+                                   'min': chart_y_min,
+                                   'max': chart_y_max,
+                                   'ticks': {'color': indicatorsParams.default_color},
+                                   'grid': grid_config
+                              },
+                              'y1': {
+                                   'position':'right',
+                                   'min': chart_y_min,
+                                   'max': chart_y_max,
+                                   'ticks': { 'color': indicatorsParams.default_color },
+                                   'grid': { 'display':False  }
+                              }
+
+                         },
+                         'plugins': {
+                                   'legend': {
+                                             'display': True, # Show the legend
+                                             'labels': {
+                                                        'color': indicatorsParams.default_color, # Set the color for legend labels
+                                                        'filter': ''
+                                                       }
+                                             },                                  
+            }
+        }
+     }
+
+
+     return chartConfig
+
