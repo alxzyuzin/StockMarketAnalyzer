@@ -234,7 +234,7 @@ footer
   / Navigation bar styles end                                                   /
   ______________________________________________________________________________*/
 
-/* Simbols page */
+/* Symbols page */
 
 
 #main-row{
@@ -256,7 +256,7 @@ footer
     border-radius: 4px;
 }
 
-#simbols-search-row
+#symbols-search-row
 {
     margin: 5px;
     
@@ -277,14 +277,14 @@ footer
     margin-top: 0px;
     
 }
-#simbols-list-row
+#symbols-list-row
 {
     padding-right: 10px;
     height: calc(100% - 115px);
     margin-right: calc(var(--bs-gutter-x)* -.15);
     margin-left: calc(var(--bs-gutter-x)* -.15);
 }
-.simbols-list
+.symbols-list
 {
     height: 100%;
     list-style-type: none;
@@ -301,7 +301,7 @@ footer
 
 }
 
-.simbols-list-border
+.symbols-list-border
 {
     height:inherit;
     border: 1px solid white;
@@ -315,14 +315,14 @@ footer
 
 
 
-.simbols-list-header
+.symbols-list-header
 {
     font-size: large;
     justify-content: center;
     text-wrap:wrap ;
 }
 
-.search-simbol-input
+.search-symbol-input
 {
     align-self:center;
     width: calc(100% - 2px);
@@ -334,7 +334,7 @@ footer
    
     border-radius: 4px;
 }
-.simbol-button
+.symbol-button
 {
     background-color: #505050;
     width: 99%;
@@ -389,16 +389,16 @@ footer
 
 
 
-.simbol-button:focus
+.symbol-button:focus
 {
     color: orange;
 }
 
-#simbol-control-buttons{
+#symbol-control-buttons{
     margin-top: 2px;
 }
 
-.simbol-management-buton
+.symbol-management-buton
 {
     font-size:medium;
     text-wrap: nowrap ;
@@ -420,7 +420,7 @@ footer
     padding-bottom: 0px;
 }
 
-.move-simbol-label{
+.move-symbol-label{
     text-wrap-mode: nowrap;
 }
 
@@ -578,19 +578,19 @@ footer
     text-wrap: wrap;
 }
 
-#editsimbol-form{
+#editsymbol-form{
     margin-top: 80px;
     max-width: 600px;
 }
-#editsimbol-form h3.form-header{
+#editsymbol-form h3.form-header{
     padding-top: 20px;
     margin-left: 20px
 }
 
-#editsimbol-form label{
+#editsymbol-form label{
     padding-left: 10px;
 }
-#editsimbol-form .col-sm-3,.col-sm-9{
+#editsymbol-form .col-sm-3,.col-sm-9{
     padding-right: 15px;
 }
 /*

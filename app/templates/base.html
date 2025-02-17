@@ -37,20 +37,20 @@
                 <a class="nav-link {% if pageName == 'Home' %} active {% endif %}" aria-current="page" href="/">Home</a>
               </li>
               {% if user.is_authenticated %}
-              <!-- Simbols.menu -->
+              <!-- Symbols.menu -->
               <li class = "nav-item dropdown">
-                <a  id="navbarDropdownSimbols" 
-                    class="nav-link dropdown-toggle {% if pageName == 'Simbols' %} active {% endif %}" 
+                <a  id="navbarDropdownSymbols" 
+                    class="nav-link dropdown-toggle {% if pageName == 'Symbols' %} active {% endif %}" 
                     href="#"
                     role="button" data-bs-toggle="dropdown" 
                     aria-expanded="false">Symbols</a>
-               <ul class="dropdown-menu" aria-labelledby="navbarDropdownSimbols">
-                  <li><a class="dropdown-item" href="/simbols?listtype=portfolio&rwl=false&simbol=">Portfolio</a></li>
-                  <li><a class="dropdown-item" href="/simbols?listtype=shortlist&rwl=false&simbol=">Shortlist</a></li>
-                  <li><a class="dropdown-item" href="/simbols?listtype=watchlist&rwl=false&simbol=">Wachlist</a></li>
-                  <li><a class="dropdown-item" href="/simbols?listtype=unselected&rwl=false&simbol=">All</a></li>
-                  <li><a class="dropdown-item" href="/editsimboldata?simbol=">Add symbol</a></li>
-                  <li><a class="dropdown-item" onclick="reset_simbol_data_click(event)" href="">Reset symbols data</a></li>
+               <ul class="dropdown-menu" aria-labelledby="navbarDropdownSymbols">
+                  <li><a class="dropdown-item" href="/symbols_ind?listtype=portfolio&rwl=false">Portfolio</a></li>
+                  <li><a class="dropdown-item" href="/symbols_ind?listtype=shortlist&rwl=false">Shortlist</a></li>
+                  <li><a class="dropdown-item" href="/symbols_ind?listtype=watchlist&rwl=false">Wachlist</a></li>
+                  <li><a class="dropdown-item" href="/symbols_ind?listtype=unselected&rwl=false">All</a></li>
+                  <li><a class="dropdown-item" href="/editsymboldata?symbol=">Add symbol</a></li>
+                  <li><a class="dropdown-item" onclick="reset_symbol_data_click(event)" href="">Reset symbols data</a></li>
                   <li><hr class="dropdown-divider"></hr></li>
                   
                   <li><a class="dropdown-item" href="/managesymbols">Manage symbols</a></li>
@@ -65,7 +65,7 @@
                    role="button" data-bs-toggle="dropdown" 
                   aria-expanded="false">Portfolio</a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownPortfolio">
-                  <li><a class="dropdown-item" href="/simbols_ind?listtype=portfolio&rwl=false&simbol=">Symbols</a></li>
+                  <li><a class="dropdown-item" href="/symbols_ind?listtype=portfolio&rwl=false">Symbols</a></li>
                   <li><a class="dropdown-item" href="/activity">Activity</a></li>
                   <li><a class="dropdown-item" href="/perfomance">Perfomance</a></li>
                   <li><a class="dropdown-item" href="/copilotexample">Copilot example</a></li>
@@ -78,7 +78,7 @@
                    role="button" data-bs-toggle="dropdown" 
                    aria-expanded="false">Settings</a>
                   <ul class="dropdown-menu" aria-labelledby="navbarDropdownSettings">
-                    <li><a class="dropdown-item" href="/setindicatorsparams?simbol=-----">Indicator's preferences</a></li>
+                    <li><a class="dropdown-item" href="/setindicatorsparams?symbol=-----">Indicator's preferences</a></li>
                     <li><a class="dropdown-item" href="/userprofile">User profile</a></li>
                   </ul>
               </li>
@@ -148,7 +148,7 @@
 	      $("html")[0].style.visibility = "visible";
     });
 
-    function reset_simbol_data_click(event)
+    function reset_symbol_data_click(event)
     {
       alert("Event:" + event.target + "\nSecond line")
       
@@ -162,7 +162,7 @@
          $.ajax(
             {
                 type: "POST",
-                url: "/clear_simbols_historical_data",
+                url: "/clear_symbols_historical_data",
                 data: JSON.stringify(server_request_data),
                 contentType: "application/json",
                 dataType: "json",
@@ -171,7 +171,7 @@
                     if (result.processed == "true")
                     {
                         // Insert handling results of request here
-                       alert("Simbols historical data cleared")
+                       alert("Symbols historical data cleared")
                     }
                     else
                     {

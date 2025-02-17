@@ -122,20 +122,17 @@ def simbols():
       except Exception as ex:
           return render_template("error.html", pageName = "Simbols", user = current_user, error_descr = ex.args)     
 
-@app.route("/simbols_ind")
+@app.route("/symbols_ind")
 @login_required
-def simbols_ind():
+def symbols_ind():
    #if not current_user.is_authenticated:
    #    return render_template("home.html", pageName = "Home", user = current_user)
    plots_img = "/static/images/empty_plots.png"
    if request.args:
       req = request.args
       listtype = req["listtype"]
-      simbol   = req["simbol"]
       rwl      = req["rwl"]
-      simbols=[]
-      # If page requested for specific simbol get simbol description from database
-      selected_simbol_data = db.session.query(Simbol).filter(Simbol.simbol == simbol).first()  
+      symbols=[]  
       try:
          # Listtypes
          #   0 - unselected
@@ -145,69 +142,72 @@ def simbols_ind():
          
          # Get list of simbols in portfolio
          if listtype == "portfolio": 
-            subquery = db.session.query(UserSimbol.simbol)\
-                     .filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).subquery()
-            simbols = db.session.query(Simbol, SimbolData)\
-                                 .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
-                                 .filter(Simbol.simbol.in_(subquery))\
-                                 .order_by(Simbol.simbol).all()            
+            subquery = db.session.query(UserSimbol.simbol
+                                       ).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1
+                                       ).subquery()
+            symbols = db.session.query(Simbol, SimbolData
+                                       ).outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol
+                                       ).filter(Simbol.simbol.in_(subquery)
+                                       ).order_by(Simbol.simbol).all()            
          # Get list of simbols in watchlist
          if listtype == "watchlist":
-            subquery = db.session.query(UserSimbol.simbol)\
-                                 .filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 2).subquery()
-            simbols = db.session.query(Simbol, SimbolData)\
-                                 .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
-                                 .filter(Simbol.simbol.in_(subquery))\
-                                 .order_by(Simbol.simbol).all()
+            subquery = db.session.query(UserSimbol.simbol
+                                       ).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 2
+                                       ).subquery()
+            symbols = db.session.query(Simbol, SimbolData
+                                       ).outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol
+                                       ).filter(Simbol.simbol.in_(subquery)
+                                       ).order_by(Simbol.simbol).all()
             # Get list of simbols in watchlist
          if listtype == "shortlist":
-            subquery = db.session.query(UserSimbol.simbol)\
-                                 .filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 3).subquery()
-            simbols = db.session.query(Simbol, SimbolData)\
-                                 .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
-                                 .filter(Simbol.simbol.in_(subquery))\
-                                 .order_by(Simbol.simbol).all()
+            subquery = db.session.query(UserSimbol.simbol
+                                       ).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 3
+                                       ).subquery()
+            symbols = db.session.query(Simbol, SimbolData
+                                       ).outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol
+                                       ).filter(Simbol.simbol.in_(subquery)
+                                       ).order_by(Simbol.simbol).all()
             
          # Get list of all simbols that are in application databace 
          if listtype == "unselected":
-            subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id).subquery()
-            simbols = db.session.query(Simbol, SimbolData)\
-                                 .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
-                                 .filter(Simbol.simbol.notin_(subquery))\
-                                 .order_by(Simbol.simbol).all()
+            subquery = db.session.query(UserSimbol.simbol
+                                       ).filter(UserSimbol.userid == current_user.id
+                                       ).subquery()
+            symbols = db.session.query(Simbol, SimbolData
+                                       ).outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol
+                                       ).filter(Simbol.simbol.notin_(subquery)
+                                       ).order_by(Simbol.simbol).all()
          # Create mosck history data object to provide all nessesery values for html template
          # if no one simbol selected
          historydata = ChartsData("-----", get_user_indicators_params("-----", current_user.id))
-         if simbol != '':
-            # Get history price data for simbol and calculate indicators
-            historydata = load_historical_data(simbol = simbol)
-            # Build plots 
-            if historydata != None and historydata.dataLoaded:
-               plt = historydata.build_plots()
-               # Save plots to a temporary buffer.
-               buf = BytesIO()
-               plt.savefig(buf, format="png")
-               # Embed the result in the html output.
-               fig_data = base64.b64encode(buf.getbuffer()).decode("ascii")
-               plots_img = f'data:image/png;base64,{fig_data}'
-            else:
-                return render_template("error.html", pageName = "Simbols", user = current_user, error_descr = historydata.errorMessage)     
+         #if simbol != '':
+         #   # Get history price data for simbol and calculate indicators
+         #   historydata = load_historical_data(simbol = simbol)
+         #   # Build plots 
+         #   if historydata != None and historydata.dataLoaded:
+         #      plt = historydata.build_plots()
+         #      # Save plots to a temporary buffer.
+         #      buf = BytesIO()
+         #      plt.savefig(buf, format="png")
+         #      # Embed the result in the html output.
+         #      fig_data = base64.b64encode(buf.getbuffer()).decode("ascii")
+         #      plots_img = f'data:image/png;base64,{fig_data}'
+         #   else:
+         #       return render_template("error.html", pageName = "Simbols", user = current_user, error_descr = historydata.errorMessage)     
                
          # Refresh historical data for current list of simbols and calculate warning levels
          if rwl == 'true':    
-            # We already read list of simbols for carrent page into variable "simbols" 
-            for smb in simbols:
-               load_historical_data(simbol = smb[0].simbol)
+            # We already read list of symbols for carrent page into variable "symbols" 
+            for smb in symbols:
+               load_historical_data(symbol = smb[0].simbol)
  
-         return render_template("simbols_ind.html" , pageName = "Simbols", simbols = simbols,
-                                 selected_simbol = req["simbol"],
-                                 selected_simbol_data = selected_simbol_data,  
+         return render_template("symbols_ind.html" , pageName = "Symbols", symbols = symbols,
                                  user = current_user,
                                  listtype = req["listtype"], plots_image = plots_img,
                                  last_price = historydata.lastPrice,
                                  warning_level = historydata.warningLevel)             
       except Exception as ex:
-          return render_template("error.html", pageName = "Simbols", user = current_user, error_descr = ex.args)     
+          return render_template("error.html", pageName = "Symbols", user = current_user, error_descr = ex.args)     
 
 @app.route('/portfolio')
 @login_required
@@ -253,13 +253,13 @@ def logout():
 #____________________________________________________________________________
 #   Handle request on moving simbols between lists of simbols
 #____________________________________________________________________________
-@app.route("/move_simbols_between_lists", methods = ['POST', 'GET'])
+@app.route("/move_symbols_between_lists", methods = ['POST', 'GET'])
 @login_required
-def move_simbols_between_lists():
+def move_symbols_between_lists():
    if request.method == "POST":
       request_data = request.get_json()
       symbol = request_data[0]["symbol"]
-      sourcelist = request_data[0]["sourcelist"]
+      sourcelist = int(request_data[0]["sourcelist"])
       targetlist = int(request_data[0]["targetlist"])
       try:
          # Listtypes

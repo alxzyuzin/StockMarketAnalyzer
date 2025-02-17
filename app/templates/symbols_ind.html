@@ -4,11 +4,11 @@
 <div>
     <div id = "main-row" class = "row gx-3">
         <div id = "left-column" class = "col-md-2 left-column">
-            <div class = "simbols-list-border">
-                <!-- Simbol list header -->
-                <div class = "row simbols-list-header">
+            <div class = "symbols-list-border">
+                <!-- Symbol list header -->
+                <div class = "row symbols-list-header">
                     {% if listtype == "unselected" %}
-                    Unselected simbols   
+                    Unselected symbols   
                     {% endif %}
                     {% if listtype == "watchlist" %}
                     Watchlist   
@@ -20,30 +20,27 @@
                     Shortlist  
                     {% endif %}
                 </div>
-                <!-- simbl search field -->
-                <div id = "simbols-search-row" class = "row">
-                    <input id = "simbol-search" type="text" class = "form-control search-simbol-input" 
-                        placeholder="Type simbol">
+                <!-- symbol search field -->
+                <div id = "symbols-search-row" class = "row">
+                    <input id = "symbol-search" type="text" class = "form-control search-symbol-input" 
+                        placeholder="Type symbol">
                 </div>
-                <!-- Simbols list itself -->
-                <div id = "simbols-list-row" class = "row">
-                    <ul id = "list-of-simbols" class = "simbols-list">
-                        {% for simbol in simbols %}
+                <!-- Symbols list itself -->
+                <div id = "symbols-list-row" class = "row">
+                    <ul id = "list-of-symbols" class = "symbols-list">
+                        {% for symbol in symbols %}
                         <li>
                             <button type="button" 
-                                    class="btn  btn-secondary shadow-none simbol-button warning-level-{{simbol[1].warning_level}}"  
-                                    {% if simbol[0].simbol == selected_simbol %}
-                                        autofocus style = "color: orange;"
-                                    {% endif %}
-                                    onclick="simbol_button_click(event)">   
-                                    {{simbol[0].simbol}}                     
+                                    class="btn  btn-secondary shadow-none symbol-button warning-level-{{symbol[1].warning_level}}"  
+                                    onclick="symbol_button_click(event)">   
+                                    {{symbol[0].simbol}}                     
                             </button>
                         </li>
                         {% endfor %}
                     </ul>
                     
                 </div>
-                <!-- button for calculating simbols warning levels-->
+                <!-- button for calculating symbols warning levels-->
                 {% if listtype == "watchlist" or listtype == "portfolio" or listtype == "shortlist" %}
                 <div id = "set-warn-levels-row" class = "row">
                     <div class = "col-sm">
@@ -76,7 +73,7 @@
                 <div id = "plots-body-macd" class = "row">
                     <canvas id="myChartMACD"></canvas>
                 </div>
-                <!-- Section with buttons to manage simbols lists -->
+                <!-- Section with buttons to manage symbols lists -->
                 <div id = "plots-footer" class = "row" style = "visibility: hidden;">
                     <div class = "col-sm-12">
                         <div id = "last-price" class = "float-start" style="margin-left: 10px;"></div>
@@ -88,7 +85,7 @@
                             <button class="btn btn-secondary shadow-none btn-symbol-management btn-set-period" data-period="720">2 Y</button>
                         </div>
                         <div class="float-end">
-                            <div id="simbol-control-buttons" class = "d-flex">
+                            <div id="symbol-control-buttons" class = "d-flex">
                                 <!--
                                 # Listtypes
                                 #   0 - unselected
@@ -96,18 +93,21 @@
                                 #   2 - watchlist
                                 #   3 - shortlist
                                 -->                 
-                                <label class="move-simbol-label" for="dest-list-type" value ="QWERTY">Move simbol to&nbsp</label>
+                                <label class="move-symbol-label" for="dest-list-type" value ="QWERTY">Move symbol to&nbsp</label>
                                 <select id  = "dest-list-type" class="form-select select-destination-list" 
-                                        name = "destListType"
-                                        onchange = "set_destination_list_type">
+                                        name = "destListType">
+                                        <!--onchange = "set_destination_list_type"-->
                                         {% if listtype != "watchlist" %}<option value="2">watchlist</option>{% endif %}
                                         {% if listtype != "shortlist" %}<option value="3">shortlist</option>{% endif %}
                                         {% if listtype != "portfolio" %}<option value="1">portfolio</option>{% endif %}
-                                        {% if listtype != "unselected" %}<option value="0">all simbols</option>{% endif %}
+                                        {% if listtype != "unselected" %}<option value="0">all symbols</option>{% endif %}
                                 </select>
-                                <button type="button" 
-                                        class="btn btn-secondary shadow-none simbol-management-buton" 
-                                        onclick="move_simbols_between_lists()">
+                                <button type="button" id = "move-symbol-button"
+                                        class="btn btn-secondary shadow-none symbol-management-buton"                                       
+                                        {% if listtype == "watchlist" %} data-sourcelist = "2"{% endif %}
+                                        {% if listtype == "portfolio" %} data-sourcelist = "1"{% endif %}
+                                        {% if listtype == "shortlist" %} data-sourcelist = "3"{% endif %}
+                                        {% if listtype == "unselected" %} data-sourcelist = "0" {% endif %}>
                                     Move
                                 </button>
                             
@@ -135,28 +135,12 @@
     window.onload = function()
     {
         set_main_row_height();
-        
-        /*
-        simbols_list = document.getElementById('list-of-simbols');
-        items = simbols_list.getElementsByTagName("button")
-        // Convert the HTMLCollection to an array and log each item
-        Array.from(items).forEach(
-            item => {
-            button_text = item.textContent.trim()
-            if (button_text == "{{selected_simbol}}")
-            {
-                item.scrollIntoView({ block: 'center', behavior: 'instant' });
-                item.style.backgroundColor = "#505050";
-                return
-            }
-        });
-        */
     }
     
     function mark_symbol_button(smb)
     {
-        simbols_list = document.getElementById('list-of-simbols');
-        items = simbols_list.getElementsByTagName("button")
+        symbols_list = document.getElementById('list-of-symbols');
+        items = symbols_list.getElementsByTagName("button")
         // Convert the HTMLCollection to an array and log each item
         Array.from(items).forEach(
             item => {
@@ -178,8 +162,8 @@
 
     function mark_period_button(period)
     {
-        simbols_list = document.getElementById('plots-footer');
-        items = simbols_list.getElementsByTagName("button")
+        symbols_list = document.getElementById('plots-footer');
+        items = symbols_list.getElementsByTagName("button")
         // Convert the HTMLCollection to an array and log each item
         Array.from(items).forEach(
             item => {
@@ -244,12 +228,12 @@
          $("#myChartMACD").css("height", avalable_height / 4)
     }
 
-    const search_smb = document.getElementById('simbol-search');
+    const search_smb = document.getElementById('symbol-search');
       
     search_smb.addEventListener('input', function(event)
     {
-        simbols_list = document.getElementById('list-of-simbols');
-        items = simbols_list.getElementsByTagName("button")
+        symbols_list = document.getElementById('list-of-symbols');
+        items = symbols_list.getElementsByTagName("button")
         // Convert the HTMLCollection to an array and log each item
         Array.from(items).forEach(item => {
             button_text = item.textContent.trim()
@@ -268,74 +252,33 @@
     
     $(".btn-set-period").click(function() 
         {
-            
             var period = $(this).data("period");
-            mark_symbol_button(CURRENT_SIMBOL)
+            mark_symbol_button(CURRENT_SYMBOL)
             mark_period_button(period)
-            update_charts(CURRENT_SIMBOL, period)
+            update_charts(CURRENT_SYMBOL, period)
         })
 
-    CURRENT_SIMBOL=""
+    $("#move-symbol-button").click(function() 
+        {
+            move_symbols_between_lists()
+        })
+
+    CURRENT_SYMBOL=""
     SOURCE_LIST = 0
 
      /*_______________________________________________________________________
     | Request server for calculating indicators and build plots
     | Parameters:
-    |   simbol - simbol for calcutation indicatoer for
+    |   symbol - symbol for calcutation indicatoer for
     |___________________________________________________________________________*/
    
     
-    function simbol_button_click(event)
+    function symbol_button_click(event)
     {   
-        CURRENT_SIMBOL = event.target.innerText
+        CURRENT_SYMBOL = event.target.innerText
         update_charts(event.target.innerText, 180)
         mark_period_button(180)
-        /*
-        server_request_data = 
-        [
-            {
-                "symbol":event.target.innerText,
-                "period":120
-            }
-         ]
-
-         $.ajax(
-            {
-                type: "POST",
-                url: "/get_charts_data",
-                data: JSON.stringify(server_request_data),
-                contentType: "application/json",
-                dataType: "json",
-                success: function(result)
-                {                  
-                    if (result.processed == "true")
-                    {   
-                        if (ChartMA instanceof Chart) 
-                            ChartMA.destroy()         
-                        const ctx = document.getElementById('myChart').getContext('2d');
-                        ChartMA = new Chart(ctx,result.charts_ma_data)
-                        // Show plots header
-                        $("#plots-header-content").css("visibility", "visible")
-                        $("#plots-header-content").text(result.symbol_header)
-                        // Show plots footer
-                        $("#plots-footer").css("visibility","visible")
-                        $("#last-price").text("Last price: "+result.last_price)
-                        mark_symbol_button(CURRENT_SIMBOL)  
-                    }
-                    else
-                    {
-                        $("#plots-body").html("<p style = 'font-size:xx-large'>" + result.error_descr + "</p>")
-                    }       
-                },
-                error: function(result,status)
-                {
-                    message = "<p>" + "Something get wrong."+ "</p> <p>Result:" + result + "</p><p>Status:" + status + "</p>"
-                    $("#plots-body").html(message)
-                }
-
-             }
-        );
-        */
+       
     }
 
     function legendfilter(item, chart) {
@@ -407,7 +350,7 @@
                         // Show plots footer
                         $("#plots-footer").css("visibility","visible")
                         $("#last-price").text("Last price: "+result.last_price)
-                        mark_symbol_button(CURRENT_SIMBOL)  
+                        mark_symbol_button(CURRENT_SYMBOL)  
                     }
                     else
                     {
@@ -426,46 +369,43 @@
 
 
     /*_______________________________________________________________________
-    | Request server for adding or delete simbol to or from specified list
+    | Request server for adding or delete symbol to or from specified list
     | Parameters:
-    |   simbol - simbol name to add or delete
-    |   targetlist   - list of simbols which operation wil be performed on
+    |   symbol - symbol name to add or delete
+    |   targetlist   - list of symbols which operation wil be performed on
     |           Listtypes
     |               0 - unselected
     |               1 - portfolio
     |               2 - watchlist
     |               3 - shortlist
-    |   operation   - "add" - add or "del" - delete simbol, "mov" - move simbol from sorce list to target list
+    |   operation   - "add" - add or "del" - delete symbol, "mov" - move symbol from sorce list to target list
     |___________________________________________________________________________*/
    
-    function move_simbols_between_lists(simbol, sourcelist, targetlist)
+    function move_symbols_between_lists(symbol, sourcelist, targetlist)
     {
-        {% if listtype == 'unselected' %} var sourcelist = 0  {% endif %}
-        {% if listtype == 'portfolio'  %} var sourcelist = 1  {% endif %}
-        {% if listtype == 'watchlist'  %} var sourcelist = 2  {% endif %}
-        {% if listtype == 'shortlist'  %} var sourcelist = 3  {% endif %} 
+        var sourcelist = event.target.getAttribute('data-sourcelist');
         var selectElement = document.getElementById('dest-list-type');
         var targetlist = selectElement.value; 
-        var simbol = CURRENT_SIMBOL
-        if (simbol.length == 0)
+        var symbol = CURRENT_SYMBOL
+        if (symbol.length == 0)
         {
-            alert("No selected simbols.")
+            alert("No selected symbols.")
             return
         }
         
         server_request_data = 
         [
             {
-                "simbol":simbol,
+                "symbol":symbol,
                 "sourcelist":sourcelist,
-                "targetlist":targetlist,
+                "targetlist":targetlist
             }
          ]
         
         $.ajax(
             {
                 type: "POST",
-                url: "/move_simbols_between_lists",
+                url: "/move_symbols_between_lists",
                 data: JSON.stringify(server_request_data),
                 contentType: "application/json",
                 dataType: "json",
@@ -476,23 +416,28 @@
                         listname = ""
                         switch(targetlist)
                         {
-                            case '0': listname = "the list of all simbols"; break;
+                            case '0': listname = "the list of all symbols"; break;
                             case '1': listname = "portfolio"; break;
                             case '2': listname = "watchlist"; break;
                             case '3': listname = "shortlist"; break;
                         }
-                        message = "Symbol " + simbol + " successfully moved to " + listname + "."
+                       // Hide plots
+                        $("#plots-body-ma").css("visibility", "hidden")
+                        $("#plots-body-rsi").css("visibility", "hidden")
+                        $("#plots-body-macd").css("visibility", "hidden")
+                       
+                        message = "Symbol " + symbol + " successfully moved to " + listname + "."
                         // Display message
-                        $("#plots-body").html("<p style = 'font-size:xx-large'>" + message + "</p>")
-                        $("#plots-body").css("text-align", "center") //
+                        //$("#plots-body").html("<p style = 'font-size:xx-large'>" + message + "</p>")
+                        //$("#plots-body").css("text-align", "center") //
                         
                         // Hide plots header
-                        $("#plots-header-content").css("visibility", "hidden")
-                        // Hide plots for moved simbols
-                        $('#plots-body').css("background-image", "none")
+                        $("#plots-header-content").html("<p style = 'font-size:xx-large'>" + message + "</p>")
+                        $("#plots-body").css("text-align", "center") //
+
                         // Hide plots footer
                         $("#plots-footer").css("visibility", "hidden")
-                        delete_current_simbol_from_the_list(simbol)
+                        delete_current_symbol_from_the_list(symbol)
                     }
                     else
                     {
@@ -511,17 +456,17 @@
 
     /*___________________________________________________________________________
     |  
-    |   Delete simbol button from the list on the left side of page
+    |   Delete symbol button from the list on the left side of page
     |____________________________________________________________________________*/
-    function delete_current_simbol_from_the_list(simbol)
+    function delete_current_symbol_from_the_list(symbol)
     {
-        simbols_list = document.getElementById('list-of-simbols');
-        items = simbols_list.getElementsByTagName("button")
+        symbols_list = document.getElementById('list-of-symbols');
+        items = symbols_list.getElementsByTagName("button")
         // Convert the HTMLCollection to an array and log each item
             
         Array.from(items).forEach(item => {
             button_text = item.textContent.trim()
-            if (button_text == simbol)
+            if (button_text == symbol)
             {
                 item.parentElement.removeChild(item);
                 return
@@ -532,7 +477,7 @@
 
     function set_warning_levels_button_click()
     {
-        window.location.href = "/simbols?listtype={{listtype}}&rwl=true&simbol=";
+        window.location.href = "/symbols?listtype={{listtype}}&rwl=true&symbol=";
     }
 </script>
 

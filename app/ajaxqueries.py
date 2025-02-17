@@ -325,8 +325,8 @@ def config_MA(chartsData:ChartsData, indicatorsParams:IndicatorsParams, offset:i
                          ]
         }
 
-     y_min = math.ceil(min(min(closePrices[offset:]), min(lowerBoligerBand[offset:]))) 
-     y_max = math.floor(max(max(closePrices[offset:]), max(upperBoligerBand[offset:])))
+     y_min = math.floor(min(min(closePrices[offset:]), min(lowerBoligerBand[offset:]))) 
+     y_max = math.ceil(max(max(closePrices[offset:]), max(upperBoligerBand[offset:])))
 
      chartConfig = {
             'type': 'line',
