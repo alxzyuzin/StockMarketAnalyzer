@@ -27,7 +27,7 @@ class PriceChange:
 
 class ChartsData:
 
-    def __init__(self, simbol, indicators_params:IndicatorsParams ):
+    def __init__(self, symbol, indicators_params:IndicatorsParams ):
         # numberOfDays = 250
         # Request parameters
         self.__url = 'https://financialmodelingprep.com/api/v3/historical-price-full/'
@@ -37,7 +37,7 @@ class ChartsData:
         self.dataLoaded = False
         self.errorMessage = ""
 
-        self.__simbol = simbol
+        self.__symbol = symbol
         self.__history_length = indicators_params.history_length
         self.__from = (datetime.now() - timedelta(days = self.__history_length)).strftime("%Y-%m-%d")
         self.__to = datetime.now().strftime("%Y-%m-%d")
@@ -165,7 +165,7 @@ class ChartsData:
         self.__from = (datetime.now() - timedelta(days = self.__history_length)).strftime("%Y-%m-%d")
         self.__to   = datetime.now().strftime("%Y-%m-%d")
 
-        url = self.__url + self.__simbol+"?from=" + self.__from +"&to=" + self.__to + "&apikey=" + self.__apikey# + "&serietype=" + self.__serietype
+        url = self.__url + self.__symbol+"?from=" + self.__from +"&to=" + self.__to + "&apikey=" + self.__apikey# + "&serietype=" + self.__serietype
         #test url with constant range for tests
         #url = 'https://financialmodelingprep.com/api/v3/historical-price-full/FSELX?from=2024-01-01&to=2024-09-07&apikey=VmvqJNpPV26D4SP554R2BkjnrCuJsJ2m'
         sourceData = []
@@ -181,7 +181,7 @@ class ChartsData:
         
         if len(sourceData) == 0:
             self.dataLoaded = False
-            self.errorMessage = f"No historical data for simbol {self.__simbol} loaded."
+            self.errorMessage = f"No historical data for symbol {self.__symbol} loaded."
             return
         
         for datastr in reversed(sourceData["historical"]):
@@ -485,7 +485,7 @@ class ChartsData:
         # Temporaly remove
         #ax1.plot(self.__date[startvalue:], self.__volume[startvalue:],
         #         label = "Volume", color='steelblue', linewidth = 1)
-        #set_common_axis_params(axis = ax1, title=f'Volume for simbol {self.__simbol}',legend_position='lower left')
+        #set_common_axis_params(axis = ax1, title=f'Volume for symbol {self.__symbol}',legend_position='lower left')
 
         #----------------------------------------------------------------------------------
         # Display RSI
@@ -504,7 +504,7 @@ class ChartsData:
         ax2.text(self.__date[startvalue + 10],23,"Overbought level", fontsize=10, color='gray')
         ax2.text(self.__date[startvalue + 10],-30,"Oversold level", fontsize=10, color='gray')
         
-        set_common_axis_params(axis = ax2, title=f'RSI for simbol {self.__simbol}',legend_position='lower left')
+        set_common_axis_params(axis = ax2, title=f'RSI for symbol {self.__symbol}',legend_position='lower left')
 
         #----------------------------------------------------------------------------------
         # Display MACD
@@ -518,11 +518,11 @@ class ChartsData:
                  color= self.__params.macd_signal_color,
                  linewidth = 1)
         
-        set_common_axis_params(axis = ax3, title=f'MACD for simbol {self.__simbol}',legend_position='lower left')
+        set_common_axis_params(axis = ax3, title=f'MACD for symbol {self.__symbol}',legend_position='lower left')
 
         # Open full screen window
         #mng = plt.get_current_fig_manager()
-        #mng.set_window_title("Indicators for simbol " + self.__simbol)
+        #mng.set_window_title("Indicators for symbol " + self.__symbol)
         #mng.full_screen_toggle()
        
         return fig

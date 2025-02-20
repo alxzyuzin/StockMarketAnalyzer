@@ -11,12 +11,12 @@ from flask import render_template, redirect, request, session, url_for, jsonify
 from flask_login import current_user, user_logged_out, login_user, logout_user, login_required
 
 from app.models import ( db, 
-                        Simbol, User, UserSimbol, IndicatorsParams,
-                        SimbolData, Operation,
+                        Symbol, User, UserSymbol, IndicatorsParams,
+                        SymbolData, Operation,
                         get_user_indicators_params )
 from app.indicators import ChartsData
 
-@app.route("/clear_simbols_historical_data", methods = ['POST', 'GET'])
+@app.route("/clear_symbols_historical_data", methods = ['POST', 'GET'])
 @login_required
 def clear_simbols_historical_data():
     try:
@@ -198,21 +198,21 @@ def get_operation_data():
 def get_gharts_data():
    if request.method == "POST":
       request_data = request.get_json()
-      simbol = request_data[0]["symbol"]
+      symbol = request_data[0]["symbol"]
       period = int(request_data[0]["period"])
    try:
-          indicators_params = get_user_indicators_params(simbol, current_user.id)
-          chartsdata = ChartsData(simbol,indicators_params)
+          indicators_params = get_user_indicators_params(symbol, current_user.id)
+          chartsdata = ChartsData(symbol,indicators_params)
           chartsdata.load()
           chartsdata.calculate_indicators()
-          simbol_data = db.session.query(Simbol).filter(Simbol.simbol == simbol).first()  
+          symbol_data = db.session.query(Symbol).filter(Symbol.symbol == symbol).first()  
           offset = max(indicators_params.get_offset(), len(chartsdata.Labels()) - period)      
           results = {"processed": "true",
                     "error_descr":"",
                     "charts_ma_data": config_MA(chartsdata, indicators_params, offset),
                     "charts_rsi_data": config_RSI(chartsdata, indicators_params, offset),
                     "charts_macd_data": config_MACD(chartsdata, indicators_params, offset),
-                    "symbol_header":simbol_data.title,
+                    "symbol_header":symbol_data.title,
                     "last_price":chartsdata.lastPrice
                     }
    except Exception as ex:

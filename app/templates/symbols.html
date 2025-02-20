@@ -7,16 +7,16 @@
             <div class = "symbols-list-border">
                 <!-- Symbol list header -->
                 <div class = "row symbols-list-header">
-                    {% if listtype == "unselected" %}
+                    {% if listtype == 0 %}
                     Unselected symbols   
                     {% endif %}
-                    {% if listtype == "watchlist" %}
+                    {% if listtype == 2 %}
                     Watchlist   
                     {% endif %}
-                    {% if listtype == "portfolio" %}
+                    {% if listtype == 1 %}
                     Portolio  
                     {% endif %}
-                    {% if listtype == "shortlist" %}
+                    {% if listtype == 3 %}
                     Shortlist  
                     {% endif %}
                 </div>
@@ -33,7 +33,7 @@
                             <button type="button" 
                                     class="btn  btn-secondary shadow-none symbol-button warning-level-{{symbol[1].warning_level}}"  
                                     onclick="symbol_button_click(event)">   
-                                    {{symbol[0].simbol}}                     
+                                    {{symbol[0].symbol}}                     
                             </button>
                         </li>
                         {% endfor %}
@@ -41,7 +41,7 @@
                     
                 </div>
                 <!-- button for calculating symbols warning levels-->
-                {% if listtype == "watchlist" or listtype == "portfolio" or listtype == "shortlist" %}
+                {% if listtype > 0 %}
                 <div id = "set-warn-levels-row" class = "row">
                     <div class = "col-sm">
                         <button type="button" class="btn btn-secondary shadow-none" 

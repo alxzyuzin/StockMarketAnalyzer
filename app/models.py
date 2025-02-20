@@ -36,11 +36,11 @@ class User(UserMixin, db.Model):
     def check_password(self,password:str):
         return check_password_hash(self.password_hash,password)
 
-# List of simbols registered in the system
-class Simbol(db.Model):
-    __tablename__ = 'simbol'
+# List of symbols registered in the system
+class Symbol(db.Model):
+    __tablename__ = 'symbol'
           
-        #  0 - Simbol                  string
+        #  0 - Symbol                  string
         #  1 - Name                    string
         #  2 - Morningstar Category    string
         #  3 - YTD # (Daily)           float
@@ -53,7 +53,7 @@ class Simbol(db.Model):
         # 10 - Gross ‡                 float
         # 11 - Overall                 float
     
-    simbol = db.Column(db.String(10), primary_key = True)                         
+    symbol = db.Column(db.String(10), primary_key = True)                         
     title = db.Column(db.String(100))
     category = db.Column(db.String(20))
     sector = db.Column(db.String(30))
@@ -74,13 +74,13 @@ class Simbol(db.Model):
     gross = db.Column(db.Float)
     overall = db.Column(db.Float)
     
-    def __init__(self, simbol:str = "", title:str = "", category:str = "",
+    def __init__(self, symbol:str = "", title:str = "", category:str = "",
                  sector:str = "", industry:str = "", country:str = "", isfund:bool = False,
                  onemonthreturn = 0.0, twomonthreturn = 0.0, threemonthreturn = 0.0, sixmonthreturn = 0.0,
                  ytd:float = 0.0,  oneyearreturn:float = 0.0, threeyearreturn:float = 0.0,
                  fiveyearreturn:float = 0.0, tenyearreturn:float = 0.0, lifeoffundreturn:float = 0.0,
                  netto:float = 0.0, gross:float = 0.0, overall:float = 0.0):
-        self.simbol = simbol
+        self.symbol = symbol
         self.title = title
         self.category = category
         self.sector = sector
@@ -102,7 +102,7 @@ class Simbol(db.Model):
         self.overall = overall
  
     def __repr__(self):
-        return f"{self.simbol}:{self.title}:{self.category}:\
+        return f"{self.symbol}:{self.title}:{self.category}:\
                  {self.sector}:{self.industry}:{self.country}:{self.isfund}\
                  {self.onemonthreturn}:{self.twomonthreturn}:\
                  {self.threemonthreturn}:{self.sixmonthreturn}:{self.ytd}:\
@@ -112,7 +112,7 @@ class Simbol(db.Model):
      
    # def to_dic(self):
    #     return {
-   #             "simbol":self.simbol,
+   #             "symbol":self.symbol,
    #             "title":self.title,
    #             "category":self.category,
    #             "oneyearreturn":self.oneyearreturn,
@@ -125,33 +125,33 @@ class Simbol(db.Model):
    #             "overall":self.overall
    #             }
 
-# Simbol's history data cache
-class SimbolData(db.Model):
-    __tablename__ = "simboldata"
+# Symbol's history data cache
+class SymbolData(db.Model):
+    __tablename__ = "symboldata"
 
-    simbol = db.Column(db.String(10), primary_key=True)
+    symbol = db.Column(db.String(10), primary_key=True)
     warning_level = db.Column(db.Integer)
     date_of_loading = db.Column(db.Date)             
     historical_data = db.Column(db.LargeBinary)
     last_price = db.Column(db.Float)
 
     
-    def __init__(self, simbol:str, warning_level:int, date_of_loading:date, historical_data, last_price:float):
-        self.simbol = simbol
+    def __init__(self, symbol:str, warning_level:int, date_of_loading:date, historical_data, last_price:float):
+        self.symbol = symbol
         self.warning_level = warning_level
         self.date_of_loading = date_of_loading
         self.historical_data = historical_data
         self.last_price = last_price
 
     def __repr__(self):
-        return f"simbol: {self.simbol}; warning_level: {self.warning_level}; date_of_loading: {self.date_of_loading}; historical_data: BLOB"
+        return f"symbol: {self.symbol}; warning_level: {self.warning_level}; date_of_loading: {self.date_of_loading}; historical_data: BLOB"
 
-# List of simbols includer by user to include 
+# List of symbols includer by user to include 
 # in portfolio, watchlist or shortlist 
-class UserSimbol(db.Model):  
-    __tablename__ = 'usersimbol'
+class UserSymbol(db.Model):  
+    __tablename__ = 'usersymbol'
 
-    simbol = db.Column(db.String(10), primary_key=True)
+    symbol = db.Column(db.String(10), primary_key=True)
     userid = db.Column(db.String(40), primary_key=True)
     listtype  = db.Column(db.Integer)
     warning_level = db.Column(db.Integer)
@@ -163,35 +163,39 @@ class UserSimbol(db.Model):
     #   2 - watchlist
     #   3 - shortlist
     
-    def __init__(self, simbol:str, userid:str, listtype:int,
+    def __init__(self, symbol:str, userid:str, listtype:int,
                  warning_level:int = 0, calculation_date:date = date.today()):
              
-        self.simbol = simbol
+        self.symbol = symbol
         self.userid = userid
         self.listtype = listtype
         self.warning_level = warning_level
         self.calculation_date = calculation_date
     
     def __repr__(self):
-        return f"simbol: {self.simbol}; userid: {self.userid}; list type: {self.listtype};\
+        return f"symbol: {self.symbol}; userid: {self.userid}; list type: {self.listtype};\
               warning_level: {self.warning_level}; calculation date: {self.calculation_date}"
 
 # Values of indicators parameters that user
-# defined for each simbol in order to calculate indicators    
+# defined for each symbol in order to calculate indicators    
 class IndicatorsParams(db.Model):
     __tablename__ = 'indicatorsparams'
 
     userid = db.Column(db.String(40), primary_key=True)
-    simbol = db.Column(db.String(10), primary_key=True)
+    symbol = db.Column(db.String(10), primary_key=True)
     
     width  = db.Column(db.Integer)
     heigh  = db.Column(db.Integer)
     
     history_length = db.Column(db.Integer)
+    default_plots_period = db.Column(db.String(2))
 
     default_color = db.Column(db.String(9))
     background_color   = db.Column(db.String(9))
+    grid_color = db.Column(db.String(9)) #
+    axis_color = db.Column(db.String(9)) #
     
+    daily_prices_color = db.Column(db.String(9)) #
     ma_first_period = db.Column(db.Integer)
     ma_first_type  = db.Column(db.String(4)) # SMA EMA e.s.on
     ma_first_color = db.Column(db.String(9))
@@ -212,6 +216,11 @@ class IndicatorsParams(db.Model):
     
     rsi_period = db.Column(db.Integer)
     rsi_color = db.Column(db.String(9))
+    rsi_upper_threhold = db.Column(db.Integer) #
+    rsi_lower_threhold = db.Column(db.Integer) #
+    rsi_threhold_line_color = db.Column(db.String(9)) #
+    rsi_norm_aria_color = db.Column(db.String(9)) #
+    rsi_norm_aria_opacity = db.Column(db.Float) #
     show_rsi  = db.Column(db.Boolean)
 
     macd_short_period = db.Column(db.Integer)
@@ -227,13 +236,17 @@ class IndicatorsParams(db.Model):
     bollingerband_opacity = db.Column(db.Float)
     show_bollingerband  = db.Column(db.Boolean)
 
-    def __init__(self, userid:str, simbol:str, 
+    def __init__(self, userid:str, symbol:str, 
                  
                 width:int,
                 heigh:int,
                 history_length:int,
+                default_plots_period:str,
                 default_color:str,
                 background_color:str,
+                grid_color:str, 
+                axis_color:str, 
+                daily_prices_color:str, 
     
                 ma_first_period:int,
                 ma_first_type:str,
@@ -255,6 +268,11 @@ class IndicatorsParams(db.Model):
     
                 rsi_period:int,
                 rsi_color:str,
+                rsi_upper_threhold:int,
+                rsi_lower_threhold:int,
+                rsi_threhold_line_color:str,
+                rsi_norm_aria_color:str,
+                rsi_norm_aria_opacity:float,
                 show_rsi:bool,
 
                 macd_short_period:int,
@@ -272,14 +290,19 @@ class IndicatorsParams(db.Model):
             ):
         
         self.userid = userid
-        self.simbol = simbol
+        self.symbol = symbol
         self.width  = width
         self.heigh  = heigh
 
         self.history_length = history_length
+        self.default_plots_period = default_plots_period
 
         self.default_color = default_color
         self.background_color = background_color
+        self.grid_color = grid_color, 
+        self.axis_color = axis_color, 
+       
+        self.daily_prices_color = daily_prices_color , 
     
         self.ma_first_period = ma_first_period
         self.ma_first_type  = ma_first_type
@@ -301,6 +324,11 @@ class IndicatorsParams(db.Model):
     
         self.rsi_period = rsi_period
         self.rsi_color = rsi_color
+        self.rsi_upper_threhold = rsi_upper_threhold,
+        self.rsi_lower_threhold = rsi_lower_threhold,
+        self.rsi_threhold_line_color = rsi_threhold_line_color,
+        self.rsi_norm_aria_color = rsi_norm_aria_color,
+        self.rsi_norm_aria_opacity = rsi_norm_aria_opacity,
         self.show_rsi = show_rsi
 
         self.macd_short_period = macd_short_period
@@ -318,12 +346,16 @@ class IndicatorsParams(db.Model):
 
     def __repr__(self):
         return f"userid: {self.userid};\
-        simbol: {self.simbol};\
+        symbol: {self.symbol};\
         width: {self.width};\
         heigh: {self.heigh};\
         history_length: {self.history_length};\
+        default_plots_period: {self.default_plots_period};\
         default_color: {self.default_color};\
         background_color: {self.background_color};\
+        grid_color: {self.grid_color};\
+        axis_color: {self.axis_color};\
+        daily_prices_color: {self.daily_prices_color};\
         ma_first_period: {self.ma_first_period};\
         ma_first_type: {self.ma_first_type};\
         ma_first_color: {self.ma_first_color};\
@@ -340,6 +372,11 @@ class IndicatorsParams(db.Model):
         show_volume: {self.show_volume};\
         rsi_period: {self.rsi_period};\
         rsi_color: {self.rsi_color};\
+        rsi_upper_threhold: {self.rsi_upper_threhold};\
+        rsi_lower_threhold: {self.rsi_lower_threhold};\
+        rsi_threhold_line_color: {self.rsi_threhold_line_color};\
+        rsi_norm_aria_color: {self.rsi_norm_aria_color};\
+        rsi_norm_aria_opacity: {self.rsi_norm_aria_opacity};\
         show_rsi: {self.show_rsi};\
         macd_short_period: {self.macd_short_period};\
         macd_long_period: {self.macd_long_period};\
@@ -368,7 +405,7 @@ class IndicatorsParams(db.Model):
     def __eq__(self, other):  
         if isinstance(other, IndicatorsParams):
             if self.userid == other.userid and\
-                self.simbol == other.simbol and\
+                self.symbol == other.symbol and\
                 self.width  == other.width and\
                 self.heigh  == other.heigh and\
                 self.history_length == other.history_length and\
@@ -410,7 +447,7 @@ class IndicatorsParams(db.Model):
 
     def is_equal(self, other)->bool:
         if  self.userid == other.userid and\
-            self.simbol == other.simbol and\
+            self.symbol == other.symbol and\
             self.width  == other.width and\
             self.heigh  == other.heigh and\
             self.history_length == other.history_length and\
@@ -459,20 +496,20 @@ class Operation(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable = False, autoincrement=True)
     userid = db.Column(db.String(40), nullable = False)
     account = db.Column(db.String(15), nullable = False)
-    simbol = db.Column(db.String(10), nullable = False)
+    symbol = db.Column(db.String(10), nullable = False)
     date = db.Column(db.Date, nullable = False)
     type = db.Column(db.Integer, nullable = False)
     price  = db.Column(db.Float, nullable = False)
     quantity = db.Column(db.Float, nullable = False)
     todayprice  = db.Column(db.Float, nullable = False)
     
-    def __init__(self,  userid:str, account:str, simbol:str, 
+    def __init__(self,  userid:str, account:str, symbol:str, 
                  date,  type:int = 0,
                  price:float = 0.0, quantity:float = 0.0, todayprice:float = 0.0):
         
         self.userid = userid
         self.account = account
-        self.simbol = simbol
+        self.symbol = symbol
         self.date = date
         self.type = type # buy or sell
         self.price = price
@@ -480,7 +517,7 @@ class Operation(db.Model):
         self.todayprice = todayprice
         
     def __repr__(self):
-        return f"id: {self.id}; simbol: {self.simbol}; userid: {self.userid}; account: {self.account};\
+        return f"id: {self.id}; symbol: {self.symbol}; userid: {self.userid}; account: {self.account};\
                 date: {self.date}; type: {self.type};\
                 price: {self.price}; quantity: {self.quantity};\
                 todayprice: {self.todayprice};"
@@ -505,16 +542,20 @@ def get_default_indicators_params()->IndicatorsParams:
 
    params = IndicatorsParams(
                 userid = InitialIndicatorsParams.USERID,
-                simbol =  InitialIndicatorsParams.SIMBOL,
+                symbol =  InitialIndicatorsParams.SYMBOL,
 
                 width = InitialIndicatorsParams.WIDTH,
                 heigh = InitialIndicatorsParams.HEIGH,
 
                 history_length = InitialIndicatorsParams.HISTORY_LENGTH,
+                default_plots_period = InitialIndicatorsParams.DEFAULT_PLOTS_PERIOD,
 
                 default_color = InitialIndicatorsParams.DEFAULT_COLOR,
                 background_color = InitialIndicatorsParams.BACKGROUND_COLOR,
-    
+                grid_color = InitialIndicatorsParams.GRID_COLOR, 
+                axis_color = InitialIndicatorsParams.AXIS_COLOR, 
+                
+                daily_prices_color = InitialIndicatorsParams.DAILY_PRICES_COLOR, 
                 ma_first_period = InitialIndicatorsParams.MA_FIRST_PERIOD,
                 ma_first_type = InitialIndicatorsParams.MA_FIRST_TYPE,
                 ma_first_color = InitialIndicatorsParams.MA_FIRST_COLOR,
@@ -535,6 +576,11 @@ def get_default_indicators_params()->IndicatorsParams:
     
                 rsi_period = InitialIndicatorsParams.RSI_PERIOD,
                 rsi_color = InitialIndicatorsParams.RSI_COLOR,
+                rsi_upper_threhold = InitialIndicatorsParams.RSI_UPPER_THREHOLD,
+                rsi_lower_threhold = InitialIndicatorsParams.RSI_LOWER_THREHOLD,
+                rsi_threhold_line_color = InitialIndicatorsParams.RSI_THREHOLD_LINE_COLOR,
+                rsi_norm_aria_color = InitialIndicatorsParams.RSI_NORM_ARIA_COLOR,
+                rsi_norm_aria_opacity = InitialIndicatorsParams.RSI_NORM_ARIA_OPACITY,
                 show_rsi = InitialIndicatorsParams.SHOW_RSI,
 
                 macd_short_period = InitialIndicatorsParams.MACD_SHORT_PERIOD,
@@ -553,19 +599,19 @@ def get_default_indicators_params()->IndicatorsParams:
    
    return params
 
-def get_user_indicators_params(simbol:str, userid:str)->IndicatorsParams:
-    # Try to get params for defined user and simbol
+def get_user_indicators_params(symbol:str, userid:str)->IndicatorsParams:
+    # Try to get params for defined user and symbol
     user_indicators_params  = db.session\
                                 .query(IndicatorsParams)\
                                 .filter(IndicatorsParams.userid == userid,
-                                        IndicatorsParams.simbol == simbol)\
+                                        IndicatorsParams.symbol == symbol)\
                                 .first()   
     if user_indicators_params == None:
         # if set of parameters not found try to get default parameters for that user 
         user_indicators_params  = db.session\
                                 .query(IndicatorsParams)\
                                 .filter(IndicatorsParams.userid == userid,
-                                        IndicatorsParams.simbol == "-----")\
+                                        IndicatorsParams.symbol == "-----")\
                                 .first()
         if user_indicators_params == None:   
             # if default set of parameters for that user not found

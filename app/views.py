@@ -15,8 +15,8 @@ import base64
 import pickle
 
 from app.models import ( db, 
-                        Simbol, User, UserSimbol, 
-                        IndicatorsParams, SimbolData,Operation,
+                        Symbol, User, UserSymbol, 
+                        IndicatorsParams, SymbolData,Operation,
                         Account,
                         get_user_indicators_params )
 from app.userlogin  import currentusername
@@ -35,102 +35,14 @@ def home():
 #   Display list of simbols and calculated indiators for selected simbol
 #____________________________________________________________________________
 
-@app.route("/simbols")
+@app.route("/symbols")
 @login_required
-def simbols():
-   #if not current_user.is_authenticated:
-   #    return render_template("home.html", pageName = "Home", user = current_user)
+def symbols():
+  
    plots_img = "/static/images/empty_plots.png"
    if request.args:
       req = request.args
-      listtype = req["listtype"]
-      simbol   = req["simbol"]
-      rwl      = req["rwl"]
-      simbols=[]
-      # If page requested for specific simbol get simbol description from database
-      selected_simbol_data = db.session.query(Simbol).filter(Simbol.simbol == simbol).first()  
-      try:
-         # Listtypes
-         #   0 - unselected
-         #   1 - portfolio
-         #   2 - watchlist
-         #   3 - shortlist
-         
-         # Get list of simbols in portfolio
-         if listtype == "portfolio": 
-            subquery = db.session.query(UserSimbol.simbol)\
-                     .filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).subquery()
-            simbols = db.session.query(Simbol, SimbolData)\
-                                 .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
-                                 .filter(Simbol.simbol.in_(subquery))\
-                                 .order_by(Simbol.simbol).all()            
-         # Get list of simbols in watchlist
-         if listtype == "watchlist":
-            subquery = db.session.query(UserSimbol.simbol)\
-                                 .filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 2).subquery()
-            simbols = db.session.query(Simbol, SimbolData)\
-                                 .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
-                                 .filter(Simbol.simbol.in_(subquery))\
-                                 .order_by(Simbol.simbol).all()
-            # Get list of simbols in watchlist
-         if listtype == "shortlist":
-            subquery = db.session.query(UserSimbol.simbol)\
-                                 .filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 3).subquery()
-            simbols = db.session.query(Simbol, SimbolData)\
-                                 .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
-                                 .filter(Simbol.simbol.in_(subquery))\
-                                 .order_by(Simbol.simbol).all()
-            
-         # Get list of all simbols that are in application databace 
-         if listtype == "unselected":
-            subquery = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id).subquery()
-            simbols = db.session.query(Simbol, SimbolData)\
-                                 .outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol)\
-                                 .filter(Simbol.simbol.notin_(subquery))\
-                                 .order_by(Simbol.simbol).all()
-         # Create mosck history data object to provide all nessesery values for html template
-         # if no one simbol selected
-         historydata = ChartsData("-----", get_user_indicators_params("-----", current_user.id))
-         if simbol != '':
-            # Get history price data for simbol and calculate indicators
-            historydata = load_historical_data(simbol = simbol)
-            # Build plots 
-            if historydata != None and historydata.dataLoaded:
-               plt = historydata.build_plots()
-               # Save plots to a temporary buffer.
-               buf = BytesIO()
-               plt.savefig(buf, format="png")
-               # Embed the result in the html output.
-               fig_data = base64.b64encode(buf.getbuffer()).decode("ascii")
-               plots_img = f'data:image/png;base64,{fig_data}'
-            else:
-                return render_template("error.html", pageName = "Simbols", user = current_user, error_descr = historydata.errorMessage)     
-               
-         # Refresh historical data for current list of simbols and calculate warning levels
-         if rwl == 'true':    
-            # We already read list of simbols for carrent page into variable "simbols" 
-            for smb in simbols:
-               load_historical_data(simbol = smb[0].simbol)
- 
-         return render_template("simbols.html" , pageName = "Simbols", simbols = simbols,
-                                 selected_simbol = req["simbol"],
-                                 selected_simbol_data = selected_simbol_data,  
-                                 user = current_user,
-                                 listtype = req["listtype"], plots_image = plots_img,
-                                 last_price = historydata.lastPrice,
-                                 warning_level = historydata.warningLevel)             
-      except Exception as ex:
-          return render_template("error.html", pageName = "Simbols", user = current_user, error_descr = ex.args)     
-
-@app.route("/symbols_ind")
-@login_required
-def symbols_ind():
-   #if not current_user.is_authenticated:
-   #    return render_template("home.html", pageName = "Home", user = current_user)
-   plots_img = "/static/images/empty_plots.png"
-   if request.args:
-      req = request.args
-      listtype = req["listtype"]
+      listtype = int(req["listtype"])
       rwl      = req["rwl"]
       symbols=[]  
       try:
@@ -139,50 +51,60 @@ def symbols_ind():
          #   1 - portfolio
          #   2 - watchlist
          #   3 - shortlist
-         
-         # Get list of simbols in portfolio
-         if listtype == "portfolio": 
-            subquery = db.session.query(UserSimbol.simbol
-                                       ).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1
+         if listtype > 0 :
+            subquery = db.session.query(UserSymbol.symbol
+                                       ).filter(UserSymbol.userid == current_user.id, UserSymbol.listtype == listtype
                                        ).subquery()
-            symbols = db.session.query(Simbol, SimbolData
-                                       ).outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol
-                                       ).filter(Simbol.simbol.in_(subquery)
-                                       ).order_by(Simbol.simbol).all()            
+            symbols = db.session.query(Symbol, SymbolData
+                                       ).outerjoin(SymbolData, SymbolData.symbol ==Symbol.symbol
+                                       ).filter(Symbol.symbol.in_(subquery)
+                                       ).order_by(Symbol.symbol).all()   
+
+
+         ## Get list of symbols in portfolio
+         #if listtype == "portfolio": 
+         #   subquery = db.session.query(UserSymbol.symbol
+         #                              ).filter(UserSymbol.userid == current_user.id, UserSymbol.listtype == 1
+         #                              ).subquery()
+         #   symbols = db.session.query(Symbol, SymbolData
+         #                              ).outerjoin(SymbolData, SymbolData.symbol ==Symbol.symbol
+         #                              ).filter(Symbol.symbol.in_(subquery)
+         #                              ).order_by(Symbol.symbol).all()            
          # Get list of simbols in watchlist
-         if listtype == "watchlist":
-            subquery = db.session.query(UserSimbol.simbol
-                                       ).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 2
-                                       ).subquery()
-            symbols = db.session.query(Simbol, SimbolData
-                                       ).outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol
-                                       ).filter(Simbol.simbol.in_(subquery)
-                                       ).order_by(Simbol.simbol).all()
-            # Get list of simbols in watchlist
-         if listtype == "shortlist":
-            subquery = db.session.query(UserSimbol.simbol
-                                       ).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 3
-                                       ).subquery()
-            symbols = db.session.query(Simbol, SimbolData
-                                       ).outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol
-                                       ).filter(Simbol.simbol.in_(subquery)
-                                       ).order_by(Simbol.simbol).all()
+         #if listtype == "watchlist":
+         #   subquery = db.session.query(UserSymbol.symbol
+         #                              ).filter(UserSymbol.userid == current_user.id, UserSymbol.listtype == 2
+         #                              ).subquery()
+         #   symbols = db.session.query(Symbol, SymbolData
+         #                              ).outerjoin(SymbolData, SymbolData.symbol == Symbol.symbol
+         #                              ).filter(Symbol.symbol.in_(subquery)
+         #                              ).order_by(Symbol.symbol).all()
+            # Get list of symbols in watchlist
+         #if listtype == "shortlist":
+         #   subquery = db.session.query(UserSymbol.symbol
+         #                              ).filter(UserSymbol.userid == current_user.id, UserSymbol.listtype == 3
+         #                              ).subquery()
+         #   symbols = db.session.query(Symbol, SymbolData
+         #                              ).outerjoin(SymbolData, SymbolData.symbol ==Symbol.symbol
+         #                              ).filter(Symbol.symbol.in_(subquery)
+         #                              ).order_by(Symbol.symbol).all()
             
-         # Get list of all simbols that are in application databace 
-         if listtype == "unselected":
-            subquery = db.session.query(UserSimbol.simbol
-                                       ).filter(UserSimbol.userid == current_user.id
+         # Get list of all symbols that are in application database 
+         #if listtype == "unselected":
+         else:
+            subquery = db.session.query(UserSymbol.symbol
+                                       ).filter(UserSymbol.userid == current_user.id
                                        ).subquery()
-            symbols = db.session.query(Simbol, SimbolData
-                                       ).outerjoin(SimbolData, SimbolData.simbol ==Simbol.simbol
-                                       ).filter(Simbol.simbol.notin_(subquery)
-                                       ).order_by(Simbol.simbol).all()
+            symbols = db.session.query(Symbol, SymbolData
+                                       ).outerjoin(SymbolData, SymbolData.symbol ==Symbol.symbol
+                                       ).filter(Symbol.symbol.notin_(subquery)
+                                       ).order_by(Symbol.symbol).all()
          # Create mosck history data object to provide all nessesery values for html template
-         # if no one simbol selected
+         # if no one symbol selected
          historydata = ChartsData("-----", get_user_indicators_params("-----", current_user.id))
-         #if simbol != '':
-         #   # Get history price data for simbol and calculate indicators
-         #   historydata = load_historical_data(simbol = simbol)
+         #if symbol != '':
+         #   # Get history price data for symbol and calculate indicators
+         #   historydata = load_historical_data(symbol = symbol)
          #   # Build plots 
          #   if historydata != None and historydata.dataLoaded:
          #      plt = historydata.build_plots()
@@ -193,17 +115,17 @@ def symbols_ind():
          #      fig_data = base64.b64encode(buf.getbuffer()).decode("ascii")
          #      plots_img = f'data:image/png;base64,{fig_data}'
          #   else:
-         #       return render_template("error.html", pageName = "Simbols", user = current_user, error_descr = historydata.errorMessage)     
+         #       return render_template("error.html", pageName = "Symbols", user = current_user, error_descr = historydata.errorMessage)     
                
-         # Refresh historical data for current list of simbols and calculate warning levels
+         # Refresh historical data for current list of symbols and calculate warning levels
          if rwl == 'true':    
             # We already read list of symbols for carrent page into variable "symbols" 
             for smb in symbols:
-               load_historical_data(symbol = smb[0].simbol)
+               load_historical_data(symbol = smb[0].symbol)
  
-         return render_template("symbols_ind.html" , pageName = "Symbols", symbols = symbols,
+         return render_template("symbols.html" , pageName = "Symbols", symbols = symbols,
                                  user = current_user,
-                                 listtype = req["listtype"], plots_image = plots_img,
+                                 listtype = listtype, plots_image = plots_img,
                                  last_price = historydata.lastPrice,
                                  warning_level = historydata.warningLevel)             
       except Exception as ex:
@@ -251,7 +173,7 @@ def logout():
 #     AJAX requests handlers
 #============================================================================
 #____________________________________________________________________________
-#   Handle request on moving simbols between lists of simbols
+#   Handle request on moving symbols between lists of symbols
 #____________________________________________________________________________
 @app.route("/move_symbols_between_lists", methods = ['POST', 'GET'])
 @login_required
@@ -267,25 +189,25 @@ def move_symbols_between_lists():
          #   1 - portfolio
          #   2 - watchlist
 
-         # Moving simbol from unselected to watchlist or portfolio or shortlist
+         # Moving symbol from unselected to watchlist or portfolio or shortlist
          if sourcelist == 0:
-            db.session.add(UserSimbol(userid = current_user.id,
-                                      simbol = symbol,
+            db.session.add(UserSymbol(userid = current_user.id,
+                                      symbol = symbol,
                                       listtype = targetlist))
-         # Moving simbol between watchlist an portfolio in any direction   
+         # Moving symbol between watchlist an portfolio in any direction   
          if not(sourcelist == 0 or targetlist == 0):
-            record = db.session.query(UserSimbol
-                              ).filter(UserSimbol.userid == current_user.id, 
-                                       UserSimbol.simbol == symbol,
-                                       UserSimbol.listtype == sourcelist
+            record = db.session.query(UserSymbol
+                              ).filter(UserSymbol.userid == current_user.id, 
+                                       UserSymbol.symbol == symbol,
+                                       UserSymbol.listtype == sourcelist
                               ).first()
             record.listtype = targetlist
          
-          # Moving simbol from watchlist or portfolio or shortlist to unselected   
+          # Moving symbol from watchlist or portfolio or shortlist to unselected   
          if targetlist == 0:
-            db.session.query(UserSimbol).filter(UserSimbol.userid == current_user.id,
-                                                UserSimbol.simbol == symbol,
-                                                UserSimbol.listtype == sourcelist
+            db.session.query(UserSymbol).filter(UserSymbol.userid == current_user.id,
+                                                UserSymbol.symbol == symbol,
+                                                UserSymbol.listtype == sourcelist
                                                 ).delete()
          db.session.commit()
          results = {"processed": "true", "error_descr":""}
@@ -295,17 +217,17 @@ def move_symbols_between_lists():
    return jsonify(results)
 
 #____________________________________________________________________________
-#   Calculate simbol indicators, build plots and return plots to client
+#   Calculate symbol indicators, build plots and return plots to client
 #____________________________________________________________________________
 @app.route("/calculate_indicators", methods = ['POST', 'GET'])
 @login_required
 def calculate_indicators():
    if request.method == "POST":
       request_data = request.get_json()
-      simbol = request_data[0]["simbol"]
+      symbol = request_data[0]["symbol"]
    try:
-         indicators_params = get_user_indicators_params(simbol, current_user.id)
-         chartsdata = ChartsData(simbol,indicators_params)
+         indicators_params = get_user_indicators_params(symbol, current_user.id)
+         chartsdata = ChartsData(symbol,indicators_params)
          chartsdata.calculate_indicators()
          plt = chartsdata.build_plots()
 
@@ -322,11 +244,11 @@ def calculate_indicators():
    except Exception as ex:
          results = {"processed": 'false', "error_descr": ex.args}
       
-   return render_template("simbols.html", simbols = simbols, user = current_user, listtype = request["listtype"])        
+   return render_template("symbols.html", symbols = symbols, user = current_user, listtype = request["listtype"])        
    
    #   try:
-   #      indicators_params = get_user_indicators_params(simbol, current_user.id)
-   #      chartsdata = ChartsData(simbol,indicators_params)
+   #      indicators_params = get_user_indicators_params(symbol, current_user.id)
+   #      chartsdata = ChartsData(symbol,indicators_params)
    #      chartsdata.calculate_indicators()
    #      plt = chartsdata.build_plots()
 
@@ -349,13 +271,13 @@ def calculate_indicators():
 # If fresh history price data exist in the cache 
 #  Restore data from the cache and return object with data
 # else
-#  Download history price data for simbol, calculate indicators,
+#  Download history price data for symbol, calculate indicators,
 #  save data to the cache and return object with data
 #____________________________________________________________________________
-def load_historical_data( simbol:str):
+def load_historical_data( symbol:str):
 
-   def get_history_data(simbol:str, indicators_params:IndicatorsParams):
-      historydata = ChartsData(simbol, indicators_params)
+   def get_history_data(symbol:str, indicators_params:IndicatorsParams):
+      historydata = ChartsData(symbol, indicators_params)
       historydata.load()
       if historydata.dataLoaded != False:
          historydata.calculate_indicators()
@@ -363,56 +285,56 @@ def load_historical_data( simbol:str):
    
    try:
       historydata = None
-      indicators_params = get_user_indicators_params(simbol, current_user.id)
-      # Try to find simbol's history data in cache
-      simboldata = db.session.query(SimbolData).filter(SimbolData.simbol == simbol).first()
-      # If no data for simbol in the cache load history data and save it to the cache
-      if simboldata == None:
-            # No simbol data in the cache so load history data and
+      indicators_params = get_user_indicators_params(symbol, current_user.id)
+      # Try to find symbol's history data in cache
+      symboldata = db.session.query(SymbolData).filter(SymbolData.symbol == symbol).first()
+      # If no data for symbol in the cache load history data and save it to the cache
+      if symboldata == None:
+            # No symbol data in the cache so load history data and
             # save history data in the cache
-            historydata = get_history_data(simbol, indicators_params)
+            historydata = get_history_data(symbol, indicators_params)
             if historydata.dataLoaded:            
                serialized_history_data = pickle.dumps(historydata)
-               simboldata = SimbolData(simbol = simbol,
+               symboldata = SymbolData(symbol = symbol,
                                        warning_level=historydata.warningLevel,
                                        date_of_loading=date.today(),
                                        historical_data = serialized_history_data,
                                        last_price = historydata.lastPrice)
-               db.session.add(simboldata)
+               db.session.add(symboldata)
                db.session.commit()
             else:
                return historydata
          
-      historydata = pickle.loads(simboldata.historical_data)
+      historydata = pickle.loads(symboldata.historical_data)
 
-      # Simbol data exist in the cache
+      # Symbol data exist in the cache
       # If data in the cache outdated or data loaded with outdated params
       # load new history data   
-      if simboldata.date_of_loading < date.today()\
+      if symboldata.date_of_loading < date.today()\
          or (not (historydata.get_indicators_params() == indicators_params)):
         
-         historydata = get_history_data(simbol, indicators_params)
+         historydata = get_history_data(symbol, indicators_params)
          if historydata.dataLoaded:
             # Save new history data in the cache
             serialized_historycaldata = pickle.dumps(historydata) 
-            simboldata.warning_level = historydata.warningLevel
-            simboldata.date_of_loading = date.today()
-            simboldata.historical_data = serialized_historycaldata
-            simboldata.last_price = historydata.lastPrice
+            symboldata.warning_level = historydata.warningLevel
+            symboldata.date_of_loading = date.today()
+            symboldata.historical_data = serialized_historycaldata
+            symboldata.last_price = historydata.lastPrice
             db.session.commit()
       else:
-         # There is valid simbol data in the cache 
-         # Restore simbol's history data from cache
-         historydata = pickle.loads(simboldata.historical_data)
+         # There is valid symbol data in the cache 
+         # Restore symbol's history data from cache
+         historydata = pickle.loads(symboldata.historical_data)
 
    except Exception as ex:
-     raise Exception(f"Error loading historical data for simbol {simbol} {ex.args}")
+     raise Exception(f"Error loading historical data for symbol {symbol} {ex.args}")
   
    return historydata
 
-@app.route("/editsimboldata", methods=["GET","POST"])
+@app.route("/editsymboldata", methods=["GET","POST"])
 @login_required
-def editsimboldata():
+def editsymboldata():
    
    def get_checkbox_value(form:object, name:str)->bool:
       if form.get(name, "off") == "off":
@@ -421,49 +343,48 @@ def editsimboldata():
          return True
       
    EditResult = ""
-   simbol = Simbol()
+   symbol = Symbol()
    if request.args:
       req = request.args
-      if req["simbol"] != "":
-         simbol = db.session.query(Simbol).filter(Simbol.simbol == request[simbol]).first()
+      if req["symbol"] != "":
+         symbol = db.session.query(Symbol).filter(Symbol.symbol == request[symbol]).first()
   
    if request.method == "POST":
       try:
-         simbol = request.form["inputSimbol"]
-         simbol = db.session.query(Simbol).filter(Simbol.simbol == simbol).first()
-         if simbol == None:
-            simbol = Simbol()
-            db.session.add(simbol)
+         symbol = request.form["inputSymbol"]
+         symbol = db.session.query(Symbol).filter(Symbol.symbol == symbol).first()
+         if symbol == None:
+            symbol = Symbol()
+            db.session.add(symbol)
 
-         simbol.simbol = request.form["inputSimbol"]
-         simbol.simbol = request.form["inputSimbol"]
-         simbol.title = request.form["inputTitle"]
-         simbol.sector = request.form["inputSector"]
-         simbol.industry = request.form["inputIndustry"]
-         simbol.country = request.form["inputCountry"]
-         simbol.isfund = get_checkbox_value(request.form, "isFund")
-         simbol.onemonthreturn = float(request.form["inputOneMonthReturn"])
-         simbol.twomonthreturn = float(request.form["inputTwoMonthReturn"])
-         simbol.threemonthreturn = float(request.form["inputThreeMonthReturn"])
-         simbol.sixmonthreturn = float(request.form["inputSixMonthReturn"])
+         symbol.symbol = request.form["inputSymbol"]
+         symbol.title = request.form["inputTitle"]
+         symbol.sector = request.form["inputSector"]
+         symbol.industry = request.form["inputIndustry"]
+         symbol.country = request.form["inputCountry"]
+         symbol.isfund = get_checkbox_value(request.form, "isFund")
+         symbol.onemonthreturn = float(request.form["inputOneMonthReturn"])
+         symbol.twomonthreturn = float(request.form["inputTwoMonthReturn"])
+         symbol.threemonthreturn = float(request.form["inputThreeMonthReturn"])
+         symbol.sixmonthreturn = float(request.form["inputSixMonthReturn"])
 
-         #simbol.ytd = float(request.form["inputYTD"])
-         #simbol.oneyearreturn = float(request.form["inputOneYearReturn"])
-         #simbol.threeyearreturn = float(request.form["inputThreeYearReturn"])
-         #simbol.fiveyearreturn = float(request.form["inputFiveYearReturn"])
-         #simbol.tenyearreturn = float(request.form["inputTenYearReturn"])
-         #simbol.lifeoffundreturn = float(request.form["inputLifeOfFundReturn"])
-         #simbol.netto = float(request.form["inputNetto"])
-         #simbol.gross = float(request.form["inputGross"])
-         #simbol.overall = float(request.form["inputOverall"])
+         #symbol.ytd = float(request.form["inputYTD"])
+         #symbol.oneyearreturn = float(request.form["inputOneYearReturn"])
+         #symbol.threeyearreturn = float(request.form["inputThreeYearReturn"])
+         #symbol.fiveyearreturn = float(request.form["inputFiveYearReturn"])
+         #symbol.tenyearreturn = float(request.form["inputTenYearReturn"])
+         #symbol.lifeoffundreturn = float(request.form["inputLifeOfFundReturn"])
+         #symbol.netto = float(request.form["inputNetto"])
+         #symbol.gross = float(request.form["inputGross"])
+         #symbol.overall = float(request.form["inputOverall"])
       
-         #db.session.add(simbol)
+         #db.session.add(symbol)
          db.session.commit()
-         EditResult = "Simbol data saved."
+         EditResult = "Symbol data saved."
       except Exception as ex:
-         EditResult = f"Error saving simbol data {ex.args}"
+         EditResult = f"Error saving symbol data {ex.args}"
            
-   return render_template("editsimbol.html", pageName = "Simbol", simbol = simbol, user = current_user, operationResult = EditResult)
+   return render_template("editsymbol.html", pageName = "Symbol", symbol = symbol, user = current_user, operationResult = EditResult)
 
 
 #____________________________________________________________________________
@@ -485,10 +406,10 @@ def activity():
       accounts = db.session.query(Account).filter(Account.userid == current_user.id).all()
       accounts.append(Account( "9140b38c-8d65-4e54-bf8f-205337e0634d", "Z32117095", 0.0, "USD") )  
       operations = db.session.query(Operation).filter(Operation.userid == current_user.id).all()
-      portfolioSymbols = db.session.query(UserSimbol)\
-                                 .filter(UserSimbol.userid == current_user.id and 
-                                         UserSimbol.listtype == 1)\
-                                 .all()
+      portfolioSymbols = db.session.query(UserSymbol
+                                          ).filter(UserSymbol.userid == current_user.id and 
+                                                   UserSymbol.listtype == 1
+                                          ).all()
    except Exception as ex:
       operationResult = f"Error loading data {ex.args}"
    return render_template("activity.html", pageName = "Portfolio",
@@ -518,7 +439,7 @@ def perfomance():
 @app.route("/managesymbols")
 @login_required
 def managesymbols():
-   # simbol
+   # symbol
    # title
    # sector
    # industry
@@ -528,27 +449,27 @@ def managesymbols():
    try:
      
       symbols = db.session.query(
-                                 Simbol.simbol, 
-                                 Simbol.title,
-                                 Simbol.sector,
-                                 Simbol.industry,
-                                 Simbol.country,
-                                 Simbol.isfund,
-                                 UserSimbol.listtype,
-                                 UserSimbol.userid
+                                 Symbol.symbol, 
+                                 Symbol.title,
+                                 Symbol.sector,
+                                 Symbol.industry,
+                                 Symbol.country,
+                                 Symbol.isfund,
+                                 UserSymbol.listtype,
+                                 UserSymbol.userid
                               ).outerjoin(
-                                 UserSimbol, and_(Simbol.simbol == UserSimbol.simbol, UserSimbol.userid == current_user.id)
+                                 UserSymbol, and_(Symbol.symbol == UserSymbol.symbol, UserSymbol.userid == current_user.id)
                               #).filter(
                                  
                               ).order_by(
-                                 Simbol.simbol
+                                 Symbol.symbol
                               ).all()
 
       i = 0
-      #symbols = db.session.query(Simbol).order_by(Simbol.simbol).all()
+      #symbols = db.session.query(Symbol).order_by(Symbol.symbol).all()
    except Exception as ex:
       operationResult = f"Error loading data {ex.args}"
-   return render_template("managesymbols.html", pageName = "symbols",
+   return render_template("managesymbols.html", pageName = "Symbols",
                           today = date.today(),
                           symbols = symbols,
                           user = current_user, 
@@ -556,6 +477,6 @@ def managesymbols():
 
 
 
-@app.route("/copilotexample")
-def copilotexample():
-   return render_template("copilotexample.html", pageName = "Copilot Example", user = current_user)
+#@app.route("/copilotexample")
+#def copilotexample():
+#   return render_template("copilotexample.html", pageName = "Copilot Example", user = current_user)

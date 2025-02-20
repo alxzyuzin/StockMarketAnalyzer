@@ -3,7 +3,7 @@ from flask_login import current_user, user_logged_out, login_user, logout_user, 
 from flask import render_template, redirect, request, session, url_for, jsonify
 
 from app.models import ( db,
-                         Simbol, User, UserSimbol, IndicatorsParams, SimbolData,
+                         Symbol, User, UserSymbol, IndicatorsParams, SymbolData,
                          get_default_indicators_params)
 
 
@@ -15,25 +15,24 @@ def settings():
    message = ""
    if request.args:
       req = request.args
-      simbol   = req["simbol"]
-      # Select simbols that are in user's portfolio
-      #simbols = db.session.query(UserSimbol.simbol).filter(UserSimbol.userid == current_user.id, UserSimbol.listtype == 1).all()
+      symbol   = req["symbol"]
+      # Select symbols that are in user's portfolio
+      #smbols = db.session.query(UserSymbol.symbol).filter(UserSymbol.userid == current_user.id, UserSymbol.listtype == 1).all()
    else:
      error_description = "Page '/setindicatorsparams' didn't get any requested args"
      return render_template("error.html", pageName = "Settings",
                              user = current_user, error_descr = error_description)     
 
 
-   if simbol == '':
+   if symbol == '':
       error_description = "Page '/setindicatorsparams' simbol=''"
       return render_template("error.html", pageName = "Settings",
                              user = current_user, error_descr = error_description)
    try:
-      user_indicators_params  = db.session\
-                                 .query(IndicatorsParams)\
-                                 .filter(IndicatorsParams.userid == current_user.id,
-                                          IndicatorsParams.simbol == simbol)\
-                                 .first()   
+      user_indicators_params  = db.session.query(IndicatorsParams
+                                                 ).filter(IndicatorsParams.userid == current_user.id,
+                                                         IndicatorsParams.symbol == symbol
+                                                ).first()   
 
       if user_indicators_params == None:
          new_params_set = True
@@ -90,7 +89,7 @@ def settings():
          message =  "Parameters saved."
 
       return render_template("indicatorsparams.html", pageName = "Settings", 
-                           simbols = None,
+                           symbols = None,
                            user = current_user,
                            par_values = user_indicators_params,
                            message = message) 

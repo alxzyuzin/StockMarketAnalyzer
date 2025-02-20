@@ -45,10 +45,10 @@
                     role="button" data-bs-toggle="dropdown" 
                     aria-expanded="false">Symbols</a>
                <ul class="dropdown-menu" aria-labelledby="navbarDropdownSymbols">
-                  <li><a class="dropdown-item" href="/symbols_ind?listtype=portfolio&rwl=false">Portfolio</a></li>
-                  <li><a class="dropdown-item" href="/symbols_ind?listtype=shortlist&rwl=false">Shortlist</a></li>
-                  <li><a class="dropdown-item" href="/symbols_ind?listtype=watchlist&rwl=false">Wachlist</a></li>
-                  <li><a class="dropdown-item" href="/symbols_ind?listtype=unselected&rwl=false">All</a></li>
+                  <li><a class="dropdown-item" href="/symbols?listtype=1&rwl=false">Portfolio</a></li> <!-- Portfolio -->
+                  <li><a class="dropdown-item" href="/symbols?listtype=3&rwl=false">Shortlist</a></li> <!-- Shortlist -->
+                  <li><a class="dropdown-item" href="/symbols?listtype=2&rwl=false">Wachlist</a></li>  <!-- Watchlist -->
+                   <li><a class="dropdown-item" href="/symbols?listtype=unselected&rwl=false">All</a></li> <!-- All -->
                   <li><a class="dropdown-item" href="/editsymboldata?symbol=">Add symbol</a></li>
                   <li><a class="dropdown-item" onclick="reset_symbol_data_click(event)" href="">Reset symbols data</a></li>
                   <li><hr class="dropdown-divider"></hr></li>
@@ -65,10 +65,10 @@
                    role="button" data-bs-toggle="dropdown" 
                   aria-expanded="false">Portfolio</a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownPortfolio">
-                  <li><a class="dropdown-item" href="/symbols_ind?listtype=portfolio&rwl=false">Symbols</a></li>
+                  <li><a class="dropdown-item" href="/symbols?listtype=1&rwl=false">Symbols</a></li>
                   <li><a class="dropdown-item" href="/activity">Activity</a></li>
                   <li><a class="dropdown-item" href="/perfomance">Perfomance</a></li>
-                  <li><a class="dropdown-item" href="/copilotexample">Copilot example</a></li>
+                  <!--li><a class="dropdown-item" href="/copilotexample">Copilot example</a></li-->
                 </ul>
               </li>
               <li class = "nav-item dropdown">

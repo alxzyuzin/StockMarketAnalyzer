@@ -34,15 +34,18 @@ class Config(object):
 
 class InitialIndicatorsParams(object):
     USERID = ""
-    SIMBOL = "-----"
+    SYMBOL = "-----"
 
     WIDTH = 800
     HEIGH = 600
 
     BACKGROUND_COLOR = "#F0F0F0"
+    GRID_COLOR  = "#F0F0F0"
+    AXIS_COLOR  = "#F0F0F0"
     DEFAULT_COLOR = "#1F1F1F"
 
     HISTORY_LENGTH = 250
+    DEFAULT_PLOTS_PERIOD = '1M'
     DAILY_PRICES_COLOR = "#AAAAAA"
 
     MA_FIRST_PERIOD = 4
@@ -65,6 +68,11 @@ class InitialIndicatorsParams(object):
 
     RSI_PERIOD = 20
     RSI_COLOR = "#00FF00"    
+    RSI_UPPER_THREHOLD = 30
+    RSI_LOWER_THREHOLD = -30
+    RSI_THREHOLD_LINE_COLOR  = "#0000FF"
+    RSI_NORM_ARIA_COLOR = "#0000FF"
+    RSI_NORM_ARIA_OPACITY = 0.2
     SHOW_RSI = True    
     
     MACD_SHORT_PERIOD = 12
