@@ -15,6 +15,7 @@
     .modal-dialog {
         max-width: 1000px;
         margin: 1.75rem auto;
+        background-color: #A0A0A0;
     }    
     .container, .container-sm, .container-md, .container-lg, .container-xl {
         max-width: 800px;

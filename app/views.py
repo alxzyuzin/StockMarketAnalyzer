@@ -59,38 +59,6 @@ def symbols():
                                        ).outerjoin(SymbolData, SymbolData.symbol ==Symbol.symbol
                                        ).filter(Symbol.symbol.in_(subquery)
                                        ).order_by(Symbol.symbol).all()   
-
-
-         ## Get list of symbols in portfolio
-         #if listtype == "portfolio": 
-         #   subquery = db.session.query(UserSymbol.symbol
-         #                              ).filter(UserSymbol.userid == current_user.id, UserSymbol.listtype == 1
-         #                              ).subquery()
-         #   symbols = db.session.query(Symbol, SymbolData
-         #                              ).outerjoin(SymbolData, SymbolData.symbol ==Symbol.symbol
-         #                              ).filter(Symbol.symbol.in_(subquery)
-         #                              ).order_by(Symbol.symbol).all()            
-         # Get list of simbols in watchlist
-         #if listtype == "watchlist":
-         #   subquery = db.session.query(UserSymbol.symbol
-         #                              ).filter(UserSymbol.userid == current_user.id, UserSymbol.listtype == 2
-         #                              ).subquery()
-         #   symbols = db.session.query(Symbol, SymbolData
-         #                              ).outerjoin(SymbolData, SymbolData.symbol == Symbol.symbol
-         #                              ).filter(Symbol.symbol.in_(subquery)
-         #                              ).order_by(Symbol.symbol).all()
-            # Get list of symbols in watchlist
-         #if listtype == "shortlist":
-         #   subquery = db.session.query(UserSymbol.symbol
-         #                              ).filter(UserSymbol.userid == current_user.id, UserSymbol.listtype == 3
-         #                              ).subquery()
-         #   symbols = db.session.query(Symbol, SymbolData
-         #                              ).outerjoin(SymbolData, SymbolData.symbol ==Symbol.symbol
-         #                              ).filter(Symbol.symbol.in_(subquery)
-         #                              ).order_by(Symbol.symbol).all()
-            
-         # Get list of all symbols that are in application database 
-         #if listtype == "unselected":
          else:
             subquery = db.session.query(UserSymbol.symbol
                                        ).filter(UserSymbol.userid == current_user.id
@@ -332,41 +300,41 @@ def load_historical_data( symbol:str):
   
    return historydata
 
-@app.route("/editsymboldata", methods=["GET","POST"])
-@login_required
-def editsymboldata():
+#@app.route("/editsymboldata", methods=["GET","POST"])
+#@login_required
+#def editsymboldata():
    
-   def get_checkbox_value(form:object, name:str)->bool:
-      if form.get(name, "off") == "off":
-         return False
-      else:
-         return True
+#   def get_checkbox_value(form:object, name:str)->bool:
+#      if form.get(name, "off") == "off":
+#         return False
+#      else:
+#         return True
       
-   EditResult = ""
-   symbol = Symbol()
-   if request.args:
-      req = request.args
-      if req["symbol"] != "":
-         symbol = db.session.query(Symbol).filter(Symbol.symbol == request[symbol]).first()
+#   EditResult = ""
+#   symbol = Symbol()
+#   if request.args:
+#      req = request.args
+#      if req["symbol"] != "":
+#         symbol = db.session.query(Symbol).filter(Symbol.symbol == request[symbol]).first()
   
-   if request.method == "POST":
-      try:
-         symbol = request.form["inputSymbol"]
-         symbol = db.session.query(Symbol).filter(Symbol.symbol == symbol).first()
-         if symbol == None:
-            symbol = Symbol()
-            db.session.add(symbol)
+#   if request.method == "POST":
+#      try:
+#         symbol = request.form["inputSymbol"]
+#         symbol = db.session.query(Symbol).filter(Symbol.symbol == symbol).first()
+#         if symbol == None:
+#            symbol = Symbol()
+#            db.session.add(symbol)
 
-         symbol.symbol = request.form["inputSymbol"]
-         symbol.title = request.form["inputTitle"]
-         symbol.sector = request.form["inputSector"]
-         symbol.industry = request.form["inputIndustry"]
-         symbol.country = request.form["inputCountry"]
-         symbol.isfund = get_checkbox_value(request.form, "isFund")
-         symbol.onemonthreturn = float(request.form["inputOneMonthReturn"])
-         symbol.twomonthreturn = float(request.form["inputTwoMonthReturn"])
-         symbol.threemonthreturn = float(request.form["inputThreeMonthReturn"])
-         symbol.sixmonthreturn = float(request.form["inputSixMonthReturn"])
+#         symbol.symbol = request.form["inputSymbol"]
+#         symbol.title = request.form["inputTitle"]
+#         symbol.sector = request.form["inputSector"]
+#         symbol.industry = request.form["inputIndustry"]
+#         symbol.country = request.form["inputCountry"]
+#         symbol.isfund = get_checkbox_value(request.form, "isFund")
+#         symbol.onemonthreturn = float(request.form["inputOneMonthReturn"])
+#         symbol.twomonthreturn = float(request.form["inputTwoMonthReturn"])
+#         symbol.threemonthreturn = float(request.form["inputThreeMonthReturn"])
+#         symbol.sixmonthreturn = float(request.form["inputSixMonthReturn"])
 
          #symbol.ytd = float(request.form["inputYTD"])
          #symbol.oneyearreturn = float(request.form["inputOneYearReturn"])
@@ -379,12 +347,12 @@ def editsymboldata():
          #symbol.overall = float(request.form["inputOverall"])
       
          #db.session.add(symbol)
-         db.session.commit()
-         EditResult = "Symbol data saved."
-      except Exception as ex:
-         EditResult = f"Error saving symbol data {ex.args}"
+#         db.session.commit()
+#         EditResult = "Symbol data saved."
+#      except Exception as ex:
+#         EditResult = f"Error saving symbol data {ex.args}"
            
-   return render_template("editsymbol.html", pageName = "Symbol", symbol = symbol, user = current_user, operationResult = EditResult)
+#   return render_template("editsymbol.html", pageName = "Symbol", symbol = symbol, user = current_user, operationResult = EditResult)
 
 
 #____________________________________________________________________________
@@ -459,10 +427,8 @@ def managesymbols():
                                  UserSymbol.userid
                               ).outerjoin(
                                  UserSymbol, and_(Symbol.symbol == UserSymbol.symbol, UserSymbol.userid == current_user.id)
-                              #).filter(
-                                 
-                              ).order_by(
-                                 Symbol.symbol
+                              #).filter(                       
+                              ).order_by(Symbol.symbol
                               ).all()
 
       i = 0

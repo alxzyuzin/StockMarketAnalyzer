@@ -640,3 +640,128 @@ def config_MACD(chartsData:ChartsData, indicatorsParams:IndicatorsParams,offset:
 
      return chartConfig
 
+
+@app.route("/get_symbol_data", methods = ['POST', 'GET'])
+@login_required
+def get_symbol_data():
+     symbol_data = {}
+     description = ""
+     processed = "false"
+     try:
+          if request.method == "POST":
+               request_data = request.get_json()
+               symbol = request_data[0]["symbol"]
+               smb = db.session.query(Symbol).filter(Symbol.symbol == symbol).first()  
+               
+               symbol_data['symbol'] = smb.symbol
+               symbol_data['title'] = smb.title
+               symbol_data['sector'] = smb.sector
+               symbol_data['industry'] = smb.industry
+               symbol_data['country'] = smb.country
+               symbol_data['isfund'] = smb.isfund
+               symbol_data['onemonthreturn'] = smb.onemonthreturn
+               symbol_data['twomonthreturn'] = smb.twomonthreturn
+               symbol_data['threemonthreturn'] = smb.threemonthreturn
+               symbol_data['sixmonthreturn'] = smb.sixmonthreturn
+               
+               processed = "true"
+               description = f"Data obtained for symbol {symbol}"
+          else:
+               description = "No 'POST' request obtained."
+               
+     except Exception as ex:
+          description = ex.msg     
+          symbol_data = {}
+          processed = "false"
+
+     results = {
+                "processed": processed,
+                "description":description,
+                "symbol_data":symbol_data,
+               } 
+     return jsonify(results)
+
+@app.route("/save_symbol_data", methods = ['POST', 'GET'])
+@login_required
+def save_symbol_data():
+     description = ""
+     try:
+          if request.method == "POST":
+               request_data = request.get_json()[0]
+               symbol = request_data["symbol"]
+               smb = db.session.query(Symbol).filter(Symbol.symbol == symbol).first()  
+               
+               if smb is None:
+                    smb = Symbol()
+                    smb.symbol = symbol
+                    db.session.add(smb)
+               smb.title = request_data["title"]
+               smb.sector = request_data["sector"]
+               smb.industry = request_data["industry"]
+               smb.country = request_data["country"]
+               smb.isfund = request_data["isfund"]
+               smb.onemonthreturn = str_to_float(request_data["onemonthreturn"])
+               smb.twomonthreturn = str_to_float(request_data["twomonthreturn"])
+               smb.threemonthreturn = str_to_float(request_data["threemonthreturn"])
+               smb.sixmonthreturn = str_to_float(request_data["sixmonthreturn"])
+
+               #symbol.ytd = float(request.form["inputYTD"])
+               #symbol.oneyearreturn = float(request.form["inputOneYearReturn"])
+               #symbol.threeyearreturn = float(request.form["inputThreeYearReturn"])
+               #symbol.fiveyearreturn = float(request.form["inputFiveYearReturn"])
+               #symbol.tenyearreturn = float(request.form["inputTenYearReturn"])
+               #symbol.lifeoffundreturn = float(request.form["inputLifeOfFundReturn"])
+               #symbol.netto = float(request.form["inputNetto"])
+               #symbol.gross = float(request.form["inputGross"])
+               #symbol.overall = float(request.form["inputOverall"])
+ 
+
+               db.session.commit()
+               processed = True
+               description = f"Symbol data saved."
+     except Exception as ex:
+          db.session.rollback()
+          
+          if hasattr(ex, 'msg'):
+               description = f"Symbol data not saved - {ex.msg}"
+          if hasattr(ex, 'args'):
+               description = f"Symbol data not saved - {ex.args}"
+          processed = False
+     
+     results = {
+               "processed": processed,
+               "description": description,
+               }
+     return jsonify(results)
+
+def str_to_float(value:str)->float:
+     if value == "":
+          return 0
+     else:
+          return float(value)
+     
+@app.route("/delete_symbol_data", methods = ['POST', 'GET'])
+@login_required
+def delete_symbol_data():
+     description = ""
+     try:
+          if request.method == "POST":
+               request_data = request.get_json()
+               Symbol.query.filter_by(symbol = request_data["symbol"]).delete()
+               db.session.commit()
+               processed = True
+               description = f"Symbol data deleted."
+     except Exception as ex:
+          db.session.rollback()
+          msghdr = "Symbol data not deleted -"
+          if hasattr(ex, 'msg'):
+               description = f"{msghdr} {ex.msg}"
+          if hasattr(ex, 'args'):
+               description = f"{msghdr} {ex.args}"
+          processed = False
+     
+     results = {
+               "processed": processed,
+               "description": description,
+               }
+     return jsonify(results)

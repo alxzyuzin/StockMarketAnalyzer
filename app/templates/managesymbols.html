@@ -7,13 +7,14 @@
         <h2>Manage symbols&nbsp&nbsp&nbsp</h2>
         <div class = "d-flex justify-content-end" >  
             <div style = "padding-top: 3px;">Search symbol&nbsp&nbsp</div>
-            <input id = "simbol-search" type="text" class = "form-control search-simbol-input" 
+            <input id = "symbol-search" type="text" class = "form-control search-symbol-input" 
                     placeholder="Type symbol" style = "width: 120px;">
             <div style="width: 40px;"></div>
             <div class = "d-flex" style = "padding-right: 5px;">
                 <button type="button" 
                         class="btn btn-secondary justify-content-end symbol-manage-page-button" 
-                        data-bs-toggle="modal" data-bs-target="#editSymbolModal">
+                        data-bs-toggle="modal" data-bs-target="#editSymbolModal"
+                        data-symbol="">
                     Add symbol
                 </button>
             </div>
@@ -30,10 +31,10 @@
                 <th scope="col">Fund</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id = "symbols-table-body">
             {% for symbol in symbols %}
-            <tr data-toggle="collapse" data-target="#{{symbol.simbol}}" class="accordion-toggle">
-                <th scope="row" class = "simbol-row">{{ symbol.simbol }}</th>
+            <tr data-toggle="collapse" data-target="#{{symbol.symbol}}" class="accordion-toggle">
+                <th scope="row" class = "symbol-row">{{ symbol.symbol }}</th>
                 <td>{{ symbol.title }}</td>
                 <td>{{ symbol.sector }}</td>
                 <td>{{ symbol.industry }}</td>
@@ -42,24 +43,24 @@
             </tr>
             <tr class = "accordion-content">
                 <td colspan="6" class="hiddenRow">
-                    <div class="accordion-body collapse" id="{{symbol.simbol}}">
+                    <div class="accordion-body collapse" id="{{symbol.symbol}}">
                         <div class = "d-flex justify-content-end">
-                        <div id = "{{symbol.simbol}}-source-list">Move symbol from
+                        <div id = "{{symbol.symbol}}-source-list">Move symbol from
                             {% if symbol.listtype == None %}unselected{% endif %}
                             {% if symbol.listtype == 1 %}portfolio{% endif %}
                             {% if symbol.listtype == 2 %}watchlist{% endif %}
                             {% if symbol.listtype == 3 %}shortlist{% endif %}
                             to</div>
-                        <select id  = "{{symbol.simbol}}-select-dest-list" 
+                        <select id  = "{{symbol.symbol}}-select-dest-list" 
                                 class="form-select form-control select-dest-list">                         
                             <option value="0" selected>Unselected</option>                                       
                             <option value="1" selected>Portfolio</option>                                       
                             <option value="2" selected>Watchlist</option>                                       
                             <option value="3" selected>Shortlist</option>                                           
                         </select>
-                        <button id  = "{{symbol.simbol}}-move-button" type="button" 
-                                class="btn btn-secondary symbol-manage-page-button move-simbol-button" 
-                                data-symbol="{{symbol.simbol}}"
+                        <button id  = "{{symbol.symbol}}-move-button" type="button" 
+                                class="btn btn-secondary symbol-manage-page-button move-symbol-button" 
+                                data-symbol="{{symbol.symbol}}"
                                 {% if symbol.listtype == None %}
                                     data-sourcelist = "0"
                                 {% else %}
@@ -68,20 +69,25 @@
                                 Move</button>
                         <div style="width: 40px;"></div>
                         <button type="button" class="btn btn-secondary symbol-manage-page-button"
-                                data-simbol="{{ symbol.simbol }}"
-                                onclick = "delete_symbol()">Delete symbol</button>
+                                data-symbol="{{ symbol.symbol }}" data-listtype = "{{ symbol.listtype }}"
+                                data-bs-toggle="modal" data-bs-target="#editSymbolModal">
+                                Edit symbol data</button>
+                        <div style="width: 10px;"></div>
+                        <button type="button" 
+                                class="btn btn-secondary symbol-manage-page-button"
+                                data-symbol="{{ symbol.symbol }}"
+                                data-toggle="modal" data-target="#delSymbolModal">
+                                Delete symbol
+                        </button>
                         </div>
                     </div>
-                    <div id = "{{symbol.simbol}}-message-placeholder" class = "message-placeholder"></div>
+                    <div id = "{{symbol.symbol}}-message-placeholder" class = "message-placeholder"></div>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
 
 <!-- The Modal "Edit symbol data" --> 
 <div class="modal fade" id="editSymbolModal" tabindex="-1" 
@@ -89,59 +95,117 @@
     <div class="modal-dialog"> 
         <div class="modal-content"> 
             <div class="modal-header"> 
-                <h5 class="modal-title" id="editSymbolModalTitle">Edit symbol data</h5>
+                <h5 class="modal-title" id="editSymbolModalTitle">New symbol</h5>
                     <button type="button" class="btn-close" 
                             data-bs-dismiss="modal" aria-label="Close">
                     </button>
-                    <input type = "text" id = "inputSymbol" hidden>
+                    <input type = "text" id = "inputListType" value = "" hidden>
             </div>
             <div class="modal-body">
                 <div class = "container">
-                    <div class = "row">
-                        <div class = "col-lg-3"> <!-- Operation Type -->
-                            <label for="inputOperationType">Operation</label>
-                            <select id  = "inputOperationType" class="form-select form-control" 
-                                    name = "inputOperationType" onchange="inputOperationTypeSelectionChanged()">                                       
-                                <option value="0" >Buy shares</option>
-                                <option value="1">Sell shares</option>
-                                <option value="2" selected>Deposit</option>
-                                <option value="3">Withdraw</option>
-                            </select>
+                    <div class = "row" id = "symbol-row">  <!-- Symbol -->
+                        <div class = "col-sm-3">
+                            <label for="inputSymbol" class="form-label>">Symbol</label>
+                        </div>
+                        <div class = "col-sm-3">         
+                            <input  type="text" class="form-control col-sm" id="inputSymbol" 
+                                    name="inputSymbol" placeholder="Symbol" required
+                                    value="">  
+                        </div>
+                        <div class = "col-sm-6">
+                            &nbsp
                         </div>
                     </div>
-                    <div class = "row">
-                        <div class = "col-lg-6"> <!-- Date Account  -->
-                            <div class = "row">
-                                <div class = "col-md-6">
-                                    <label for="inputDate">Date</label>
-                                    <input type="date" class="form-control" id="inputDate" name="inputDate" value="{{ today }}">
-                                </div>
-                                <div class = "col-md-6">
-                                    <label for="inputAccount">Account</label>
-                                    <select id  = "inputAccount" class="form-select form-control" name = "inputAccount">                                       
-                                       {% for account in accounts %}
-                                            <option value="{{ account.name}}">{{ account.name }}</option>
-                                       {% endfor %} 
-                                    </select>
-                                </div>
-                                
-                            </div>
+                    <div class = "row" > <!-- Title -->
+                        <div class = "col-sm-3">
+                            <label for="inputTitle" class="form-label>">Title</label>
+                        </div>    
+                        <div class = "col-sm-9">
+                            <input  type="text" class="form-control col-sm" id="inputTitle" 
+                                    name="inputTitle" placeholder="Title" 
+                                    value="">         
                         </div>
-                        <div class = "col-lg-6"> <!-- Symbol Price Amount -->
-                            <div class = "row">
-                                <div class = "col-md-4" id = "containerSymbol" >
-                                    <label for="inputSymbol">Symbol</label>
-                                    <input type = "text" id  = "inputSymbol" class="form-control" name = "inputSymbol"> 
-                                </div>
-                                <div class = "col-md-4">
-                                    <label for="inputQuantity" id="inputQuantityLabel">Quantity</label>
-                                    <input type="text"  id="inputQuantity" class="form-control" name="inputQuantity">
-                                </div>
-                                <div  class = "col-md-4" id = "containerPrice">
-                                    <label for="inputPrice" id = "inputPriceLabel">Price per share</label>
-                                    <input type="text" class="form-control" id="inputPrice" name="inputPrice">
-                                </div>              
-                            </div>
+                    </div>
+                    <div class = "row"> <!--   Sector  Industry -->
+                       
+                        <div class = "col-sm-3">
+                                <label for="inputSector" class="form-label>">Sector</label>
+                        </div>
+                        <div class = "col-sm-3">
+                            <input  type="text" class="form-control col-sm" id="inputSector" 
+                                    name="inputSector" placeholder="Sector" 
+                                    value="">
+                        </div>
+                        <div class = "col-sm-3">
+                            <label for="inputIndustry" class="form-control-label">Industry</label>
+                        </div>
+                        <div class = "col-sm-3">
+                            <input  type="text" class="form-control col-sm" id="inputIndustry" 
+                                    name="inputIndustry" placeholder="Industry" 
+                                    value="">
+                        </div>
+                    </div>    
+                    <div class = "row" > <!--  Country Category -->
+                          <div class = "col-sm-3">
+                            <label for="inputCountry" class="form-label>">Country</label>
+                        </div>
+                        <div class = "col-sm-3">
+                            <input  type="text" class="form-control col-sm" id="inputCountry" 
+                                    name="inputCountry" placeholder="Country" 
+                                    value="">
+                        </div>
+                        <div class = "col-sm-3">
+                            <label for="inputIsFund" class="form-label>">Is fund</label>
+                        </div>    
+                        <div class = "col-sm-3">
+                            <input  type="checkbox" class="form-check-input" id="inputIsFund"
+                                    name="inputIsFund">         
+                        </div>
+                    </div>
+                    <div class = "row empty-row"> <!-- Empty row -->
+                        <div class = "col-sm-12">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class = "row"> <!-- One month return , two month return -->
+                        <div class = "col-sm-3">
+                            <label for="inputOneMonthReturn" class="form-label>">One Month Return</label>
+                        </div>
+                        <div class = "col-sm-3">
+                            <input  type="text" class="form-control col-sm" id="inputOneMonthReturn" 
+                                    name="inputOneMonthReturn" placeholder="One Month Return" required
+                                    value="">
+                        </div>
+                        <div class = "col-sm-3">
+                            <label for="inputTwoMonthReturn" class="form-label>">Two Month Return</label>
+                        </div>
+                        <div class = "col-sm-3">
+                            <input  type="text" class="form-control col-sm" id="inputTwoMonthReturn" 
+                                    name="inputTwoMonthReturn" placeholder="Two Month Return" required
+                                    value="">
+                        </div>
+                    </div>
+                    <div class = "row"> <!-- Three Month Return 6 Month Return -->
+                        <div class = "col-sm-3">
+                            <label for="inputThreeMonthReturn" class="form-label>">Three Month Return</label>
+                        </div>
+                        <div class = "col-sm-3">
+                            <input  type="text" class="form-control col-sm" id="inputThreeMonthReturn" 
+                                    name="inputThreeMonthReturn" placeholder="Three Month Return" required
+                                    value="">
+                        </div>
+                        <div class = "col-sm-3">
+                            <label for="inputSixMonthReturn" class="form-label>">Six Month Return</label>
+                        </div>
+                        <div class = "col-sm-3">
+                            <input  type="text" class="form-control col-sm" id="inputSixMonthReturn" 
+                                    name="inputSixMonthReturn" placeholder="Six Month Return" required
+                                    value="">
+                        </div>
+                    </div>
+                    <div class = "row empty-row"> <!-- Empty row -->
+                        <div class = "col-sm-12">
+                            &nbsp;
                         </div>
                     </div>
                 </div>
@@ -152,47 +216,47 @@
                 </button> 
                 <button type="button" class="btn btn-secondary"
                         onclick = "save_symbol_data()">Save</button>
+                <button type ="button" class="btn btn-secondary" 
+                        onclick="get_company_info()">Retrieve symbol data</button>
             </div>
             <div class = "modal-message text-center">
-                <p id = "modal-message"></p>    
+                <p id = "modal-edit-symbol-message"></p>    
             </div>
         </div>
     </div> 
 </div>
 
-<!-- The Modal "Delete delete" -->
-<div class="modal fade" id="deleteSymbolModal" tabindex="-1" 
-aria-labelledby="deleteSymbolModalTitle" aria-hidden="true"> 
-<div class="modal-dialog"> 
-   <div class="modal-content"> 
-       <div class="modal-header"> 
-           <h5 class="modal-title" id="deleteSymbolModalTitle">Delete symbol</h5>
-               <button type="button" class="btn-close" 
-                       data-bs-dismiss="modal" aria-label="Close">
-               </button>
-       </div>
-       
-       <div class = "modal-message text-center">
-           <p id = "modal-delete-message"></p>    
-       </div>
-   </div>
-</div> 
+<!-- The Modal "Delete symbol" -->
+<div class="modal" id="delSymbolModal" tabindex="-1" aria-labelledby="delSymbolModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="delSymbolModalLabel">Delete symbol</h5>
+                <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class = "modal-message text-center">
+                    <p id = "modal-delete-symbol-message"></p>    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
-
-
-    
 {% endblock %} 
 
 
 {% block script %}
-    <script>
-
-    const search_smb = document.getElementById('simbol-search');
-      
+<script>
+    const search_smb = document.getElementById('symbol-search');
     search_smb.addEventListener('input', function(event)
       {
         var elements = [];
-        $('.simbol-row').each(function() {
+        $('.symbol-row').each(function() {
                     elements.push($(this).text());
                     if ($(this).text().substring(0, event.target.value.length) == event.target.value.toUpperCase())
                     {
@@ -225,40 +289,280 @@ aria-labelledby="deleteSymbolModalTitle" aria-hidden="true">
   
           });
           */
-      })
+      });
 
-function delete_symbol()
-{
-    var symbol = event.target.getAttribute('data-simbol');
-    var modal = new bootstrap.Modal(document.getElementById('deleteSymbolModal'), {});
-    document.getElementById('modal-delete-message').innerHTML = "Delete symbol " + symbol + "?";
-    modal.show();
-}
+    $('#editSymbolModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);    // Button that triggered the modal
+            var symbol = button.data('symbol');     // Extract info from data-* attributes
+            var listtype = button.data('listtype');
+           
+            var modal = $(this);
+            if (symbol == "")
+            {
+                modal.find('.modal-title').text('New symbol');
+                modal.find('#inputSymbol').prop('disabled', false);
+                modal.find('#inputSymbol').val('');
+                modal.find('#inputTitle').val('');
+                modal.find('#inputSector').val('');
+                modal.find('#inputIndustry').val('');
+                modal.find('#inputCountry').val('');
+                modal.find('#inputIsFund').prop('checked', false);
+            }
+            else
+            {
+                modal.find('.modal-title').text('Edit symbol ' + symbol);
+                modal.find('#inputSymbol').val(symbol);
+                modal.find('#inputSymbol').prop('disabled', true);
+                $("#modal-edit-symbol-message").html('Loading data for symbol ' + symbol + '...');
+                var server_request_data = [ { "symbol":symbol}]
+                $.ajax(
+                {
+                    type: "POST",
+                    url: "/get_symbol_data",
+                    data: JSON.stringify(server_request_data),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(result)
+                    {  
+                        if (result.processed)
+                        {
+                            modal.find('#inputSymbol').val(result.symbol_data.symbol);
+                            modal.find('#inputTitle').val(result.symbol_data.title);
+                            modal.find('#inputSector').val(result.symbol_data.sector);
+                            modal.find('#inputIndustry').val(result.symbol_data.industry);
+                            modal.find('#inputCountry').val(result.symbol_data.country);
+                            modal.find('#inputIsFund').prop('checked', result.symbol_data.isfund);
+                            modal.find('#inputOneMonthReturn').val(result.symbol_data.onemonthreturn);
+                            modal.find('#inputTwoMonthReturn').val(result.symbol_data.twomonthreturn);
+                            modal.find('#inputThreeMonthReturn').val(result.symbol_data.threemonthreturn);
+                            modal.find('#inputSixMonthReturn').val(result.symbol_data.sixmonthreturn);
+                            modal.find('#inputListType').val(listtype);
+                            $("#modal-edit-symbol-message").html('');
+                            
+                        }
+                        else
+                        {
+                            $("#modal-edit-symbol-message").html("Error: " + result.error_descr);
 
+                        }
+                    },
+                    error: function(result,status)
+                    {
+                        message = "Something get wrong. Result:" + result + ". Status:" + status + "."
+                        $("#modal-edit-symbol-message").html(message)
+                    }
+                }
+                );
+            }
+            
+        });
+    
+    $('#delSymbolModal').on('show.bs.modal', function (event) {
+    
+        var button = $(event.relatedTarget);    // Button that triggered the modal
+        var symbol = button.data('symbol');     // Extract info from data-* attributes
+        var modal = $(this);
+        
+        modal.find("#modal-delete-symbol-message").html('Deleting data for symbol ' + symbol + '...');
+        var server_request_data = [{ "symbol":symbol}]
+        $.ajax({
+                type: "POST",
+                url: "/delete_symbol_data",
+                data: JSON.stringify({"symbol":symbol}),
+                contentType: "application/json",
+                dataType: "json",
+                success: function(result)
+                {
+                    if (result.processed)
+                    {
+                        message  = "Symbol " + symbol + " successfully deleted.";
+                    }
+                    else
+                    {
+                        message = "Error: " + result.error_descr;
+                    }
+                    modal.find('#modal-delete-symbol-message').html(message);
+                    // Delete symbol from table
+                    var row = button.closest('tr');
+                    row.prev().remove();
+                    row.remove();
 
-$(".move-simbol-button").click(function() 
+                },
+                error: function(result,status)
+                {   
+                    message = "Something get wrong. Result:" + result + ". Status:" + status + "."
+                    modal.find('#modal-delete-symbol-message').html(message);
+                }
+            });
+            
+        });
+
+    function get_company_info()
+    {
+        var inputValue = $('#inputSymbol').val();
+        if (inputValue == "")
+        {
+            alert("Symbol value is empty");
+            return;
+        }
+     
+        var server_request_data = 
+        [
+            {
+                "symbol":inputValue
+            }
+        ]
+        $.ajax(
+            {
+                type: "POST",
+                url: "/get_company_info",
+                data: JSON.stringify(server_request_data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(result)
+                {  
+                    if (result.processed)
+                    {
+                        $("#inputSymbol").val(result.company_info.symbol);
+                        $('#inputTitle').val(result.company_info.companyName);
+                        $('#inputSector').val(result.company_info.sector);
+                        $('#inputIndustry').val(result.company_info.industry);
+                        $('#inputCountry').val(result.company_info.country);
+                        $("#inputIsFund").prop("checked", result.company_info.isFund);
+                    }
+                    $('#operationResult').text(result.description);
+                },
+                error: function(result,status)
+                {
+                    message = "<p>" + "Something get wrong."+ "</p> <p>Result:" + result + "</p><p>Status:" + status + "</p>"
+                    $("#plots-body").html(message)
+                }
+            }
+        );
+    }
+
+    function save_symbol_data()
+    {
+        var modal =$('#editSymbolModal');
+
+        var symbol = modal.find('#inputSymbol').val();
+        var title = modal.find('#inputTitle').val();
+        var sector = modal.find('#inputSector').val();
+        var industry = modal.find('#inputIndustry').val();
+        var country = modal.find('#inputCountry').val();
+        var isfund = modal.find('#inputIsFund').prop('checked');
+        var onemonthreturn = modal.find('#inputOneMonthReturn').val();
+        var twomonthreturn = modal.find('#inputTwoMonthReturn').val();
+        var threemonthreturn = modal.find('#inputThreeMonthReturn').val();
+        var sixmonthreturn = modal.find('#inputSixMonthReturn').val()
+
+        var listtype = modal.find('#inputListType').val();
+         
+        var server_request_data = 
+        [
+            {
+                "symbol":symbol,
+                "title":title,
+                "sector":sector,
+                "industry":industry,
+                "country":country,
+                "isfund":isfund,
+                "onemonthreturn":onemonthreturn,
+                "twomonthreturn":twomonthreturn,
+                "threemonthreturn":threemonthreturn,
+                "sixmonthreturn":sixmonthreturn
+            }
+        ]
+        $.ajax(
+            {
+                type: "POST",
+                url: "/save_symbol_data",
+                data: JSON.stringify(server_request_data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(result)
+                {  
+                    if (result.processed)
+                    {
+                        $("#modal-edit-symbol-message").html("Symbol " + symbol + " successfully saved.");
+                        // Insert new row at the beginning of the table
+                        let firstRow = $("<tr>" +
+                                                    "<th scope='row' class='symbol-row'>" + symbol + "</th>" +
+                                                    "<td>" + title + "</td>" +
+                                                    "<td>" + sector + "</td>" +
+                                                    "<td>" + industry + "</td>" +
+                                                    "<td>" + country + "</td>" +
+                                                    "<td>" + isfund + "</td>" +
+                                            "</tr>")
+                        firstRow.attr({
+                                        class: 'accordion-toggle',
+                                        'data-toggle': 'collapse',
+                                        'data-target': '#' + symbol
+                                        });
+                        let secondRow = $("<tr>" +
+                                                "<td colspan='6' class='hiddenRow'>" +
+                                                    "<div class='accordion-body collapse' id='" + symbol + "'>" +
+                                                    "<div class='d-flex justify-content-end'>" +
+                                                    "<div id='" + symbol + "-source-list'>Move symbol from " + listtype + " to</div>" +
+                                                    "<select id='" + symbol + "-select-dest-list' class='form-select form-control select-dest-list'>" +
+                                                    "<option value='0' selected>Unselected</option>" +
+                                                    "<option value='1' selected>Portfolio</option>" +
+                                                    "<option value='2' selected>Watchlist</option>" +
+                                                    "<option value='3' selected>Shortlist</option>" +
+                                                    "</select>" +
+                                                    "<button id='" + symbol + "-move-button' type='button' class='btn btn-secondary symbol-manage-page-button move-symbol-button' data-symbol='" + symbol + "' data-sourcelist='" + listtype + "'>Move</button>" +
+                                                    "<div style='width: 40px;'></div>" +
+                                                    "<button type='button' class='btn btn-secondary symbol-manage-page-button' data-symbol='" + symbol + "' data-bs-toggle='modal' data-bs-target='#editSymbolModal'>Edit symbol data</button>" +
+                                                    "<div style='width: 10px;'></div>" +
+                                                    "<button type='button' class='btn btn-secondary symbol-manage-page-button' data-symbol='" + symbol + "' data-toggle='modal' data-target='#delSymbolModal'>Delete symbol</button>" +
+                                                    "</div>" +
+                                                    "</div>" +
+                                                    "<div id='" + symbol + "-message-placeholder' class='message-placeholder'></div>" +
+                                                "</td>" +
+                                            "</tr>");
+                        secondRow.attr('class', 'accordion-content');
+
+                        $('#symbols-table-body').prepend(firstRow);
+                        $('#symbols-table-body  tr:first').after(secondRow);
+
+                    }
+                    else
+                    {
+                        $("#modal-edit-symbol-message").html("Error: " + result.error_descr);
+                    }
+                },
+                error: function(result,status)
+                {
+                    message = "Something get wrong. Result:" + result + ". Status:" + status + "."
+                    $("#modal-edit-symbol-message").html(message)
+                }
+            }
+        );
+    }
+
+    $(".move-symbol-button").click(function() 
         {
             var symbol = $(this).data("symbol");
             var sourcelist = $(this).data("sourcelist");
             var selectElement = document.getElementById(symbol+'-select-dest-list');
             var targetlist = parseInt(selectElement.value, 10);
-            move_simbols_between_lists(symbol, sourcelist, targetlist)
+            move_symbols_between_lists(symbol, sourcelist, targetlist)
         });
 
- /*_______________________________________________________________________
-    | Request server for adding or delete simbol to or from specified list
+    /*_______________________________________________________________________
+    | Request server for adding or delete symbol to or from specified list
     | Parameters:
-    |   simbol - simbol name to add or delete
-    |   targetlist   - list of simbols which operation wil be performed on
+    |   symbol - symbol name to add or delete
+    |   targetlist   - list of symbols which operation wil be performed on
     |           Listtypes
     |               0 - unselected
     |               1 - portfolio
     |               2 - watchlist
     |               3 - shortlist
-    |   operation   - "add" - add or "del" - delete simbol, "mov" - move simbol from sorce list to target list
+    |   operation   - "add" - add or "del" - delete symbol, "mov" - move symbol from sorce list to target list
     |___________________________________________________________________________*/
    
-    function move_simbols_between_lists(symbol, sourcelist, targetlist)
+    function move_symbols_between_lists(symbol, sourcelist, targetlist)
     {
         if (symbol.length == 0)
         {
@@ -283,7 +587,7 @@ $(".move-simbol-button").click(function()
         $.ajax(
             {
                 type: "POST",
-                url: "/move_simbols_between_lists",
+                url: "/move_symbols_between_lists",
                 data: JSON.stringify(server_request_data),
                 contentType: "application/json",
                 dataType: "json",
@@ -323,6 +627,6 @@ $(".move-simbol-button").click(function()
             case 3: return "shortlist";
         }
     }
-    </script>
+</script>
 
 {% endblock %}
