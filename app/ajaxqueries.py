@@ -690,8 +690,9 @@ def save_symbol_data():
                request_data = request.get_json()[0]
                symbol = request_data["symbol"]
                smb = db.session.query(Symbol).filter(Symbol.symbol == symbol).first()  
-               
+               isnewsymbol = False
                if smb is None:
+                    isnewsymbol = True
                     smb = Symbol()
                     smb.symbol = symbol
                     db.session.add(smb)
@@ -719,6 +720,7 @@ def save_symbol_data():
                db.session.commit()
                processed = True
                description = f"Symbol data saved."
+               
      except Exception as ex:
           db.session.rollback()
           
@@ -731,6 +733,7 @@ def save_symbol_data():
      results = {
                "processed": processed,
                "description": description,
+               "isnewsymbol":isnewsymbol
                }
      return jsonify(results)
 

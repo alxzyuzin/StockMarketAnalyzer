@@ -33,7 +33,7 @@
         </thead>
         <tbody id = "symbols-table-body">
             {% for symbol in symbols %}
-            <tr data-toggle="collapse" data-target="#{{symbol.symbol}}" class="accordion-toggle">
+            <tr id = "{{symbol.symbol}}-row" data-toggle="collapse" data-target="#{{symbol.symbol}}" class="accordion-toggle">
                 <th scope="row" class = "symbol-row">{{ symbol.symbol }}</th>
                 <td>{{ symbol.title }}</td>
                 <td>{{ symbol.sector }}</td>
@@ -300,6 +300,7 @@
             if (symbol == "")
             {
                 modal.find('.modal-title').text('New symbol');
+                modal.find('#inputListType').val(0)   //unselected
                 modal.find('#inputSymbol').prop('disabled', false);
                 modal.find('#inputSymbol').val('');
                 modal.find('#inputTitle').val('');
@@ -313,8 +314,10 @@
                 modal.find('.modal-title').text('Edit symbol ' + symbol);
                 modal.find('#inputSymbol').val(symbol);
                 modal.find('#inputSymbol').prop('disabled', true);
+                modal.find('#inputListType').val(listtype)   //unselected
                 $("#modal-edit-symbol-message").html('Loading data for symbol ' + symbol + '...');
                 var server_request_data = [ { "symbol":symbol}]
+                // Request symbol data from server
                 $.ajax(
                 {
                     type: "POST",
@@ -456,7 +459,7 @@
         var threemonthreturn = modal.find('#inputThreeMonthReturn').val();
         var sixmonthreturn = modal.find('#inputSixMonthReturn').val()
 
-        var listtype = modal.find('#inputListType').val();
+        var listtype = parseInt(modal.find('#inputListType').val(),10);
          
         var server_request_data = 
         [
@@ -485,46 +488,60 @@
                     if (result.processed)
                     {
                         $("#modal-edit-symbol-message").html("Symbol " + symbol + " successfully saved.");
-                        // Insert new row at the beginning of the table
-                        let firstRow = $("<tr>" +
-                                                    "<th scope='row' class='symbol-row'>" + symbol + "</th>" +
-                                                    "<td>" + title + "</td>" +
-                                                    "<td>" + sector + "</td>" +
-                                                    "<td>" + industry + "</td>" +
-                                                    "<td>" + country + "</td>" +
-                                                    "<td>" + isfund + "</td>" +
-                                            "</tr>")
-                        firstRow.attr({
-                                        class: 'accordion-toggle',
-                                        'data-toggle': 'collapse',
-                                        'data-target': '#' + symbol
-                                        });
-                        let secondRow = $("<tr>" +
-                                                "<td colspan='6' class='hiddenRow'>" +
-                                                    "<div class='accordion-body collapse' id='" + symbol + "'>" +
-                                                    "<div class='d-flex justify-content-end'>" +
-                                                    "<div id='" + symbol + "-source-list'>Move symbol from " + listtype + " to</div>" +
-                                                    "<select id='" + symbol + "-select-dest-list' class='form-select form-control select-dest-list'>" +
-                                                    "<option value='0' selected>Unselected</option>" +
-                                                    "<option value='1' selected>Portfolio</option>" +
-                                                    "<option value='2' selected>Watchlist</option>" +
-                                                    "<option value='3' selected>Shortlist</option>" +
-                                                    "</select>" +
-                                                    "<button id='" + symbol + "-move-button' type='button' class='btn btn-secondary symbol-manage-page-button move-symbol-button' data-symbol='" + symbol + "' data-sourcelist='" + listtype + "'>Move</button>" +
-                                                    "<div style='width: 40px;'></div>" +
-                                                    "<button type='button' class='btn btn-secondary symbol-manage-page-button' data-symbol='" + symbol + "' data-bs-toggle='modal' data-bs-target='#editSymbolModal'>Edit symbol data</button>" +
-                                                    "<div style='width: 10px;'></div>" +
-                                                    "<button type='button' class='btn btn-secondary symbol-manage-page-button' data-symbol='" + symbol + "' data-toggle='modal' data-target='#delSymbolModal'>Delete symbol</button>" +
-                                                    "</div>" +
-                                                    "</div>" +
-                                                    "<div id='" + symbol + "-message-placeholder' class='message-placeholder'></div>" +
-                                                "</td>" +
-                                            "</tr>");
-                        secondRow.attr('class', 'accordion-content');
+                        if (result.isnewsymbol)
+                        {
+                            // Insert new row at the beginning of the table
+                            let firstRow = $("<tr>" +
+                                                        "<th scope='row' class='symbol-row'>" + symbol + "</th>" +
+                                                        "<td>" + title + "</td>" +
+                                                        "<td>" + sector + "</td>" +
+                                                        "<td>" + industry + "</td>" +
+                                                        "<td>" + country + "</td>" +
+                                                        "<td>" + isfund + "</td>" +
+                                                "</tr>")
+                            firstRow.attr({
+                                            class: 'accordion-toggle',
+                                            'data-toggle': 'collapse',
+                                            'data-target': '#' + symbol
+                                            });
+                            let secondRow = $("<tr>" +
+                                                    "<td colspan='6' class='hiddenRow'>" +
+                                                        "<div class='accordion-body collapse' id='" + symbol + "'>" +
+                                                        "<div class='d-flex justify-content-end'>" +
+                                                        "<div id='" + symbol + "-source-list'>Move symbol from " + list_type_to_list_name(listtype) + " to</div>" +
+                                                        "<select id='" + symbol + "-select-dest-list' class='form-select form-control select-dest-list'>" +
+                                                        "<option value='0' selected>Unselected</option>" +
+                                                        "<option value='1' selected>Portfolio</option>" +
+                                                        "<option value='2' selected>Watchlist</option>" +
+                                                        "<option value='3' selected>Shortlist</option>" +
+                                                        "</select>" +
+                                                        "<button id='" + symbol + "-move-button' type='button' class='btn btn-secondary symbol-manage-page-button move-symbol-button' data-symbol='" + symbol + "' data-sourcelist='" + listtype + "'>Move</button>" +
+                                                        "<div style='width: 40px;'></div>" +
+                                                        "<button type='button' class='btn btn-secondary symbol-manage-page-button' data-symbol='" + symbol + "' data-bs-toggle='modal' data-bs-target='#editSymbolModal'>Edit symbol data</button>" +
+                                                        "<div style='width: 10px;'></div>" +
+                                                        "<button type='button' class='btn btn-secondary symbol-manage-page-button' data-symbol='" + symbol + "' data-toggle='modal' data-target='#delSymbolModal'>Delete symbol</button>" +
+                                                        "</div>" +
+                                                        "</div>" +
+                                                        "<div id='" + symbol + "-message-placeholder' class='message-placeholder'></div>" +
+                                                    "</td>" +
+                                                "</tr>");
+                            secondRow.attr('class', 'accordion-content');
 
-                        $('#symbols-table-body').prepend(firstRow);
-                        $('#symbols-table-body  tr:first').after(secondRow);
-
+                            $('#symbols-table-body').prepend(firstRow);
+                            $('#symbols-table-body  tr:first').after(secondRow);
+                        }
+                        else
+                        {
+                            // Update symbol row
+                            $("#"+symbol+"-row td:eq(0)").text(title);
+                            $("#"+symbol+"-row td:eq(1)").text(sector);
+                            $("#"+symbol+"-row td:eq(2)").text(industry);
+                            $("#"+symbol+"-row td:eq(3)").text(country);
+                            strisfund = isfund.toString();
+                            sss = strisfund.charAt(0).toUpperCase() + strisfund.slice(1)
+                            $("#"+symbol+"-row td:eq(4)").text(sss);
+                            
+                        }
                     }
                     else
                     {
