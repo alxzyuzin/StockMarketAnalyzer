@@ -402,8 +402,9 @@
 
     function get_company_info()
     {
-        var inputValue = $('#inputSymbol').val();
-        if (inputValue == "")
+        var modal =$('#editSymbolModal');
+        var symbol = modal.find('#inputSymbol').val();
+        if (symbol == "")
         {
             alert("Symbol value is empty");
             return;
@@ -412,7 +413,7 @@
         var server_request_data = 
         [
             {
-                "symbol":inputValue
+                "symbol":symbol
             }
         ]
         $.ajax(
@@ -426,19 +427,28 @@
                 {  
                     if (result.processed)
                     {
-                        $("#inputSymbol").val(result.company_info.symbol);
-                        $('#inputTitle').val(result.company_info.companyName);
-                        $('#inputSector').val(result.company_info.sector);
-                        $('#inputIndustry').val(result.company_info.industry);
-                        $('#inputCountry').val(result.company_info.country);
-                        $("#inputIsFund").prop("checked", result.company_info.isFund);
+                       
+                        modal.find('#inputSymbol').val(result.company_info.symbol);
+                        modal.find('#inputTitle').val(result.company_info.companyName);
+                        modal.find('#inputSector').val(result.company_info.sector);
+                        modal.find('#inputIndustry').val(result.company_info.industry);
+                        modal.find('#inputCountry').val(result.company_info.country);
+                        modal.find("#inputIsFund").prop("checked", result.company_info.isFund);
+
+                        
+                        //$("#inputSymbol").val(result.company_info.symbol);
+                        //$('#inputTitle').val(result.company_info.companyName);
+                        //$('#inputSector').val(result.company_info.sector);
+                        //$('#inputIndustry').val(result.company_info.industry);
+                        //$('#inputCountry').val(result.company_info.country);
+                        ///$("#inputIsFund").prop("checked", result.company_info.isFund);
                     }
-                    $('#operationResult').text(result.description);
+                    modal.find("#modal-edit-symbol-message").html(result.description);
                 },
                 error: function(result,status)
                 {
-                    message = "<p>" + "Something get wrong."+ "</p> <p>Result:" + result + "</p><p>Status:" + status + "</p>"
-                    $("#plots-body").html(message)
+                    message = "Something get wrong. "+ "Result:" + result + ". Status:" + status + "."
+                    modal.find("#modal-edit-symbol-message").html(message);
                 }
             }
         );

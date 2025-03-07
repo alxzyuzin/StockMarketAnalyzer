@@ -51,7 +51,7 @@ def get_company_info():
      try:
           if request.method == "POST":
                request_data = request.get_json()
-               simbol = request_data[0]["simbol"]
+               simbol = request_data[0]["symbol"]
           
                url = f"https://financialmodelingprep.com/api/v3/profile/{simbol}?apikey={app.config['API_KEY']}"
                
@@ -204,19 +204,28 @@ def get_gharts_data():
           indicators_params = get_user_indicators_params(symbol, current_user.id)
           chartsdata = ChartsData(symbol,indicators_params)
           chartsdata.load()
-          chartsdata.calculate_indicators()
-          symbol_data = db.session.query(Symbol).filter(Symbol.symbol == symbol).first()  
-          offset = max(indicators_params.get_offset(), len(chartsdata.Labels()) - period)      
-          results = {"processed": "true",
-                    "error_descr":"",
-                    "charts_ma_data": config_MA(chartsdata, indicators_params, offset),
-                    "charts_rsi_data": config_RSI(chartsdata, indicators_params, offset),
-                    "charts_macd_data": config_MACD(chartsdata, indicators_params, offset),
-                    "symbol_header":symbol_data.title,
-                    "last_price":chartsdata.lastPrice
-                    }
+          if chartsdata.dataLoaded:
+               chartsdata.calculate_indicators()
+               symbol_data = db.session.query(Symbol).filter(Symbol.symbol == symbol).first()  
+               offset = max(indicators_params.get_offset(), len(chartsdata.Labels()) - period)      
+               results = {
+                         "processed": "true",
+                         "error_descr":"",
+                         "charts_ma_data": config_MA(chartsdata, indicators_params, offset),
+                         "charts_rsi_data": config_RSI(chartsdata, indicators_params, offset),
+                         "charts_macd_data": config_MACD(chartsdata, indicators_params, offset),
+                         "symbol_header":symbol_data.title,
+                         "last_price":chartsdata.lastPrice
+                         }
+          else:
+               results = {
+                          "processed": 'false',
+                          "error_descr": chartsdata.errorMessage}
    except Exception as ex:
-         results = {"processed": 'false', "error_descr": ex.args}
+         results = {
+                    "processed": 'false',
+                    "error_descr": ex.args
+                    }
       
    return jsonify(results)
 #__________________________________________________________________________________

@@ -97,17 +97,17 @@
                                 <select id  = "dest-list-type" class="form-select select-destination-list" 
                                         name = "destListType">
                                         <!--onchange = "set_destination_list_type"-->
-                                        {% if listtype != "watchlist" %}<option value="2">watchlist</option>{% endif %}
-                                        {% if listtype != "shortlist" %}<option value="3">shortlist</option>{% endif %}
-                                        {% if listtype != "portfolio" %}<option value="1">portfolio</option>{% endif %}
-                                        {% if listtype != "unselected" %}<option value="0">all symbols</option>{% endif %}
+                                        {% if listtype != 2 %}<option value="2">watchlist</option>{% endif %}
+                                        {% if listtype != 3 %}<option value="3">shortlist</option>{% endif %}
+                                        {% if listtype != 1 %}<option value="1">portfolio</option>{% endif %}
+                                        {% if listtype != 0 %}<option value="0">all symbols</option>{% endif %}
                                 </select>
                                 <button type="button" id = "move-symbol-button"
                                         class="btn btn-secondary shadow-none symbol-management-buton"                                       
-                                        {% if listtype == "watchlist" %} data-sourcelist = "2"{% endif %}
-                                        {% if listtype == "portfolio" %} data-sourcelist = "1"{% endif %}
-                                        {% if listtype == "shortlist" %} data-sourcelist = "3"{% endif %}
-                                        {% if listtype == "unselected" %} data-sourcelist = "0" {% endif %}>
+                                        {% if listtype == 2 %} data-sourcelist = "2"{% endif %}
+                                        {% if listtype == 1 %} data-sourcelist = "1"{% endif %}
+                                        {% if listtype == 3 %} data-sourcelist = "3"{% endif %}
+                                        {% if listtype == 0 %} data-sourcelist = "0"{% endif %}>
                                     Move
                                 </button>
                             
@@ -260,7 +260,11 @@
 
     $("#move-symbol-button").click(function() 
         {
-            move_symbols_between_lists()
+            var sourcelist = $(this).data("sourcelist");
+            var selectElement = document.getElementById('dest-list-type');
+            var targetlist = selectElement.value; 
+            var symbol = CURRENT_SYMBOL
+            move_symbols_between_lists(symbol, sourcelist, targetlist)
         })
 
     CURRENT_SYMBOL=""
@@ -296,6 +300,14 @@
 
     function update_charts(symbol, period)
     {
+        //alert(Chart.version)
+        if (ChartMA instanceof Chart) 
+            ChartMA.destroy()   
+        if (ChartRSI instanceof Chart) 
+            ChartRSI.destroy()      
+        if (ChartMACD instanceof Chart) 
+            ChartMACD.destroy()
+
         server_request_data = 
         [
             {
@@ -317,32 +329,21 @@
                     {   
                         // Set charts size
                         avalable_height = $("#right-column").height() 
-                        
-                        //alert(Chart.version)
+                       
                         // MA chart
-                        if (ChartMA instanceof Chart) 
-                            ChartMA.destroy()         
                         const elementChartMA = document.getElementById('myChartMA');
-                        
                         result.charts_ma_data.options.plugins.legend.labels.filter = legendfilter
                         result.charts_ma_data.options.scales.x.ticks.callback = displayalllabels
                         ChartMA = new Chart(elementChartMA.getContext('2d'),result.charts_ma_data)
-                        //$("#myChartMA").css("height", avalable_height / 3)
                         
                         // RSI chart
-                        if (ChartRSI instanceof Chart) 
-                            ChartRSI.destroy()
                         const elementChartRSI = document.getElementById('myChartRSI');
                         ChartRSI = new Chart(elementChartRSI.getContext('2d'),result.charts_rsi_data)
-                        //$("#myChartRSI").css("height", avalable_height / 4)
-                       
+                        
                         // MACD chart
-                        if (ChartMACD instanceof Chart) 
-                            ChartMACD.destroy()
                         const elementChartMACD = document.getElementById('myChartMACD');
                         ChartMACD = new Chart(elementChartMACD.getContext('2d'),result.charts_macd_data)
-                        //$("#myChartMACD").css("height", avalable_height / 4)
-
+                        
                         set_charts_size()
                         // Show plots header
                         $("#plots-header-content").css("visibility", "visible")
@@ -354,7 +355,9 @@
                     }
                     else
                     {
-                        $("#plots-body").html("<p style = 'font-size:xx-large'>" + result.error_descr + "</p>")
+                        $("#plots-header-content").css("visibility", "visible")
+                        $("#plots-header-content").text(result.error_descr)
+                        //$("#plots-body").html("<p style = 'font-size:xx-large'>" + result.error_descr + "</p>")
                     }       
                 },
                 error: function(result,status)
@@ -383,10 +386,10 @@
    
     function move_symbols_between_lists(symbol, sourcelist, targetlist)
     {
-        var sourcelist = event.target.getAttribute('data-sourcelist');
-        var selectElement = document.getElementById('dest-list-type');
-        var targetlist = selectElement.value; 
-        var symbol = CURRENT_SYMBOL
+        //var sourcelist = event.target.getAttribute('sourcelist');
+        //var selectElement = document.getElementById('dest-list-type');
+        //var targetlist = selectElement.value; 
+        //var symbol = CURRENT_SYMBOL
         if (symbol.length == 0)
         {
             alert("No selected symbols.")
